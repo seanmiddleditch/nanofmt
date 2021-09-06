@@ -1,0 +1,78 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "msvc-debug-x64",
+      "displayName": "Windows x64 (Debug)",
+      "description": "Build with current MSC compiler for Windows x64 (Debug)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [ "Windows" ]
+        }
+      }
+    },
+    {
+      "name": "wsl-gcc-debug-x64",
+      "displayName": "WSL-GCC x64 (Debug)",
+      "description": "Build with installed GCC compiler on WSL for x64 (Debug)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}\\out\\build\\${presetName}",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}\\out\\install\\${presetName}"
+      },
+      "environment": {
+        "CC": "g++"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [ "Linux" ],
+          "intelliSenseMode": "linux-gcc-x64"
+        }
+      }
+    },
+    {
+      "name": "wsl-clang-debug-x64",
+      "displayName": "WSL-Clang x64 Debug",
+      "description": "Build with installed clang compiler on WSL for x64 (Debug)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}\\out\\build\\${presetName}",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}\\out\\install\\${presetName}"
+      },
+      "environment": {
+        "CC": "clang++"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [ "Linux" ],
+          "intelliSenseMode": "linux-gcc-x64"
+        }
+      }
+    }
+  ]
+}
