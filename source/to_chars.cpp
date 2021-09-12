@@ -9,27 +9,22 @@
 
 namespace nanofmt::detail {
     template <typename IntegerT>
-    constexpr char* to_chars_impl(char* buffer, char const* end, IntegerT value, int_format fmt) noexcept;
+    static char* to_chars_impl(char* buffer, char const* end, IntegerT value, int_format fmt) noexcept;
 
     template <typename CarrierT, typename FloatT>
-    constexpr char* to_chars_impl(
-        char* buffer,
-        char const* end,
-        FloatT value,
-        float_format fmt,
-        int precision) noexcept;
+    static char* to_chars_impl(char* buffer, char const* end, FloatT value, float_format fmt, int precision) noexcept;
 
     template <typename UnsignedIntT>
-    constexpr char* to_chars_impl_decimal(char* buffer, char const* end, UnsignedIntT value) noexcept;
+    static char* to_chars_impl_decimal(char* buffer, char const* end, UnsignedIntT value) noexcept;
 
     template <char A = 'a', typename UnsignedIntT>
-    constexpr char* to_chars_impl_hex(char* buffer, char const* end, UnsignedIntT value) noexcept;
+    static char* to_chars_impl_hex(char* buffer, char const* end, UnsignedIntT value) noexcept;
 
     template <typename UnsignedIntT>
-    constexpr char* to_chars_impl_binary(char* buffer, char const* end, UnsignedIntT value) noexcept;
+    static char* to_chars_impl_binary(char* buffer, char const* end, UnsignedIntT value) noexcept;
 
     template <typename UnsignedIntT>
-    constexpr char* to_chars_n_round(char* buffer, char const* end, UnsignedIntT value, int count) noexcept;
+    static char* to_chars_n_round(char* buffer, char const* end, UnsignedIntT value, int count) noexcept;
 
     template <char E = 'e', bool TrailingZeroes = true, typename CarrierT>
     char* to_chars_impl_scientific(
@@ -40,7 +35,7 @@ namespace nanofmt::detail {
         int precision) noexcept;
 
     template <bool TrailingZeroes = true, typename CarrierT>
-    char* to_chars_impl_fixed(
+    static char* to_chars_impl_fixed(
         char* buffer,
         char const* end,
         CarrierT significand,
@@ -48,17 +43,22 @@ namespace nanofmt::detail {
         int precision) noexcept;
 
     template <char E = 'e', typename CarrierT>
-    char* to_chars_impl_general(
+    static char* to_chars_impl_general(
         char* buffer,
         char const* end,
         CarrierT significand,
         int exponent,
         int precision) noexcept;
 
-    char* to_chars_impl_nonfinite(char* buffer, char const* end, bool negative, bool infinite, bool upper) noexcept;
+    static char* to_chars_impl_nonfinite(
+        char* buffer,
+        char const* end,
+        bool negative,
+        bool infinite,
+        bool upper) noexcept;
 
     // maximum significand for double is 17 decimal digits
-    constexpr size_t significand_max_digits10 = 17;
+    static constexpr size_t significand_max_digits10 = 17;
 } // namespace nanofmt::detail
 
 char* nanofmt::to_chars(char* buffer, char const* end, signed char value, int_format fmt) noexcept {
@@ -118,7 +118,7 @@ char* nanofmt::to_chars(char* buffer, char const* end, double value, float_forma
 }
 
 template <typename IntegerT>
-constexpr char* nanofmt::detail::to_chars_impl(char* buffer, char const* end, IntegerT value, int_format fmt) noexcept {
+char* nanofmt::detail::to_chars_impl(char* buffer, char const* end, IntegerT value, int_format fmt) noexcept {
     if (value < 0 && buffer != end) {
         *buffer++ = '-';
     }
@@ -145,7 +145,7 @@ constexpr char* nanofmt::detail::to_chars_impl(char* buffer, char const* end, In
 }
 
 template <typename CarrierT, typename FloatT>
-constexpr char* nanofmt::detail::to_chars_impl(
+char* nanofmt::detail::to_chars_impl(
     char* buffer,
     char const* end,
     FloatT value,
@@ -203,7 +203,7 @@ constexpr char* nanofmt::detail::to_chars_impl(
 }
 
 template <typename UnsignedIntT>
-constexpr char* nanofmt::detail::to_chars_impl_decimal(char* buffer, char const* end, UnsignedIntT value) noexcept {
+char* nanofmt::detail::to_chars_impl_decimal(char* buffer, char const* end, UnsignedIntT value) noexcept {
     static_assert(std::is_unsigned_v<UnsignedIntT>);
 
     // pathological case of an empty buffer;
@@ -237,7 +237,7 @@ constexpr char* nanofmt::detail::to_chars_impl_decimal(char* buffer, char const*
 }
 
 template <char A, typename UnsignedIntT>
-constexpr char* nanofmt::detail::to_chars_impl_hex(char* buffer, char const* end, UnsignedIntT value) noexcept {
+char* nanofmt::detail::to_chars_impl_hex(char* buffer, char const* end, UnsignedIntT value) noexcept {
     static_assert(std::is_unsigned_v<UnsignedIntT>);
 
     // constants to process nibbles (half-bytes, or 4 bits)
@@ -280,7 +280,7 @@ constexpr char* nanofmt::detail::to_chars_impl_hex(char* buffer, char const* end
 }
 
 template <typename UnsignedIntT>
-constexpr char* nanofmt::detail::to_chars_impl_binary(char* buffer, char const* end, UnsignedIntT value) noexcept {
+char* nanofmt::detail::to_chars_impl_binary(char* buffer, char const* end, UnsignedIntT value) noexcept {
     static_assert(std::is_unsigned_v<UnsignedIntT>);
 
     // find the initial non-zero bit in the input
@@ -300,18 +300,14 @@ constexpr char* nanofmt::detail::to_chars_impl_binary(char* buffer, char const* 
 }
 
 template <typename UnsignedIntT>
-constexpr char* nanofmt::detail::to_chars_n_round(
-    char* buffer,
-    char const* end,
-    UnsignedIntT value,
-    int count) noexcept {
+char* nanofmt::detail::to_chars_n_round(char* buffer, char const* end, UnsignedIntT value, int count) noexcept {
     static_assert(std::is_unsigned_v<UnsignedIntT>);
 
     if (count == 0) {
         return buffer;
     }
 
-    char tmp[significand_max_digits10];
+    char tmp[significand_max_digits10] = {};
 
     // FIXME: we could use a much faster to_chars here; e.g. we could
     // keep this in reversed order, and we know it'll never truncate
