@@ -44,3 +44,20 @@ namespace nanofmt::test {
         return result;
     }
 } // namespace nanofmt::test
+
+// wow this is annoying; see https://github.com/isocpp/CppCoreGuidelines/issues/1173
+//
+#if defined(__has_cpp_attribute)
+#    if __has_cpp_attribute(gsl::suppress)
+#        if defined(__clang__)
+// clang-format off
+#        define NANOFMT_GSL_SUPPRESS(rule) [[gsl::suppress(#rule)]]
+// clang-format on
+#        endif
+#    elif defined(_MSC_VER)
+#        define NANOFMT_GSL_SUPPRESS(rule) [[gsl::suppress(rule)]]
+#    endif
+#endif
+#if !defined(NANOFMT_GSL_SUPPRESS)
+#    define NANOFMT_GSL_SUPPRESS(rule)
+#endif
