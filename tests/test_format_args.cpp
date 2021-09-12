@@ -84,7 +84,7 @@ TEST_CASE("nanofmt.format_arg.enums", "[nanofmt][format_arg][pointers][enums]") 
     using namespace nanofmt;
 
     // clang-format off
-    NANOFMT_GSL_SUPPRESS(enum.3) enum cenum { cenum_value };
+    enum NANOFMT_GSL_SUPPRESS(enum.3) cenum { cenum_value };
     // clang-format on
     enum class enum_class { value };
     enum class chonky_enum_class : long long { value };
