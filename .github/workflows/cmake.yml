@@ -14,7 +14,6 @@ jobs:
         runs-on: ['ubuntu-latest']
         compiler: ['g++', 'clang++']
         config: ['DEBUG', 'RELEASE']
-        arch-flags: ['', '-m32']
         include:
         - runs-on: 'windows-latest'
           config: 'DEBUG'
@@ -29,7 +28,6 @@ jobs:
     - name: Configure
       env:
         CXX: ${{ matrix.compiler }}
-        CXXFLAGS: ${{ matrix.arch-flags }}
       run: cmake -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=${{ matrix.config }}
 
     - name: Build
