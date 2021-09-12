@@ -1,5 +1,6 @@
 // Copyright (c) Sean Middleditch and contributors. See accompanying LICENSE.md for copyright details.
 
+#include "test_utils.h"
 #include "nanofmt/format.h"
 
 #include <catch2/catch_test_macros.hpp>
@@ -82,14 +83,9 @@ TEST_CASE("nanofmt.format_arg.pointers", "[nanofmt][format_arg][pointers][string
 TEST_CASE("nanofmt.format_arg.enums", "[nanofmt][format_arg][pointers][enums]") {
     using namespace nanofmt;
 
-#if __has_cpp_attribute(gsl::suppress)
     // clang-format off
-    enum [[gsl::suppress(Enum.3)]] cenum{cenum_value};
+    NANOFMT_GSL_SUPPRESS(enum.3) enum cenum { cenum_value };
     // clang-format on
-#else
-    enum cenum { cenum_value };
-#endif
-
     enum class enum_class { value };
     enum class chonky_enum_class : long long { value };
 
