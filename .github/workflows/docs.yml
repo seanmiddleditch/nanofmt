@@ -25,12 +25,10 @@ jobs:
       run: cmake -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=RELEASE
 
     - name: Doxygen
-      working-directory: ${{ github.workspace }}/docs
-      run: doxygen Doxyfile
+      run: doxygen ${{ github.workspace }}/docs/Doxyfile
 
     - name: Sphinx
-      working-directory: ${{ github.workspace }}/docs/sphinx
-      run: sphinx-build . ${{ github.workspace }}/build/docs
+      run: sphinx-build . ${{ github.workspace }}/docs/sphinx ${{ github.workspace }}/build/docs
 
     - name: Artifact
       uses: actions/upload-artifact@v2
