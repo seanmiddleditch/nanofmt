@@ -228,7 +228,7 @@ which includes/imports constexpr definitions of the format implementations.
 Such an approach would allow individual TUs to opt-in to pulling in all the
 machinery if and only if they actually need it.
 
-Note that we have thus far kept the _parsing_ part of nanomsg all constexpr
+Note that we have thus far kept the _parsing_ part of nanofmt all constexpr
 capable, since we may wish to enable compile-time format string checking
 capabilities for projects that (wisely) prefer such a feature. All known
 potential users of nanofmt are not yet using C++20 so compile-time checking
