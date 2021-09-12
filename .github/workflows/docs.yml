@@ -1,0 +1,32 @@
+name: Docs
+
+on:
+  push:
+    branches:
+    - main
+    - 'releases/**'
+  pull_request:
+
+jobs:
+  build:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Configure
+      run: cmake -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=RELEASE
+
+    - name: Doxygen
+      working-directory: ${{ github.workspace }}/docs
+      run: doxygen Doxyfile
+
+    - name: Sphinx
+      working-directory: ${{ github.workspace }}/docs/sphinx
+      run: sphinx-build . ${{ github.workspace }}/build/docs
+
+    - name: Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: docs
+        path: docs/sphinx
