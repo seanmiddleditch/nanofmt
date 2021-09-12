@@ -82,11 +82,14 @@ TEST_CASE("nanofmt.format_arg.pointers", "[nanofmt][format_arg][pointers][string
 TEST_CASE("nanofmt.format_arg.enums", "[nanofmt][format_arg][pointers][enums]") {
     using namespace nanofmt;
 
-    enum
 #if __has_cpp_attribute(gsl::suppress)
-        [[gsl::suppress(Enum .3)]]
+    // clang-format off
+    enum [[gsl::suppress(Enum.3)]] cenum{cenum_value};
+    // clang-format on
+#else
+    enum cenum { cenum_value };
 #endif
-        cenum{cenum_value};
+
     enum class enum_class { value };
     enum class chonky_enum_class : long long { value };
 
