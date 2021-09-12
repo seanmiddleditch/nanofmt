@@ -11,12 +11,12 @@ namespace nanofmt {
     struct format_args;
     struct format_spec;
 
-    // Implement to provide format support for custom types.
-    //
-    // Must implement:
-    //
-    // constexpr char const* parse(char const* in, char const* end) noexcept;
-    // void format(T const& value, buffer& buf);
+    /// Implement to provide custom formatting support for a type.
+    ///
+    /// Must implement:
+    ///
+    /// constexpr char const* parse(char const* in, char const* end) noexcept;
+    /// void format(T const& value, buffer& buf);
     template <typename T>
     struct formatter;
 
