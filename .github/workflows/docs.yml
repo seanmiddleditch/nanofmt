@@ -17,9 +17,7 @@ jobs:
     - name: Install
       run: |
         sudo apt-get install -y doxygen
-        sudo apt-get install -y python3-sphinx python3-sphinx-rtd-theme
-        sudo apt-get install -y python3-breathe
-        sudo pip3 install sphinx-sitemap
+        sudo pip3 install sphinx breathe exhale sphinx-rtd-theme
 
     - name: Configure
       run: cmake -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=RELEASE
