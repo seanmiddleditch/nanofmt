@@ -8,7 +8,10 @@ API Reference
 .. _format-api:
 
 Formatting
-==========
+----------
+
+Core API
+^^^^^^^^
 
 .. doxygenfunction:: nanofmt::format_to(char (&)[N], FormatT&&, Args const&...)
 
@@ -29,12 +32,12 @@ Formatting
 .. doxygenfunction:: nanofmt::make_format_args
 
 Buffers
--------
+^^^^^^^
 
 .. doxygenstruct:: nanofmt::buffer
 
 Strings
--------
+^^^^^^^
 
 .. doxygenstruct:: nanofmt::string_view
 
@@ -48,14 +51,14 @@ Strings
 
 
 Syntax Parsers
---------------
+^^^^^^^^^^^^^^
 
 .. doxygenstruct:: nanofmt::format_spec
 
 .. doxygenfunction:: nanofmt::parse_spec
 
 Variadic Arguments
-------------------
+^^^^^^^^^^^^^^^^^^
 
 .. doxygenstruct:: nanofmt::format_args
 
@@ -64,10 +67,10 @@ Variadic Arguments
 .. _to-char-api:
 
 Character Conversion
-====================
+--------------------
 
 Integral Types
---------------
+^^^^^^^^^^^^^^
 
 .. doxygenenum:: nanofmt::int_format
 
@@ -92,7 +95,7 @@ Integral Types
 .. doxygenfunction:: nanofmt::to_chars(char *, char const *, unsigned long long, int_format)
 
 Floating Point Types
---------------------
+^^^^^^^^^^^^^^^^^^^^
 
 .. doxygenenum:: nanofmt::float_format
 

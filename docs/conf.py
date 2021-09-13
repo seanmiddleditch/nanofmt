@@ -90,8 +90,11 @@ html_theme = 'sphinx_rtd_theme'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#
-# html_theme_options = {}
+html_theme_options = {
+    'canonical_url': 'https://seanmiddleditch.github.io/nanofmt',
+    'style_external_links': True,
+    'vcs_pageview_mode': 'raw'
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -189,5 +192,6 @@ epub_exclude_files = ['search.html']
 breathe_projects = {
 	"nanofmt": "../out/xml/"
 }
+breathe_show_enumvalue_initializer = False
 breathe_default_project = "nanofmt"
 breathe_default_members = ('members',)
