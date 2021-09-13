@@ -4,25 +4,40 @@
 
 namespace nanofmt {
     // clang-format off
+    /// @brief Format options for integral values.
     enum class int_format {
-        decimal     = 1,
-        hex         = 2,
-        hex_upper   = 3,
-        binary      = 4
+        decimal     = 1, ///< Format in base 10
+        hex         = 2, ///< Format in base 16
+        hex_upper   = 3, ///< Format in base 16, with uppercase letters
+        binary      = 4, ///< Format in base 2
     };
-    
+
+    /// Format options for floating-point values.
     enum class float_format {
+        /// Format in scientific notation: [-]d.de[+-]dd
         scientific          = 0b0001,
+        /// Format in scientific notation, with uppercase letters: [-]d.dE[+-]dd
         scientific_upper    = scientific | 0b1000,
+        /// Format in fixed precision: [-]d.dddd
         fixed               = 0b0010,
+        /// Format in hexadecimal: [-]1.xxxxp[+-]dd
         hex                 = 0b0100,
+        /// Format in hexadecimal: [-]1.XXXXP[+-]dd
         hex_upper           = hex   | 0b1000,
+        /// Format in either scientific or fixed precision, depending on the exponent
         general             = fixed | scientific,
+        /// Format in either uppercase scientific or fixed precision, depending on the exponent
         general_upper       = fixed | scientific_upper
     };
     // clang-format on
 
-    // supported integral types - defaults to decimal formatting
+    /// @brief Format an integer value to the target character buffer.
+    /// @param buffer target buffer to write characters to.
+    /// @param end the end of the target buffer.
+    /// @param value the value to format.
+    /// @param fmt formatting options.
+    /// @return one past the last character written.
+    /// @{
     char* to_chars(char* buffer, char const* end, signed char value, int_format fmt = int_format::decimal) noexcept;
     char* to_chars(char* buffer, char const* end, unsigned char value, int_format fmt = int_format::decimal) noexcept;
     char* to_chars(char* buffer, char const* end, signed short value, int_format fmt = int_format::decimal) noexcept;
@@ -41,6 +56,7 @@ namespace nanofmt {
         char const* end,
         unsigned long long value,
         int_format fmt = int_format::decimal) noexcept;
+    /// @}
 
     // plain char is disallowed, cast to signed or unsigned char for integer formatting
     char* to_chars(char* buffer, char const* end, char value, int_format) noexcept = delete;
@@ -48,11 +64,39 @@ namespace nanofmt {
     // bools are disallowed, cast to an integer type if a 0 or 1 format is required
     char* to_chars(char* buffer, char const* end, bool value, int_format) noexcept = delete;
 
-    // supported floating-point types; note that float_format is required
+    /// @brief Format a single-precision floating point value to the target character buffer.
+    /// @param buffer target buffer to write characters to.
+    /// @param end the end of the target buffer.
+    /// @param value the value to format.
+    /// @param fmt formatting options.
+    /// @return one past the last character written.
     char* to_chars(char* buffer, char const* end, float value, float_format fmt) noexcept;
+
+    /// @brief Format a double-precision floating point value to the target character buffer.
+    /// @param buffer target buffer to write characters to.
+    /// @param end the end of the target buffer.
+    /// @param value the value to format.
+    /// @param fmt formatting options.
+    /// @return one past the last character written.
     char* to_chars(char* buffer, char const* end, double value, float_format fmt) noexcept;
 
+    /// @brief Format a single-precision floating point value to the target character buffer.
+    /// @param buffer target buffer to write characters to.
+    /// @param end the end of the target buffer.
+    /// @param value the value to format.
+    /// @param fmt formatting options.
+    /// @param precision target precision for the output.
+    /// @return one past the last character written.
     char* to_chars(char* buffer, char const* end, float value, float_format fmt, int precision) noexcept;
+
+    /// @brief Format a double-precision floating point value to the target character buffer.
+    /// @param buffer target buffer to write characters to.
+    /// @param end the end of the target buffer.
+    /// @param value the value to format.
+    /// @param fmt formatting options.
+    /// @param precision target precision for the output.
+    /// @return one past the last character written.
+
     char* to_chars(char* buffer, char const* end, double value, float_format fmt, int precision) noexcept;
 
     // to_chars for floating-point types requires explicit use of float_format

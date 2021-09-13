@@ -190,4 +190,4 @@ breathe_projects = {
 	"nanofmt": "../out/xml/"
 }
 breathe_default_project = "nanofmt"
-breathe_default_members = ('members', 'undoc-members')
+breathe_default_members = ('members',)

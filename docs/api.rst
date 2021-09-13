@@ -48,4 +48,43 @@ Variadic Arguments
 Character Conversion
 ====================
 
-.. doxygenfunction:: nanofmt::to_chars(char*, char const*, signed int, int_format)
+Enumerations
+------------
+
+.. doxygenenum:: nanofmt::int_format
+
+.. doxygenenum:: nanofmt::float_format
+
+Signed Integers
+---------------
+
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, signed char, int_format)
+
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, signed short, int_format)
+
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, signed int, int_format)
+
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, signed long, int_format)
+
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, signed long long, int_format)
+
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, unsigned char, int_format)
+
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, unsigned short, int_format)
+
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, unsigned int, int_format)
+
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, unsigned long, int_format)
+
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, unsigned long long, int_format)
+
+Floating Point
+------------------
+
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, float, float_format)
+
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, double, float_format)
+
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, float, float_format, int)
+
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, double, float_format, int)
