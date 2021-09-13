@@ -42,6 +42,12 @@ namespace nanofmt {
     template <typename FormatT, std::size_t N, typename... Args>
     char* format_to(char (&dest)[N], FormatT&& format_str, Args const&... args);
 
+    template <typename FormatT, typename... Args>
+    std::size_t format_size(FormatT&& format_str, Args const&... args);
+
+    template <typename FormatT>
+    std::size_t vformat_size(FormatT&& format_str, format_args&& args);
+
     template <typename... Args>
     constexpr auto make_format_args(Args const&... args) noexcept;
 
@@ -177,6 +183,30 @@ char* nanofmt::format_to(char (&dest)[N], FormatT&& format_str, Args const&... a
     char* const end = detail::vformat(buf, to_string_view(format_str), nanofmt::make_format_args(args...));
     *end = '\0';
     return end;
+}
+
+/// Calculate the size of the buffer (excluding NUL terminator) required to format the given arguments without
+/// truncation.
+/// @param format_str The primary text and formatting controls to be written.
+/// @param args The arguments used by the formatting string.
+/// @returns number of characters that would be written, excluding the terminating NUL.
+template <typename FormatT, typename... Args>
+std::size_t nanofmt::format_size(FormatT&& format_str, Args const&... args) {
+    buffer buf(nullptr, 0);
+    detail::vformat(buf, to_string_view(format_str), nanofmt::make_format_args(args...));
+    return buf.advance;
+}
+
+/// Calculate the size of the buffer (excluding NUL terminator) required to format the given arguments without
+/// truncation.
+/// @param format_str The primary text and formatting controls to be written.
+/// @param args The arguments used by the formatting string.
+/// @returns number of characters that would be written, excluding the terminating NUL.
+template <typename FormatT>
+std::size_t nanofmt::vformat_size(FormatT&& format_str, format_args&& args) {
+    buffer buf(nullptr, 0);
+    detail::vformat(buf, to_string_view(format_str), args);
+    return buf.advance;
 }
 
 #include "format_arg.h"

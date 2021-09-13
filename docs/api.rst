@@ -25,9 +25,9 @@ Formatting
 
 .. doxygenfunction:: nanofmt::vformat_to_n(char*, std::size_t, FormatT&&, format_args&&)
 
-.. doxygenfunction:: nanofmt::format_length
+.. doxygenfunction:: nanofmt::format_size
 
-.. doxygenfunction:: nanofmt::vformat_length
+.. doxygenfunction:: nanofmt::vformat_size
 
 .. doxygenfunction:: nanofmt::make_format_args
 
