@@ -1,3 +1,5 @@
+:github_url: https://github.com/seanmiddleditch/nanofmt/docs/api.rst
+
 .. _api:
 
 API Reference

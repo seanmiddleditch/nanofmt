@@ -1,4 +1,4 @@
-:github_url: https://github.com/seanmiddleditch/nanofmt
+:github_url: https://github.com/seanmiddleditch/nanofmt/docs/index.rst
 
 nanofmt
 =======
@@ -16,6 +16,7 @@ fmtlib are available for use.
 
   self
   api
+  faq
 
 .. _basic-example:
 

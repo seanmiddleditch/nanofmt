@@ -92,8 +92,7 @@ html_theme = 'sphinx_rtd_theme'
 # documentation.
 html_theme_options = {
     'canonical_url': 'https://seanmiddleditch.github.io/nanofmt',
-    'style_external_links': True,
-    'vcs_pageview_mode': 'raw'
+    'style_external_links': True
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
