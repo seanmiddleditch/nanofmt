@@ -15,11 +15,11 @@ Formatting
 Core API
 ^^^^^^^^
 
-.. doxygenfunction:: nanofmt::format_to(char (&)[N], FormatT&&, Args const&...)
+.. doxygenfunction:: nanofmt::format_to(char (&dest)[N], FormatT&&, Args const&...)
 
 .. doxygenfunction:: nanofmt::format_to(buffer&, FormatT&&, Args const&...)
 
-.. doxygenfunction:: nanofmt::vformat_to(char (&)[N], FormatT&&, format_args&&)
+.. doxygenfunction:: nanofmt::vformat_to(char (&dest)[N], FormatT&&, format_args&&)
 
 .. doxygenfunction:: nanofmt::vformat_to(buffer&, FormatT&&, format_args&&)
 
@@ -43,9 +43,9 @@ Strings
 
 .. doxygenstruct:: nanofmt::string_view
 
-.. doxygenfunction:: constexpr nanofmt::to_string_view(StringT const&) noexcept
+.. doxygenfunction:: nanofmt::to_string_view(StringT const&) noexcept
 
-.. doxygenfunction:: nanofmt::to_string_view(char const (&)[N]) noexcept
+.. doxygenfunction:: nanofmt::to_string_view(char const (&string)[N]) noexcept
 
 .. doxygenfunction:: nanofmt::to_string_view(char const *) noexcept
 
