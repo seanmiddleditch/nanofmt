@@ -184,7 +184,7 @@ exhale_args = {
     "rootFileTitle": "API ",
     "doxygenStripFromPath": "..",
     "exhaleExecutesDoxygen": True,
-    "exhaleDoxygenStdin": "INPUT = ../include RECURSIVE = YES"
+    "exhaleDoxygenStdin": "INPUT = ../include"
 }
 
 primary_domain = 'cpp'
