@@ -4,9 +4,8 @@ nanofmt
 =======
 
 **nanofmt** aims to provide a lite-weight semi-compatible implementation of the
-excellent `fmtlib`_ by Victor Zverovich and contributors. This can be
-used in environments or team cultures where neither `std::format`_ nor
-fmtlib are available for use.
+excellent `fmtlib`_. This can be used in environments or team cultures where
+neither `std::format`_ nor fmtlib are available for use.
 
 .. contents::
 

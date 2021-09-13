@@ -14,18 +14,16 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install
+    - name: apt-get
       run: |
-        sudo apt-get install -y doxygen
-        sudo apt-get install -y python3-sphinx python3-sphinx-rtd-theme
-        sudo apt-get install -y python3-breathe
-        sudo pip3 install sphinx-sitemap
+        sudo apt-get install doxygen
+
+    - name: pip
+      run: |
+        sudo pip3 install -r docs/requirements.txt
 
     - name: Configure
       run: cmake -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=RELEASE
-
-    - name: Doxygen
-      run: doxygen ${{ github.workspace }}/docs/Doxyfile
 
     - name: Sphinx
       run: sphinx-build ${{ github.workspace }}/docs ${{ github.workspace }}/build/docs
@@ -38,7 +36,7 @@ jobs:
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
-      if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/main' && github.event == 'push'
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages-docs

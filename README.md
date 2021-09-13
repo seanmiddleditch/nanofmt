@@ -40,9 +40,8 @@ About
 -----
 
 nanofmt aims to provide a lite-weight semi-compatible implementation of the
-excellent [fmtlib][fmtlib] by Victor Zverovich and contributors. This can be
-used in environments or team cultures where neither [`std::format`][stdfmt] nor
-fmtlib are available for use.
+excellent [fmtlib][fmtlib]. This can be used in environments or team cultures
+where neither [`std::format`][stdfmt] nor fmtlib are available for use.
 
 The primary motivation for nanofmt is to minimize dependencies on standard C++
 headers and to minimize compile time. nanofmt does _not_ aim to offer the

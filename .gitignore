@@ -9,3 +9,5 @@
 /tasks.vs.json
 /launch.vs.json
 enc_temp_folder
+docs/build
+docs/doxyoutput

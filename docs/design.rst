@@ -52,11 +52,11 @@ to console IO, to support ``push_back`` into containers like ``std::string``, or
 esoteric filtering mechanisms. None of these are essential to nanofmt's
 target use cases.
 
-The design and implementation pioneered by Victor for fmtlib is some honestly
-amazing engineering! Victor and other fmtlib contributors deserve nothing
-but praise and respect for the incredible amount of work done to make fmtlib
-(and by extension ``std::format``) feel natural, intuitive, and unsurprising in
-C++ while still having exceptionally good runtime efficiency.
+The design and implementation pioneered by Victor Zverovich for fmtlib is some
+honestly amazing engineering! Victor and other fmtlib contributors deserve
+nothing but praise and respect for the incredible amount of work done to make
+fmtlib (and by extension ``std::format``) feel natural, intuitive, and
+unsurprising in C++ while still having exceptionally good runtime efficiency.
 
 nanofmt however is more for teams that feel that C-like APIs like ``snprintf``
 are already the epitome of being natural, intuitive, and unsurprising;

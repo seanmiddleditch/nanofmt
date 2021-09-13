@@ -39,16 +39,7 @@ release = ''
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.autosectionlabel',
-    'sphinx.ext.todo',
-    'sphinx.ext.coverage',
-    'sphinx.ext.mathjax',
-    'sphinx.ext.ifconfig',
-    'sphinx.ext.viewcode',
-    'sphinx_sitemap',
-    'sphinx.ext.inheritance_diagram',
+    'exhale',
     'breathe'
 ]
 
@@ -185,11 +176,24 @@ epub_title = project
 # A list of files that should not be packed into the epub file.
 epub_exclude_files = ['search.html']
 
+# -- Exhale Configuration --
+
+exhale_args = {
+    "containmentFolder": "build",
+    "rootFileName": "exhale.rst",
+    "rootFileTitle": "API ",
+    "doxygenStripFromPath": "..",
+    "exhaleExecutesDoxygen": True,
+    "exhaleDoxygenStdin": "INPUT = ../include"
+}
+
+primary_domain = 'cpp'
+highlight_language = 'cpp'
 
 # -- Breathe Configuration --
 
 breathe_projects = {
-	"nanofmt": "../out/xml/"
+	"nanofmt": "./doxyoutput/xml"
 }
 breathe_show_enumvalue_initializer = False
 breathe_default_project = "nanofmt"
