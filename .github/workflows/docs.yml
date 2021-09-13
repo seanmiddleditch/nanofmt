@@ -40,7 +40,7 @@ jobs:
       uses: JamesIves/github-pages-deploy-action@releases/v3
       #if: github.ref == 'refs/heads/main'
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: gh-pages-docs
-        folder: out/docs
-        target-folder: docs
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages-docs
+        FOLDER: out/docs
+        TARGET_FOLDER: docs
