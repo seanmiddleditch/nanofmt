@@ -28,7 +28,7 @@ jobs:
       run: doxygen ${{ github.workspace }}/docs/Doxyfile
 
     - name: Sphinx
-      run: sphinx-build ${{ github.workspace }}/docs/sphinx ${{ github.workspace }}/build/docs
+      run: sphinx-build ${{ github.workspace }}/docs ${{ github.workspace }}/build/docs
 
     - name: Artifact
       uses: actions/upload-artifact@v2

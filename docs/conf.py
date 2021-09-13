@@ -77,7 +77,7 @@ language = None
 exclude_patterns = []
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = None
+pygments_style = 'sphinx'
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -187,7 +187,7 @@ epub_exclude_files = ['search.html']
 # -- Breathe Configuration --
 
 breathe_projects = {
-	"nanofmt": "../../out/xml/"
+	"nanofmt": "../out/xml/"
 }
 breathe_default_project = "nanofmt"
 breathe_default_members = ('members', 'undoc-members')
