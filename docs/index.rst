@@ -16,6 +16,7 @@ fmtlib are available for use.
 
   self
   api
+  design
   faq
 
 .. _basic-example:
