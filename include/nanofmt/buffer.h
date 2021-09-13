@@ -26,7 +26,6 @@ namespace nanofmt {
 ///
 struct nanofmt::buffer {
     constexpr buffer(char* const dest, std::size_t count) noexcept : pos(dest), end(dest + count) {}
-    constexpr buffer(char* const dest, char const* const end) noexcept : pos(dest), end(end) {}
 
     constexpr buffer& append(char const* const zstr) noexcept {
         char* const p = nanofmt::copy_to(pos, end, zstr);
