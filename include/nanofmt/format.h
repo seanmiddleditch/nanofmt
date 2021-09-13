@@ -28,19 +28,19 @@ namespace nanofmt {
     constexpr string_view to_string_view(char const* zstr) noexcept;
 
     template <typename FormatT>
-    constexpr char* vformat_to(buffer& buf, FormatT&& format_str, format_args&& args);
+    char* vformat_to(buffer& buf, FormatT&& format_str, format_args&& args);
 
     template <typename FormatT, typename... Args>
-    constexpr char* format_to(buffer& buf, FormatT&& format_str, Args const&... args);
+    char* format_to(buffer& buf, FormatT&& format_str, Args const&... args);
 
     template <typename FormatT>
-    constexpr char* vformat_to_n(char* dest, std::size_t count, FormatT&& format_str, format_args&& args);
+    char* vformat_to_n(char* dest, std::size_t count, FormatT&& format_str, format_args&& args);
 
     template <typename FormatT, typename... Args>
-    constexpr char* format_to_n(char* dest, std::size_t count, FormatT&& format_str, Args const&... args);
+    char* format_to_n(char* dest, std::size_t count, FormatT&& format_str, Args const&... args);
 
     template <typename FormatT, std::size_t N, typename... Args>
-    constexpr char* format_to(char (&dest)[N], FormatT&& format_str, Args const&... args);
+    char* format_to(char (&dest)[N], FormatT&& format_str, Args const&... args);
 
     template <typename... Args>
     constexpr auto make_format_args(Args const&... args) noexcept;
@@ -128,7 +128,7 @@ constexpr nanofmt::string_view nanofmt::to_string_view(char const* zstr) noexcep
 /// @param args Packaged arguments to use for formatting.
 /// @returns one past the last character written.
 template <typename FormatT>
-constexpr char* nanofmt::vformat_to(buffer& buf, FormatT&& format_str, format_args&& args) {
+char* nanofmt::vformat_to(buffer& buf, FormatT&& format_str, format_args&& args) {
     return detail::vformat(buf, to_string_view(format_str), static_cast<format_args&&>(args));
 }
 
@@ -139,7 +139,7 @@ constexpr char* nanofmt::vformat_to(buffer& buf, FormatT&& format_str, format_ar
 /// @param args Packaged arguments to use for formatting.
 /// @returns one past the last character written.
 template <typename FormatT>
-constexpr char* nanofmt::vformat_to_n(char* dest, std::size_t count, FormatT&& format_str, format_args&& args) {
+char* nanofmt::vformat_to_n(char* dest, std::size_t count, FormatT&& format_str, format_args&& args) {
     buffer buf(dest, count);
     return detail::vformat(buf, to_string_view(format_str), args);
 }
@@ -151,7 +151,7 @@ constexpr char* nanofmt::vformat_to_n(char* dest, std::size_t count, FormatT&& f
 /// @param args The arguments used by the formatting string.
 /// @returns one past the last character written.
 template <typename FormatT, typename... Args>
-constexpr char* nanofmt::format_to_n(char* dest, std::size_t count, FormatT&& format_str, Args const&... args) {
+char* nanofmt::format_to_n(char* dest, std::size_t count, FormatT&& format_str, Args const&... args) {
     buffer buf(dest, count);
     return detail::vformat(buf, to_string_view(format_str), nanofmt::make_format_args(args...));
 }
@@ -162,7 +162,7 @@ constexpr char* nanofmt::format_to_n(char* dest, std::size_t count, FormatT&& fo
 /// @param args The arguments used by the formatting string.
 /// @returns one past the last character written.
 template <typename FormatT, typename... Args>
-constexpr char* nanofmt::format_to(buffer& buf, FormatT&& format_str, Args const&... args) {
+char* nanofmt::format_to(buffer& buf, FormatT&& format_str, Args const&... args) {
     return detail::vformat(buf, to_string_view(format_str), nanofmt::make_format_args(args...));
 }
 
@@ -172,7 +172,7 @@ constexpr char* nanofmt::format_to(buffer& buf, FormatT&& format_str, Args const
 /// @param args The arguments used by the formatting string.
 /// @returns one past the last character written.
 template <typename FormatT, std::size_t N, typename... Args>
-constexpr char* nanofmt::format_to(char (&dest)[N], FormatT&& format_str, Args const&... args) {
+char* nanofmt::format_to(char (&dest)[N], FormatT&& format_str, Args const&... args) {
     buffer buf(dest, N - 1 /*NUL*/);
     char* const end = detail::vformat(buf, to_string_view(format_str), nanofmt::make_format_args(args...));
     *end = '\0';

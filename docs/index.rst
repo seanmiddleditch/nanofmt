@@ -14,8 +14,6 @@ fmtlib are available for use.
 
   self
   api
-  format
-  to_chars
 
 .. _basic-example:
 
