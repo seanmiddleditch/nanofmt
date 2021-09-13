@@ -11,11 +11,12 @@ namespace nanofmt {
     struct format_args;
     struct format_spec;
 
-    /// @brief Implement to provide custom formatting support for a type.
+    /// Specialize to implement format support for a type.
     ///
-    /// Must implement:
+    /// Two member functions must be defined:
     ///
     /// constexpr char const* parse(char const* in, char const* end) noexcept;
+    ///
     /// void format(T const& value, buffer& buf);
     template <typename T>
     struct formatter;
@@ -27,20 +28,23 @@ namespace nanofmt {
     constexpr string_view to_string_view(char const (&string)[N]) noexcept;
     constexpr string_view to_string_view(char const* zstr) noexcept;
 
-    template <typename FormatT>
-    char* vformat_to(buffer& buf, FormatT&& format_str, format_args&& args);
-
     template <typename FormatT, typename... Args>
     char* format_to(buffer& buf, FormatT&& format_str, Args const&... args);
 
     template <typename FormatT>
-    char* vformat_to_n(char* dest, std::size_t count, FormatT&& format_str, format_args&& args);
+    char* vformat_to(buffer& buf, FormatT&& format_str, format_args&& args);
 
     template <typename FormatT, typename... Args>
     char* format_to_n(char* dest, std::size_t count, FormatT&& format_str, Args const&... args);
 
+    template <typename FormatT>
+    char* vformat_to_n(char* dest, std::size_t count, FormatT&& format_str, format_args&& args);
+
     template <typename FormatT, std::size_t N, typename... Args>
     char* format_to(char (&dest)[N], FormatT&& format_str, Args const&... args);
+
+    template <typename FormatT, std::size_t N>
+    char* vformat_to(char (&dest)[N], FormatT&& format_str, format_args&& args);
 
     template <typename FormatT, typename... Args>
     std::size_t format_size(FormatT&& format_str, Args const&... args);
@@ -87,10 +91,7 @@ struct nanofmt::formatter<void> {
     void format(ValueT const&, buffer&) {}
 };
 
-/// @brief Simple string_view for projects that avoid std::string_view
-///
-/// Implement to_string_view for custom string types for nanofmt compat.
-///
+/// Non-owning slice of string data.
 struct nanofmt::string_view {
     constexpr string_view() = default;
     constexpr string_view(char const* str, std::size_t len) noexcept : begin(str), end(str + len) {}
@@ -113,9 +114,7 @@ constexpr nanofmt::string_view nanofmt::to_string_view(string_view string) noexc
     return string;
 }
 
-/// @brief Convert a string type to a nanofmt string_view
-/// @param string Arbitrary string type with .data() and .size() member functions
-/// @return nanofmt string_view
+/// Convert an arbitrary string type to a nanofmt string_view
 template <typename StringT>
 constexpr nanofmt::string_view nanofmt::to_string_view(StringT const& string) noexcept {
     return {string.data(), string.size()};
@@ -131,55 +130,34 @@ constexpr nanofmt::string_view nanofmt::to_string_view(char const* zstr) noexcep
     return string_view{zstr};
 }
 
-/// @brief Format text to an existing format context.
-/// @param buf Destination format context.
-/// @param format_str The primary text and formatting controls to be written.
-/// @param args Packaged arguments to use for formatting.
-/// @return one past the last character written.
 template <typename FormatT>
 char* nanofmt::vformat_to(buffer& buf, FormatT&& format_str, format_args&& args) {
     return detail::vformat(buf, to_string_view(format_str), static_cast<format_args&&>(args));
 }
 
-/// @brief Format text to a character buffer.
-/// @param dest Destination character buffer.
-/// @param count The maximum number of characters to write.
-/// @param format_str The primary text and formatting controls to be written.
-/// @param args Packaged arguments to use for formatting.
-/// @return one past the last character written.
 template <typename FormatT>
 char* nanofmt::vformat_to_n(char* dest, std::size_t count, FormatT&& format_str, format_args&& args) {
     buffer buf(dest, count);
     return detail::vformat(buf, to_string_view(format_str), args);
 }
 
-/// @brief Format text to a character buffer.
-/// @param dest Destination character buffer.
-/// @param count The maximum number of characters to write.
-/// @param format_str The primary text and formatting controls to be written.
-/// @param args The arguments used by the formatting string.
-/// @return one past the last character written.
+/// Formats a string and arguments into dest, writing no more than count
+/// bytes. The output will be NUL-terminated. Returns a pointer to the
+/// last character written, which will be the NUL byte itself.
 template <typename FormatT, typename... Args>
 char* nanofmt::format_to_n(char* dest, std::size_t count, FormatT&& format_str, Args const&... args) {
     buffer buf(dest, count);
     return detail::vformat(buf, to_string_view(format_str), nanofmt::make_format_args(args...));
 }
 
-/// @brief Format text to an existing format context.
-/// @param dest Destination character buffer.
-/// @param format_str The primary text and formatting controls to be written.
-/// @param args The arguments used by the formatting string.
-/// @return one past the last character written.
 template <typename FormatT, typename... Args>
 char* nanofmt::format_to(buffer& buf, FormatT&& format_str, Args const&... args) {
     return detail::vformat(buf, to_string_view(format_str), nanofmt::make_format_args(args...));
 }
 
-/// @brief Format text to a character buffer.
-/// @param dest Destination character array.
-/// @param format_str The primary text and formatting controls to be written.
-/// @param args The arguments used by the formatting string.
-/// @return one past the last character written.
+/// Formats a string and arguments into dest, writing no more than N
+/// bytes. The output will be NUL-terminated. Returns a pointer to the
+/// last character written, which will be the NUL byte itself.
 template <typename FormatT, std::size_t N, typename... Args>
 char* nanofmt::format_to(char (&dest)[N], FormatT&& format_str, Args const&... args) {
     buffer buf(dest, N - 1 /*NUL*/);
@@ -188,11 +166,9 @@ char* nanofmt::format_to(char (&dest)[N], FormatT&& format_str, Args const&... a
     return end;
 }
 
-/// @brief Calculate the size of the buffer (excluding NUL terminator) required to format the given arguments without
-/// truncation.
-/// @param format_str The primary text and formatting controls to be written.
-/// @param args The arguments used by the formatting string.
-/// @return number of characters that would be written, excluding the terminating NUL.
+/// Returns the number of characters that would be written to a
+/// destination buffer (_excluding_ any terminating NUL) for the
+/// given format string and arguments
 template <typename FormatT, typename... Args>
 std::size_t nanofmt::format_size(FormatT&& format_str, Args const&... args) {
     buffer buf(nullptr, 0);
@@ -200,11 +176,6 @@ std::size_t nanofmt::format_size(FormatT&& format_str, Args const&... args) {
     return buf.advance;
 }
 
-/// @brief Calculate the size of the buffer (excluding NUL terminator) required to format the given arguments without
-/// truncation.
-/// @param format_str The primary text and formatting controls to be written.
-/// @param args The arguments used by the formatting string.
-/// @return number of characters that would be written, excluding the terminating NUL.
 template <typename FormatT>
 std::size_t nanofmt::vformat_size(FormatT&& format_str, format_args&& args) {
     buffer buf(nullptr, 0);
@@ -241,6 +212,9 @@ constexpr int nanofmt::detail::parse_nonnegative(char const*& start, char const*
     return result;
 }
 
+/// Parses standard format specification options into the provided
+/// spec object. Returns a pointer to the next unconsumed character
+/// from the input range.
 constexpr char const* nanofmt::parse_spec(
     char const* in,
     char const* end,

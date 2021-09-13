@@ -7,19 +7,16 @@ API Reference
 
 .. _format-api:
 
-Utilities
-=========
-
-.. doxygenstruct:: nanofmt::string_view
-
-.. doxygenfunction:: nanofmt::to_string_view(StringT const&)
-
 Formatting
 ==========
 
 .. doxygenfunction:: nanofmt::format_to(char (&)[N], FormatT&&, Args const&...)
 
+.. doxygenfunction:: nanofmt::format_to(buffer&, FormatT&&, Args const&...)
+
 .. doxygenfunction:: nanofmt::vformat_to(char (&)[N], FormatT&&, format_args&&)
+
+.. doxygenfunction:: nanofmt::vformat_to(buffer&, FormatT&&, format_args&&)
 
 .. doxygenfunction:: nanofmt::format_to_n(char*, std::size_t, FormatT&&, Args const&...)
 
@@ -31,10 +28,31 @@ Formatting
 
 .. doxygenfunction:: nanofmt::make_format_args
 
+Buffers
+-------
+
+.. doxygenstruct:: nanofmt::buffer
+
+Strings
+-------
+
+.. doxygenstruct:: nanofmt::string_view
+
+.. doxygenfunction:: nanofmt::to_string_view(StringT const&)
+
+.. doxygenfunction:: nanofmt::to_string_view(char const (&)[N])
+
+.. doxygenfunction:: nanofmt::to_string_view(char const *)
+
+.. doxygenfunction:: nanofmt::to_string_view(string_view)
+
+
 Syntax Parsers
 --------------
 
 .. doxygenstruct:: nanofmt::format_spec
+
+.. doxygenfunction:: nanofmt::parse_spec
 
 Variadic Arguments
 ------------------
@@ -48,15 +66,10 @@ Variadic Arguments
 Character Conversion
 ====================
 
-Enumerations
-------------
+Integral Types
+--------------
 
 .. doxygenenum:: nanofmt::int_format
-
-.. doxygenenum:: nanofmt::float_format
-
-Signed Integers
----------------
 
 .. doxygenfunction:: nanofmt::to_chars(char *, char const *, signed char, int_format)
 
@@ -78,8 +91,10 @@ Signed Integers
 
 .. doxygenfunction:: nanofmt::to_chars(char *, char const *, unsigned long long, int_format)
 
-Floating Point
-------------------
+Floating Point Types
+--------------------
+
+.. doxygenenum:: nanofmt::float_format
 
 .. doxygenfunction:: nanofmt::to_chars(char *, char const *, float, float_format)
 
