@@ -72,12 +72,6 @@ namespace nanofmt {
     /// @return one past the last character written.
     char* to_chars(char* buffer, char const* end, float value, float_format fmt) noexcept;
 
-    /// @brief Format a double-precision floating point value to the target character buffer.
-    /// @param buffer target buffer to write characters to.
-    /// @param end the end of the target buffer.
-    /// @param value the value to format.
-    /// @param fmt formatting options.
-    /// @return one past the last character written.
     char* to_chars(char* buffer, char const* end, double value, float_format fmt) noexcept;
 
     /// @brief Format a single-precision floating point value to the target character buffer.
@@ -88,14 +82,6 @@ namespace nanofmt {
     /// @param precision target precision for the output.
     /// @return one past the last character written.
     char* to_chars(char* buffer, char const* end, float value, float_format fmt, int precision) noexcept;
-
-    /// @brief Format a double-precision floating point value to the target character buffer.
-    /// @param buffer target buffer to write characters to.
-    /// @param end the end of the target buffer.
-    /// @param value the value to format.
-    /// @param fmt formatting options.
-    /// @param precision target precision for the output.
-    /// @return one past the last character written.
 
     char* to_chars(char* buffer, char const* end, double value, float_format fmt, int precision) noexcept;
 
