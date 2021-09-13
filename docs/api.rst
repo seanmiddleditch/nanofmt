@@ -1,9 +1,7 @@
-:github_url: https://github.com/seanmiddleditch/nanofmt/docs/api.rst
+:github_url: https://github.com/seanmiddleditch/nanofmt/blob/main/docs/api.rst
 
-.. _api:
-
-API Reference
-=============
+API
+===
 
 .. contents::
 

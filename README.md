@@ -86,14 +86,3 @@ you should prefer using those instead!
 
 If you're not sure if nanofmt is the right fit for your project, then
 it isn't. :)
-
-Benchmarks
-----------
-
-### Compilation
-
-TBD
-
-### Runtime
-
-TBD

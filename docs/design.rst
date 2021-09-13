@@ -1,9 +1,7 @@
-:github_url: https://github.com/seanmiddleditch/nanofmt/docs/design.rst
+:github_url: https://github.com/seanmiddleditch/nanofmt/blob/main/docs/design.rst
 
-.. _design:
-
-Library Design
-==============
+Design
+======
 
 Origins
 -------
@@ -13,6 +11,7 @@ The design of nanofmt started by trying to closely match the interface of
 and types as well as the design of the ``make_format_args`` and related
 utilities.
 
+.. _design-output-iterators:
 
 Output Iterators
 ----------------
@@ -101,7 +100,7 @@ player-facing text. Game UI text tends to use heavily specialized toolkits
 and rely on iconography, layout, color and style, and other factors to convey
 information; nanofmt-like text formatting is exceptionally rare in such UI.
 
-.. design-char-conv:
+.. _design-char-conv:
 
 Character Conversion
 --------------------
