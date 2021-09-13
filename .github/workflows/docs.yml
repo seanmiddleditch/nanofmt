@@ -16,13 +16,10 @@ jobs:
 
     - name: pip
       run: |
-        sudo pip3 install sphinx breathe exhale sphinx-rtd-theme docutils==0.16
+        sudo pip3 install -r docs/requirements.txt
 
     - name: Configure
       run: cmake -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=RELEASE
-
-    - name: Doxygen
-      run: doxygen ${{ github.workspace }}/docs/Doxyfile
 
     - name: Sphinx
       run: sphinx-build ${{ github.workspace }}/docs ${{ github.workspace }}/build/docs
