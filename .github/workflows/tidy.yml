@@ -28,6 +28,6 @@ jobs:
 
     - name: Tidy
       run: |
-        for file in ${{ github.workspace }}source/*.cpp ; do
+        for file in ${{ github.workspace }}/source/*.cpp ; do
           ${{ env.CLANG_TIDY }} --quiet -p ${{ github.workspace }}/build ${file}
         done
