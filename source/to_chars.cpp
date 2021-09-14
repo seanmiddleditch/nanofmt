@@ -193,10 +193,8 @@ char* nanofmt::detail::to_chars_impl(
             return detail::to_chars_impl_general(buffer, end, significand, exponent, precision);
         case float_format::general_upper:
             return detail::to_chars_impl_general<'E'>(buffer, end, significand, exponent, precision);
-        case float_format::hex:
-        case float_format::hex_upper:
-            // FIXME: implement
-            return buffer;
+        case float_format::hex: // FIXME: implement
+        case float_format::hex_upper: // FIXME: implement
         default:
             return buffer;
     }

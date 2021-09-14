@@ -10,6 +10,9 @@ on:
 jobs:
   build:
     runs-on: 'ubuntu-latest'
+    
+    env:
+      BUILD_TYPE: RELEASE
 
     steps:
     - uses: actions/checkout@v2
@@ -21,9 +24,6 @@ jobs:
     - name: pip
       run: |
         sudo pip3 install -r docs/requirements.txt
-
-    - name: Configure
-      run: cmake -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=RELEASE
 
     - name: Sphinx
       run: sphinx-build ${{ github.workspace }}/docs ${{ github.workspace }}/build/docs

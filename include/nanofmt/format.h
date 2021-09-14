@@ -99,12 +99,12 @@ struct nanofmt::string_view {
     constexpr string_view(char const* zstr) noexcept : begin(zstr), end(zstr + __builtin_strlen(zstr)) {}
 
     /// Pointer to the data references by the string_view
-    constexpr char const* data() const noexcept {
+    [[nodiscard]] constexpr char const* data() const noexcept {
         return begin;
     }
 
     /// Number of characters referenced by the string view
-    constexpr std::size_t size() const noexcept {
+    [[nodiscard]] constexpr std::size_t size() const noexcept {
         return end - begin;
     }
 
