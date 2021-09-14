@@ -33,12 +33,3 @@ jobs:
       with:
         name: docs
         path: build/docs
-
-    - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@releases/v3
-      if: github.ref == 'refs/heads/main' && github.event == 'push'
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages-docs
-        FOLDER: build/docs
-        TARGET_FOLDER: docs
