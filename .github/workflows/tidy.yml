@@ -13,7 +13,7 @@ jobs:
 
     env:
       BUILD_TYPE: RELEASE
-      RUN_CLANG_TIDY: run-clang-tidy
+      CLANG_TIDY: clang-tidy
 
     steps:
     - uses: actions/checkout@v2
@@ -24,4 +24,7 @@ jobs:
       run: cmake -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=${{ matrix.config }} -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=ON
 
     - name: Tidy
-      run: py ${{ env.RUN_CLANG_TIDY }} -p ${{ github.workspace }}/build
+      run: |
+        for file in ${{ github.workspace }}source/*.cpp ; do
+          ${{ env.CLANG_TIDY }} --quiet -p ${{ github.workspace }}/build ${file}
+        done
