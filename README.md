@@ -14,6 +14,9 @@ nanofmt uses the [Dragonbox][drgbox] reference implementation which released
 under either the [Apache License Version 2.0 with LLVM Exceptions][apclic] or
 the [Boost Software License Version 1.0][boolic].
 
+[Documentation][apidoc]
+
+[apidoc]: https://nanofmt.readthedocs.io/
 [mitlic]: https://mit-license.org/
 [drgbox]: https://github.com/jk-jeon/dragonbox/
 [apclic]: https://raw.githubusercontent.com/jk-jeon/dragonbox/master/LICENSE-Apache2-LLVM
@@ -43,6 +46,9 @@ nanofmt aims to provide a lite-weight semi-compatible implementation of the
 excellent [fmtlib][fmtlib]. This can be used in environments or team cultures
 where neither [`std::format`][stdfmt] nor fmtlib are available for use.
 
+[fmtlib]: https://github.com/fmtlib/fmt
+[stdfmt]: https://en.cppreference.com/w/cpp/utility/format/format
+
 The primary motivation for nanofmt is to minimize dependencies on standard C++
 headers and to minimize compile time. nanofmt does _not_ aim to offer the
 fastest runtime efficiency, the most features, fmtlib or `std::format`
@@ -60,9 +66,6 @@ the interfaces found in both libraries. Some interfaces have been modified
 to appeal more to "C with Classes" programmers; this is not a judgement of
 modern C++, just an acquiescence to the prevalent tastes and opinions in
 the industries targetted by nanofmt (primarily the AAA game industry).
-
-[fmtlib]: https://github.com/fmtlib/fmt
-[stdfmt]: https://en.cppreference.com/w/cpp/utility/format/format
 
 When to Use nanofmt
 -------------------
