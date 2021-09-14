@@ -13,13 +13,13 @@ jobs:
 
     env:
       BUILD_TYPE: RELEASE
-      CLANG_TIDY: clang-tidy-11
+      CLANG_TIDY: clang-tidy-10
 
     steps:
     - uses: actions/checkout@v2
 
     - name: Install
-      run: sudo apt-get install -y clang-tidy-11
+      run: sudo apt-get install -y clang-tidy-10
 
     - name: Configure
       env:
