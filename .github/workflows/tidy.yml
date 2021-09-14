@@ -1,0 +1,23 @@
+name: Tidy
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: 'ubuntu-latest'
+
+    env:
+      BUILD_TYPE: RELEASE
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Configure
+      env:
+        CXX: ${{ matrix.compiler }}
+      run: cmake -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=${{ matrix.config }} -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=ON
+
+    - name: Tidy
+      run: run-clang-tidy -p ${{ github.workspace }}/build
