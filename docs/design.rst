@@ -3,6 +3,8 @@
 Design
 ======
 
+.. contents::
+
 Origins
 -------
 
@@ -119,6 +121,9 @@ The precision limitation is not currently believed to be a showstopper, but
 may be revisited if use cases from nanofmt users illustrates a strong need
 for more intricate fixed-point formatting.
 
+The `Dragonbox`_ reference implementation is used for the work-horse portions
+of floating-point to decimal conversion.
+
 constexpr
 ---------
 
@@ -157,3 +162,5 @@ list, though.
 
 The goal isn't to be feature-complete, and some of these specifiers are
 *juuust* annoying enough to implement that it'll only be done on-demand.
+
+.. _Dragonbox: https://github.com/jk-jeon/dragonbox/

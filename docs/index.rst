@@ -10,8 +10,8 @@ neither `std::format`_ nor fmtlib are available for use.
 .. contents::
 
 .. toctree::
+  :hidden:
   :maxdepth: 2
-  :caption: Contents:
 
   self
   api
