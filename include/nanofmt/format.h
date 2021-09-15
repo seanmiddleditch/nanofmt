@@ -21,6 +21,8 @@ namespace nanofmt {
     template <typename T>
     struct formatter;
 
+    struct format_string;
+
     constexpr string_view to_string_view(string_view string) noexcept;
     template <typename StringT>
     constexpr string_view to_string_view(StringT const& string) noexcept;
@@ -28,29 +30,26 @@ namespace nanofmt {
     constexpr string_view to_string_view(char const (&string)[N]) noexcept;
     constexpr string_view to_string_view(char const* zstr) noexcept;
 
-    template <typename FormatT, typename... Args>
-    char* format_to(buffer& buf, FormatT&& format_str, Args const&... args);
+    template <typename... Args>
+    char* format_to(buffer& buf, format_string format_str, Args const&... args);
 
-    template <typename FormatT>
-    char* vformat_to(buffer& buf, FormatT&& format_str, format_args&& args);
+    inline char* vformat_to(buffer& buf, format_string format_str, format_args&& args);
 
-    template <typename FormatT, typename... Args>
-    char* format_to_n(char* dest, std::size_t count, FormatT&& format_str, Args const&... args);
+    template <typename... Args>
+    char* format_to_n(char* dest, std::size_t count, format_string format_str, Args const&... args);
 
-    template <typename FormatT>
-    char* vformat_to_n(char* dest, std::size_t count, FormatT&& format_str, format_args&& args);
+    inline char* vformat_to_n(char* dest, std::size_t count, format_string format_str, format_args&& args);
 
-    template <typename FormatT, std::size_t N, typename... Args>
-    char* format_to(char (&dest)[N], FormatT&& format_str, Args const&... args);
+    template <std::size_t N, typename... Args>
+    char* format_to(char (&dest)[N], format_string format_str, Args const&... args);
 
-    template <typename FormatT, std::size_t N>
-    char* vformat_to(char (&dest)[N], FormatT&& format_str, format_args&& args);
+    template <std::size_t N>
+    char* vformat_to(char (&dest)[N], format_string format_str, format_args&& args);
 
-    template <typename FormatT, typename... Args>
-    std::size_t format_size(FormatT&& format_str, Args const&... args);
+    template <typename... Args>
+    std::size_t format_size(format_string format_str, Args const&... args);
 
-    template <typename FormatT>
-    std::size_t vformat_size(FormatT&& format_str, format_args&& args);
+    inline std::size_t vformat_size(format_string format_str, format_args&& args);
 
     template <typename... Args>
     constexpr auto make_format_args(Args const&... args) noexcept;
@@ -63,7 +62,7 @@ namespace nanofmt {
 } // namespace nanofmt
 
 namespace nanofmt::detail {
-    char* vformat(buffer& buf, string_view format_str, format_args args);
+    char* vformat(buffer& buf, format_string format_str, format_args&& args);
     constexpr int parse_nonnegative(char const*& start, char const* end) noexcept;
 } // namespace nanofmt::detail
 
@@ -112,6 +111,21 @@ struct nanofmt::string_view {
     char const* end = nullptr;
 };
 
+/// Wrapper for format strings.
+struct nanofmt::format_string {
+    template <std::size_t N>
+    constexpr format_string(char const (&str)[N]) noexcept : begin(str)
+                                                           , end(begin + __builtin_strlen(begin)) {}
+    constexpr format_string(char const* const zstr) noexcept : begin(zstr), end(begin + __builtin_strlen(begin)) {}
+
+    template <typename StringT>
+    constexpr format_string(StringT const& string) noexcept : begin(string.data())
+                                                            , end(begin + string.size()) {}
+
+    char const* begin = nullptr;
+    char const* end = nullptr;
+};
+
 constexpr nanofmt::string_view nanofmt::to_string_view(string_view string) noexcept {
     return string;
 }
@@ -132,38 +146,36 @@ constexpr nanofmt::string_view nanofmt::to_string_view(char const* zstr) noexcep
     return string_view{zstr};
 }
 
-template <typename FormatT>
-char* nanofmt::vformat_to(buffer& buf, FormatT&& format_str, format_args&& args) {
-    return detail::vformat(buf, to_string_view(format_str), static_cast<format_args&&>(args));
+char* nanofmt::vformat_to(buffer& buf, format_string format_str, format_args&& args) {
+    return detail::vformat(buf, format_str, static_cast<format_args&&>(args));
 }
 
-template <typename FormatT>
-char* nanofmt::vformat_to_n(char* dest, std::size_t count, FormatT&& format_str, format_args&& args) {
+char* nanofmt::vformat_to_n(char* dest, std::size_t count, format_string format_str, format_args&& args) {
     buffer buf(dest, count);
-    return detail::vformat(buf, to_string_view(format_str), args);
+    return detail::vformat(buf, format_str, static_cast<format_args&&>(args));
 }
 
 /// Formats a string and arguments into dest, writing no more than count
 /// bytes. The output will be NUL-terminated. Returns a pointer to the
 /// last character written, which will be the NUL byte itself.
-template <typename FormatT, typename... Args>
-char* nanofmt::format_to_n(char* dest, std::size_t count, FormatT&& format_str, Args const&... args) {
+template <typename... Args>
+char* nanofmt::format_to_n(char* dest, std::size_t count, format_string format_str, Args const&... args) {
     buffer buf(dest, count);
-    return detail::vformat(buf, to_string_view(format_str), nanofmt::make_format_args(args...));
+    return detail::vformat(buf, format_str, nanofmt::make_format_args(args...));
 }
 
-template <typename FormatT, typename... Args>
-char* nanofmt::format_to(buffer& buf, FormatT&& format_str, Args const&... args) {
-    return detail::vformat(buf, to_string_view(format_str), nanofmt::make_format_args(args...));
+template <typename... Args>
+char* nanofmt::format_to(buffer& buf, format_string format_str, Args const&... args) {
+    return detail::vformat(buf, format_str, nanofmt::make_format_args(args...));
 }
 
 /// Formats a string and arguments into dest, writing no more than N
 /// bytes. The output will be NUL-terminated. Returns a pointer to the
 /// last character written, which will be the NUL byte itself.
-template <typename FormatT, std::size_t N, typename... Args>
-char* nanofmt::format_to(char (&dest)[N], FormatT&& format_str, Args const&... args) {
+template <std::size_t N, typename... Args>
+char* nanofmt::format_to(char (&dest)[N], format_string format_str, Args const&... args) {
     buffer buf(dest, N - 1 /*NUL*/);
-    char* const end = detail::vformat(buf, to_string_view(format_str), nanofmt::make_format_args(args...));
+    char* const end = detail::vformat(buf, format_str, nanofmt::make_format_args(args...));
     *end = '\0';
     return end;
 }
@@ -171,17 +183,16 @@ char* nanofmt::format_to(char (&dest)[N], FormatT&& format_str, Args const&... a
 /// Returns the number of characters that would be written to a
 /// destination buffer (_excluding_ any terminating NUL) for the
 /// given format string and arguments
-template <typename FormatT, typename... Args>
-std::size_t nanofmt::format_size(FormatT&& format_str, Args const&... args) {
+template <typename... Args>
+std::size_t nanofmt::format_size(format_string format_str, Args const&... args) {
     buffer buf(nullptr, 0);
-    detail::vformat(buf, to_string_view(format_str), nanofmt::make_format_args(args...));
+    detail::vformat(buf, format_str, nanofmt::make_format_args(args...));
     return buf.advance;
 }
 
-template <typename FormatT>
-std::size_t nanofmt::vformat_size(FormatT&& format_str, format_args&& args) {
+std::size_t nanofmt::vformat_size(format_string format_str, format_args&& args) {
     buffer buf(nullptr, 0);
-    detail::vformat(buf, to_string_view(format_str), args);
+    detail::vformat(buf, format_str, static_cast<format_args&&>(args));
     return buf.advance;
 }
 
