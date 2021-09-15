@@ -46,8 +46,6 @@ void nanofmt::format_args::format(unsigned index, char const** in, char const* e
             return invoke(value.v_bool);
         case types::t_cstring:
             return invoke(value.v_cstring);
-        case types::t_stringview:
-            return invoke(value.v_stringview);
         case types::t_voidptr:
             return invoke(value.v_voidptr);
         case types::t_custom:

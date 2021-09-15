@@ -14,23 +14,23 @@ class custom_type {};
 
 namespace nanofmt {
     template <>
-    struct formatter<custom_enum> : formatter<string_view> {
+    struct formatter<custom_enum> : formatter<char const*> {
         void format(custom_enum value, buffer& buf) {
             switch (value) {
                 case custom_enum::foo:
-                    formatter<string_view>::format("foo", buf);
+                    formatter<char const*>::format("foo", buf);
                     break;
                 case custom_enum::bar:
-                    formatter<string_view>::format("bar", buf);
+                    formatter<char const*>::format("bar", buf);
                     break;
             }
         }
     };
 
     template <>
-    struct formatter<custom_type> : formatter<string_view> {
+    struct formatter<custom_type> : formatter<char const*> {
         void format(custom_type, buffer& buf) {
-            formatter<string_view>::format("custom", buf);
+            formatter<char const*>::format("custom", buf);
         }
     };
 } // namespace nanofmt
@@ -116,9 +116,8 @@ TEST_CASE("nanofmt.format.strings", "[nanofmt][format][strings]") {
     SECTION("stdlib") {
         CHECK(sformat("{}", std::string("test")) == "test");
         CHECK(sformat("{}", std::string_view("test")) == "test");
-        CHECK(sformat("{}", nanofmt::string_view("test")) == "test");
 
-        CHECK(sformat("{}{}{}", nanofmt::string_view("ab"), std::string("cd"), "ef") == "abcdef");
+        CHECK(sformat("{}{}{}", std::string_view("ab"), std::string("cd"), "ef") == "abcdef");
 
         CHECK(sformat(std::string("a{}c"), "b") == "abc");
     }

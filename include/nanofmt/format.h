@@ -7,7 +7,6 @@
 #include <cstddef>
 
 namespace nanofmt {
-    struct string_view;
     struct format_args;
     struct format_spec;
 
@@ -22,13 +21,6 @@ namespace nanofmt {
     struct formatter;
 
     struct format_string;
-
-    constexpr string_view to_string_view(string_view string) noexcept;
-    template <typename StringT>
-    constexpr string_view to_string_view(StringT const& string) noexcept;
-    template <std::size_t N>
-    constexpr string_view to_string_view(char const (&string)[N]) noexcept;
-    constexpr string_view to_string_view(char const* zstr) noexcept;
 
     template <typename StringT>
     constexpr format_string to_format_string(StringT const& value) noexcept;
@@ -93,27 +85,6 @@ struct nanofmt::formatter<void> {
     void format(ValueT const&, buffer&) {}
 };
 
-/// Non-owning slice of string data.
-struct nanofmt::string_view {
-    constexpr string_view() = default;
-    constexpr string_view(char const* str, std::size_t len) noexcept : begin(str), end(str + len) {}
-    constexpr string_view(char const* str, char const* end) noexcept : begin(str), end(end) {}
-    constexpr string_view(char const* zstr) noexcept : begin(zstr), end(zstr + __builtin_strlen(zstr)) {}
-
-    /// Pointer to the data references by the string_view
-    [[nodiscard]] constexpr char const* data() const noexcept {
-        return begin;
-    }
-
-    /// Number of characters referenced by the string view
-    [[nodiscard]] constexpr std::size_t size() const noexcept {
-        return end - begin;
-    }
-
-    char const* begin = nullptr; /// Pointer to the first characte
-    char const* end = nullptr;
-};
-
 /// Wrapper for format strings.
 struct nanofmt::format_string {
     constexpr format_string(char const* string, std::size_t length) noexcept : begin(string), end(string + length) {}
@@ -133,26 +104,6 @@ struct nanofmt::format_string {
 template <typename StringT>
 constexpr nanofmt::format_string nanofmt::to_format_string(StringT const& value) noexcept {
     return {value.data(), value.size()};
-}
-
-constexpr nanofmt::string_view nanofmt::to_string_view(string_view string) noexcept {
-    return string;
-}
-
-/// Convert an arbitrary string type to a nanofmt string_view
-template <typename StringT>
-constexpr nanofmt::string_view nanofmt::to_string_view(StringT const& string) noexcept {
-    return {string.data(), string.size()};
-}
-
-template <std::size_t N>
-constexpr nanofmt::string_view nanofmt::to_string_view(char const (&string)[N]) noexcept {
-    // don't assume N is the real length; this is probably a NUL-terminated literal
-    return string_view{string};
-}
-
-constexpr nanofmt::string_view nanofmt::to_string_view(char const* zstr) noexcept {
-    return string_view{zstr};
 }
 
 char* nanofmt::vformat_to(buffer& buf, format_string format_str, format_args&& args) {

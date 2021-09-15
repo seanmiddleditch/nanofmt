@@ -27,7 +27,6 @@ namespace nanofmt::detail {
         t_double,
         t_bool,
         t_cstring,
-        t_stringview,
         t_voidptr,
         t_custom
     };
@@ -49,7 +48,6 @@ namespace nanofmt::detail {
         constexpr value(double value) noexcept : v_double(value), type(value_type::t_double) {}
         constexpr value(bool value) noexcept : v_bool(value), type(value_type::t_bool) {}
         constexpr value(char const* value) noexcept : v_cstring(value), type(value_type::t_cstring) {}
-        constexpr value(string_view value) noexcept : v_stringview(value), type(value_type::t_stringview) {}
         constexpr value(decltype(nullptr) value) noexcept : v_voidptr(value), type(value_type::t_voidptr) {}
         constexpr value(void const* value) noexcept : v_voidptr(value), type(value_type::t_voidptr) {}
         constexpr value(custom value) noexcept : v_custom(value), type(value_type::t_custom) {}
@@ -67,7 +65,6 @@ namespace nanofmt::detail {
             double v_double;
             bool v_bool;
             char const* v_cstring;
-            string_view v_stringview;
             void const* v_voidptr;
             custom v_custom;
         };
