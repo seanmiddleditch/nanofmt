@@ -30,6 +30,9 @@ namespace nanofmt {
     constexpr string_view to_string_view(char const (&string)[N]) noexcept;
     constexpr string_view to_string_view(char const* zstr) noexcept;
 
+    template <typename StringT>
+    constexpr format_string to_format_string(StringT const& value) noexcept;
+
     template <typename... Args>
     char* format_to(buffer& buf, format_string format_str, Args const&... args);
 
@@ -113,18 +116,24 @@ struct nanofmt::string_view {
 
 /// Wrapper for format strings.
 struct nanofmt::format_string {
+    constexpr format_string(char const* string, std::size_t length) noexcept : begin(string), end(string + length) {}
     template <std::size_t N>
     constexpr format_string(char const (&str)[N]) noexcept : begin(str)
                                                            , end(begin + __builtin_strlen(begin)) {}
     constexpr format_string(char const* const zstr) noexcept : begin(zstr), end(begin + __builtin_strlen(begin)) {}
 
     template <typename StringT>
-    constexpr format_string(StringT const& string) noexcept : begin(string.data())
-                                                            , end(begin + string.size()) {}
+    constexpr format_string(StringT const& string) noexcept : format_string(to_format_string(string)) {}
 
     char const* begin = nullptr;
     char const* end = nullptr;
 };
+
+/// Specialize to customize the conversion of a string type to a format_string
+template <typename StringT>
+constexpr nanofmt::format_string nanofmt::to_format_string(StringT const& value) noexcept {
+    return {value.data(), value.size()};
+}
 
 constexpr nanofmt::string_view nanofmt::to_string_view(string_view string) noexcept {
     return string;
