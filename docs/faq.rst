@@ -195,9 +195,7 @@ Was it Worth It?
 
 Probably not.
 
-The nanofmt author implemented a (very bare-bones) `fmtlib`_ replacement at
-work in about a day, and it's likely going to be incorporated into the core
-runtime libraries of the company as-is.
+The nanofmt author has implemented several `fmtlib`_ replacements for work.
 
 In comparison, the author has been working on nanofmt for 12+ hours/day
 for about a week; and that doesn't include all the time the author spent
