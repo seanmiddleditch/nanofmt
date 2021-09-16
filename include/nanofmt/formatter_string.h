@@ -27,23 +27,21 @@ namespace nanofmt::detail {
             }
         }
     };
-
-    template <typename StringT>
-    struct string_formatter : string_formatter_base {
-        void format(StringT const& value, buffer& buf) const {
-            string_view const string = to_string_view(value);
-            string_formatter_base::do_format(buf, string.data(), string.size());
-        }
-    };
 } // namespace nanofmt::detail
 
 namespace nanofmt {
     template <>
-    struct formatter<string_view> : detail::string_formatter<string_view> {};
-    template <>
-    struct formatter<char const*> : detail::string_formatter<char const*> {};
+    struct formatter<char const*> : detail::string_formatter_base {
+        void format(char const* const zstr, buffer& buf) const {
+            return do_format(buf, zstr, __builtin_strlen(zstr));
+        };
+    };
     template <size_t N>
-    struct formatter<char const (&)[N]> : detail::string_formatter<char const (&)[N]> {};
+    struct formatter<char const (&)[N]> : detail::string_formatter_base {
+        void format(char const (&str)[N], buffer& buf) const {
+            return do_format(buf, str, __builtin_strlen(str));
+        }
+    };
 
     template <>
     struct formatter<char> : formatter<void> {

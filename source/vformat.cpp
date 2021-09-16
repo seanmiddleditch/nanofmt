@@ -2,13 +2,13 @@
 
 #include "nanofmt/format.h"
 
-char* nanofmt::detail::vformat(buffer& buf, string_view format_str, format_args args) {
+char* nanofmt::detail::vformat(buffer& buf, format_string format_str, format_args&& args) {
     int arg_next_index = 0;
     bool arg_auto_index = true;
 
     char const* input = format_str.begin;
     char const* input_begin = input;
-    char const* const input_end = input + format_str.size();
+    char const* const input_end = format_str.end;
 
     while (input != input_end) {
         if (*input != '{') {

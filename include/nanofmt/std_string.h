@@ -9,16 +9,16 @@
 
 namespace nanofmt {
     template <typename StringCharT, typename TraitsT, typename AllocatorT>
-    struct formatter<std::basic_string<StringCharT, TraitsT, AllocatorT>> : formatter<nanofmt::string_view> {
+    struct formatter<std::basic_string<StringCharT, TraitsT, AllocatorT>> : detail::string_formatter_base {
         constexpr void format(std::basic_string<StringCharT, TraitsT, AllocatorT> const& value, buffer& buf) {
-            formatter<string_view>::format({value.data(), value.size()}, buf);
+            do_format(buf, value.data(), value.size());
         }
     };
 
     template <typename StringCharT, typename TraitsT>
-    struct formatter<std::basic_string_view<StringCharT, TraitsT>> : formatter<nanofmt::string_view> {
+    struct formatter<std::basic_string_view<StringCharT, TraitsT>> : detail::string_formatter_base {
         constexpr void format(std::basic_string_view<StringCharT, TraitsT> const& value, buffer& buf) {
-            formatter<string_view>::format({value.data(), value.size()}, buf);
+            do_format(buf, value.data(), value.size());
         }
     };
 } // namespace nanofmt
