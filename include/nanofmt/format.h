@@ -20,7 +20,23 @@ namespace nanofmt {
     template <typename T>
     struct formatter;
 
-    struct format_string;
+    /// Wrapper for format strings.
+    struct format_string {
+        constexpr format_string() noexcept = default;
+        constexpr format_string(char const* string, std::size_t length) noexcept
+            : begin(string)
+            , end(string + length) {}
+        template <std::size_t N>
+        constexpr format_string(char const (&str)[N]) noexcept : begin(str)
+                                                               , end(begin + __builtin_strlen(begin)) {}
+        constexpr format_string(char const* const zstr) noexcept : begin(zstr), end(begin + __builtin_strlen(begin)) {}
+
+        template <typename StringT>
+        constexpr format_string(StringT const& string) noexcept : format_string(to_format_string(string)) {}
+
+        char const* begin = nullptr;
+        char const* end = nullptr;
+    };
 
     template <typename StringT>
     constexpr format_string to_format_string(StringT const& value) noexcept;
@@ -96,23 +112,6 @@ struct nanofmt::formatter<void> {
     template <typename ValueT>
     void format(ValueT const&, buffer&) {}
 };
-
-/// Wrapper for format strings.
-struct nanofmt::format_string {
-    constexpr format_string() noexcept = default;
-    constexpr format_string(char const* string, std::size_t length) noexcept : begin(string), end(string + length) {}
-    template <std::size_t N>
-    constexpr format_string(char const (&str)[N]) noexcept : begin(str)
-                                                           , end(begin + __builtin_strlen(begin)) {}
-    constexpr format_string(char const* const zstr) noexcept : begin(zstr), end(begin + __builtin_strlen(begin)) {}
-
-    template <typename StringT>
-    constexpr format_string(StringT const& string) noexcept : format_string(to_format_string(string)) {}
-
-    char const* begin = nullptr;
-    char const* end = nullptr;
-};
-
 /// Specialize to customize the conversion of a string type to a format_string
 template <typename StringT>
 constexpr nanofmt::format_string nanofmt::to_format_string(StringT const& value) noexcept {
