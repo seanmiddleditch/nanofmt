@@ -3,6 +3,7 @@
 #include "nanofmt/format.h"
 
 #include <catch2/catch_test_macros.hpp>
+#include <cstring>
 
 TEST_CASE("nanofmt.format_value", "[nanofmt][format_value]") {
     using namespace nanofmt;
