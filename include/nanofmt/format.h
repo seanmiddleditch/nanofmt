@@ -9,6 +9,7 @@
 namespace nanofmt {
     struct format_args;
     struct format_spec;
+    struct format_string;
 
     /// Specialize to implement format support for a type.
     ///
@@ -19,6 +20,9 @@ namespace nanofmt {
     /// void format(T const& value, buffer& buf);
     template <typename T>
     struct formatter;
+
+    template <typename StringT>
+    constexpr format_string to_format_string(StringT const& value) noexcept;
 
     /// Wrapper for format strings.
     struct format_string {
@@ -37,9 +41,6 @@ namespace nanofmt {
         char const* begin = nullptr;
         char const* end = nullptr;
     };
-
-    template <typename StringT>
-    constexpr format_string to_format_string(StringT const& value) noexcept;
 
     template <typename... Args>
     char* format_to(buffer& buf, format_string format_str, Args const&... args);
