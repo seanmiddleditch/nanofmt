@@ -15,17 +15,17 @@ Formatting
 Core API
 ^^^^^^^^
 
-.. doxygenfunction:: nanofmt::format_to(char (&dest)[N], FormatT&&, Args const&...)
+.. doxygenfunction:: nanofmt::format_to(char (&dest)[N], format_string, Args const&...)
 
-.. doxygenfunction:: nanofmt::format_to(buffer&, FormatT&&, Args const&...)
+.. doxygenfunction:: nanofmt::format_to(buffer&, format_string, Args const&...)
 
-.. doxygenfunction:: nanofmt::vformat_to(char (&dest)[N], FormatT&&, format_args&&)
+.. doxygenfunction:: nanofmt::vformat_to(char (&dest)[N], format_string, format_args&&)
 
-.. doxygenfunction:: nanofmt::vformat_to(buffer&, FormatT&&, format_args&&)
+.. doxygenfunction:: nanofmt::vformat_to(buffer&, format_string, format_args&&)
 
-.. doxygenfunction:: nanofmt::format_to_n(char*, std::size_t, FormatT&&, Args const&...)
+.. doxygenfunction:: nanofmt::format_to_n(char*, std::size_t, format_string, Args const&...)
 
-.. doxygenfunction:: nanofmt::vformat_to_n(char*, std::size_t, FormatT&&, format_args&&)
+.. doxygenfunction:: nanofmt::vformat_to_n(char*, std::size_t, format_string, format_args&&)
 
 .. doxygenfunction:: nanofmt::format_size
 
@@ -38,18 +38,18 @@ Buffers
 
 .. doxygenstruct:: nanofmt::buffer
 
-Strings
+Miscellaneous
 ^^^^^^^
 
-.. doxygenstruct:: nanofmt::string_view
+nanofmt uses a ``format_string`` type for receiving its format strings, to
+decouple from and support various string types and classes. Many string
+types should automatically convert to ``format_string``; for string types
+that don't already support conversion to ``format_string``, a
+``to_format_string`` function can be implemented.
 
-.. doxygenfunction:: nanofmt::to_string_view(StringT const&) noexcept
+.. doxygenstruct:: nanofmt::format_string
 
-.. doxygenfunction:: nanofmt::to_string_view(char const (&string)[N]) noexcept
-
-.. doxygenfunction:: nanofmt::to_string_view(char const *) noexcept
-
-.. doxygenfunction:: nanofmt::to_string_view(string_view) noexcept
+.. doxygenfunction:: nanofmt::to_format_string
 
 
 Syntax Parsers
