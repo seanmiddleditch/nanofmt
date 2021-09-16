@@ -179,19 +179,26 @@ char* nanofmt::format_value_to(buffer& buf, ValueT const& value, format_string s
     return buf.pos;
 }
 
-/// Formats a value with an optional specification to the destination.
+/// Formats a value into dest, writing no more than count bytes. The output will
+/// be NUL-terminated. Returns a pointer to the last character written, which
+/// will be the NUL byte itself.
 template <typename ValueT>
 char* nanofmt::format_value_to_n(char* dest, std::size_t count, ValueT const& value, format_string spec) {
     buffer buf(dest, count);
     return format_value_to(buf, value, spec);
 }
 
+/// Formats a value into dest, writing no more than N bytes. The output will
+/// be NUL-terminated. Returns a pointer to the last character written, which
+/// will be the NUL byte itself.
 template <typename ValueT, std::size_t N>
 char* nanofmt::format_value_to(char (&dest)[N], ValueT const& value, format_string spec) {
     buffer buf(dest, N);
     return format_value_to(buf, value, spec);
 }
 
+/// Calculates the length of the buffer required to hold the formatted value,
+/// excluded the trailing NUL byte.
 template <typename ValueT>
 std::size_t nanofmt::format_value_size(ValueT const& value, format_string spec) {
     buffer buf(nullptr, 0);
