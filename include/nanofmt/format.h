@@ -172,8 +172,8 @@ std::size_t nanofmt::vformat_size(format_string format_str, format_args&& args) 
 template <typename ValueT>
 char* nanofmt::format_value_to(buffer& buf, ValueT const& value, format_string spec) {
     formatter<ValueT> fmt;
-    if (char const* end = fmt.parse(spec.begin, spec.end); end != nullptr) {
-        return end;
+    if (char const* const end = fmt.parse(spec.begin, spec.end); end != spec.end) {
+        return buf.pos;
     }
     fmt.format(value, buf);
     return buf.pos;
@@ -196,7 +196,7 @@ template <typename ValueT>
 std::size_t nanofmt::format_value_size(ValueT const& value, format_string spec) {
     buffer buf(nullptr, 0);
     format_value_to(buf, value, spec);
-    return buf.append;
+    return buf.advance;
 }
 
 #include "format_arg.h"
