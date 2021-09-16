@@ -5,8 +5,6 @@
 #include "nanofmt/format.h"
 #include "nanofmt/formatter_float.h"
 
-#include <bit>
-
 namespace nanofmt::detail {
     template <typename IntegerT>
     static char* to_chars_impl(char* buffer, char const* end, IntegerT value, int_format fmt) noexcept;
