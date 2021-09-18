@@ -5,13 +5,13 @@
 
 namespace NANOFMT_NS {
     void format_args::format(unsigned index, char const** in, char const* end, buffer& buf) const {
-        using types = detail::value_type;
+        using types = format_value_type;
 
         if (index >= count) {
             return;
         }
 
-        detail::value const& value = values[index];
+        format_value const& value = values[index];
 
         auto invoke = [in, end, &buf](auto value) {
             formatter<decltype(value)> fmt;
@@ -49,7 +49,7 @@ namespace NANOFMT_NS {
             case types::t_voidptr:
                 return invoke(value.v_voidptr);
             case types::t_custom:
-                return value.v_custom.thunk(value.v_custom.pointer, in, end, buf);
+                return value.v_custom.thunk(value.v_custom.value, in, end, buf);
         }
     }
 } // namespace NANOFMT_NS
