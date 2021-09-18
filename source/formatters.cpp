@@ -7,6 +7,7 @@
 #include "nanofmt/to_chars.h"
 
 #include <cmath>
+#include <cstdint>
 
 // utilities
 namespace NANOFMT_NS::detail {
@@ -463,18 +464,22 @@ namespace NANOFMT_NS::detail {
         }
     }
 
+    template <>
     char const* default_formatter<char_buffer>::parse(char const* in, char const* end) noexcept {
         return parse_spec(in, end, spec, "s");
     }
 
+    template <>
     void default_formatter<char_buffer>::format(char_buffer value, buffer& buf) noexcept {
         format_string(value.buffer, strnlen(value.buffer, value.max_length), buf, spec);
     }
 
+    template <>
     char const* default_formatter<format_string_view>::parse(char const* in, char const* end) noexcept {
         return parse_spec(in, end, spec, "s");
     }
 
+    template <>
     void default_formatter<format_string_view>::format(format_string_view value, buffer& buf) noexcept {
         format_string(value.string, value.length, buf, spec);
     }
