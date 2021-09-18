@@ -12,13 +12,14 @@ API
 Formatting
 ----------
 
+
+Core API
+^^^^^^^^
+
 The format API is available in the header ``nanofmt/format.h``.
 
 Extensions for C++ standard library string types are in the header
 ``nanofmt/std_string.h``.
-
-Core API
-^^^^^^^^
 
 .. doxygenfunction:: nanofmt::format_to(char (&dest)[N], format_string, Args const&...)
 
@@ -41,10 +42,22 @@ Core API
 Buffers
 ^^^^^^^
 
+The buffer API is available in the header ``nanofmt/buffer.h``.
+
 .. doxygenstruct:: nanofmt::buffer
+
+.. doxygenfunction:: copy_to(char*, char const*, char const*) noexcept
+
+.. doxygenfunction:: copy_to_n(char*, char const*, char const*, std::size_t) noexcept
+
+.. doxygenfunction:: put(char*, char const*, char) noexcept
+
+.. doxygenfunction:: fill_n(char*, char const*, char, std::size_t) noexcept
 
 Values
 ^^^^^^
+
+The format API is available in the header ``nanofmt/format.h``.
 
 Individual values can be formatted with nanofmt without requiring a full
 format string.
