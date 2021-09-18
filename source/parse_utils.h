@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "nanofmt/config.h"
+
 namespace NANOFMT_NS::detail {
     constexpr int parse_nonnegative(char const*& start, char const* end) noexcept {
         if (start == end) {
