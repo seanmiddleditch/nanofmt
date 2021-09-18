@@ -9,7 +9,6 @@
 
 namespace NANOFMT_NS {
     struct format_args;
-    struct format_spec;
     struct format_string;
     struct format_string_view;
 
