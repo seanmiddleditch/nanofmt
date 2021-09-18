@@ -462,14 +462,12 @@ namespace NANOFMT_NS::detail {
         }
     }
 
-    char const* char_buf_formatter::parse(char const* in, char const* end) noexcept {
+    char const* default_formatter<char_buffer>::parse(char const* in, char const* end) noexcept {
         return parse_spec(in, end, spec, "s");
     }
 
-    void char_buf_formatter::format(char const* value, buffer& buf) noexcept {
-        if (value != nullptr) {
-            format_string(value, strnlen(value, max_length), buf, spec);
-        }
+    void default_formatter<char_buffer>::format(char_buffer value, buffer& buf) noexcept {
+        format_string(value.buffer, strnlen(value.buffer, value.max_length), buf, spec);
     }
 
     char const* default_formatter<format_string_view>::parse(char const* in, char const* end) noexcept {

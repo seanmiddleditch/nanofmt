@@ -102,18 +102,16 @@ namespace NANOFMT_NS {
             bool locale = false;
         };
 
+        struct char_buffer {
+            char const* buffer = nullptr;
+            std::size_t max_length = 0;
+        };
+
         template <typename T>
         struct default_formatter {
             format_spec spec;
             char const* parse(char const* in, char const* end) noexcept;
             void format(T value, buffer& buf) noexcept;
-        };
-
-        struct char_buf_formatter {
-            std::size_t max_length = 0;
-            format_spec spec;
-            char const* parse(char const* in, char const* end) noexcept;
-            void format(char const* value, buffer& buf) noexcept;
         };
     } // namespace detail
 
@@ -127,7 +125,7 @@ namespace NANOFMT_NS {
     template <>
     struct formatter<char const*> : detail::default_formatter<char const*> {};
     template <std::size_t N>
-    struct formatter<char const[N]> : detail::char_buf_formatter {};
+    struct formatter<char const[N]> : detail::default_formatter<detail::char_buffer> {};
     template <>
     struct formatter<format_string_view> : detail::default_formatter<format_string_view> {};
 
