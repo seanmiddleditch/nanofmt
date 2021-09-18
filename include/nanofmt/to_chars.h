@@ -2,7 +2,9 @@
 
 #pragma once
 
-namespace nanofmt {
+#include "config.h"
+
+namespace NANOFMT_NS {
     // clang-format off
     /// @brief Format options for integral values.
     enum class int_format {
@@ -93,4 +95,4 @@ namespace nanofmt {
     char* to_chars(char* buffer, char const* end, long double value) noexcept = delete;
     char* to_chars(char* buffer, char const* end, long double value, float_format fmt) noexcept = delete;
     char* to_chars(char* buffer, char const* end, long double value, float_format fmt, int precision) noexcept = delete;
-} // namespace nanofmt
+} // namespace NANOFMT_NS

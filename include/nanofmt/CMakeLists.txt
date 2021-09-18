@@ -1,5 +1,6 @@
 target_sources(nanofmt PRIVATE
     "buffer.h"
+    "config.h"
     "format.h"
     "format_arg.h"
     "formatter_float.h"

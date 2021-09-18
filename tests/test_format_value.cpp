@@ -6,7 +6,7 @@
 #include <cstring>
 
 TEST_CASE("nanofmt.format_value", "[nanofmt][format_value]") {
-    using namespace nanofmt;
+    using namespace NANOFMT_NS;
 
     SECTION("format_value_to") {
         char buf[32];
