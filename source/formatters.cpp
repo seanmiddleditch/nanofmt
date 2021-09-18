@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "parse_utils.h"
 #include "nanofmt/format.h"
 #include "nanofmt/to_chars.h"
 
