@@ -5,7 +5,7 @@
 
 namespace NANOFMT_NS {
     void format_args::format(unsigned index, char const** in, char const* end, buffer& buf) const {
-        using types = format_value_type;
+        using types = format_value::type;
 
         if (index >= count) {
             return;
@@ -21,7 +21,7 @@ namespace NANOFMT_NS {
             fmt.format(value, buf);
         };
 
-        switch (value.type) {
+        switch (value.tag) {
             case types::t_mono:
                 return;
             case types::t_char:
