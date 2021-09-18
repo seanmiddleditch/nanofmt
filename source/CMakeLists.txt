@@ -1,7 +1,6 @@
 include(fetch_dragonbox)
 
 target_sources(nanofmt PRIVATE
-    "format_arg.cpp"
     "formatters.cpp"
     "numeric_utils.h"
     "parse_utils.h"
