@@ -11,6 +11,7 @@ namespace NANOFMT_NS {
     struct format_args;
     struct format_string;
     struct format_string_view;
+    struct format_value;
 
     /// Specialize to implement format support for a type.
     ///
@@ -257,3 +258,38 @@ namespace NANOFMT_NS {
 } // namespace NANOFMT_NS
 
 #include "format_arg.h"
+
+namespace NANOFMT_NS {
+    /// Holds a list of N format_value objects.
+    ///
+    /// This is primarily meant to be an intermediate that holds onto values
+    /// as a temporary object, and will usually be converted to format_args.
+    ///
+    template <size_t N>
+    struct format_value_store {
+        static constexpr size_t size = N;
+        format_value values[N + 1 /* avoid size 0 */];
+    };
+
+    /// List of format args.
+    ///
+    /// Only use this type as a temporary value!
+    ///
+    struct format_args {
+        template <size_t N>
+        constexpr /*implicit*/ format_args(format_value_store<N>&& values) noexcept : values(values.values)
+                                                                                    , count(N) {}
+
+        void format(unsigned index, char const** in, char const* end, buffer& buf) const;
+
+        format_value const* values = nullptr;
+        size_t count = 0;
+    };
+
+    /// Constructs a format_args from a list of values.
+    ///
+    template <typename... Args>
+    constexpr auto make_format_args(Args const&... args) noexcept {
+        return format_value_store<sizeof...(Args)>{detail::make_format_value(args)...};
+    }
+} // namespace NANOFMT_NS
