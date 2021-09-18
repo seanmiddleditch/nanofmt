@@ -25,8 +25,7 @@ namespace NANOFMT_NS {
             case types::t_mono:
                 return;
             case types::t_char:
-                buf.append(value.v_char);
-                return;
+                return invoke(value.v_char);
             case types::t_int:
                 return invoke(value.v_int);
             case types::t_uint:

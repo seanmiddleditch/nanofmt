@@ -103,16 +103,73 @@ namespace NANOFMT_NS {
         bool locale = false;
     };
 
-    /// No-op formatter
-    template <>
-    struct formatter<void> {
-        constexpr char const* parse(char const* in, char const*) noexcept {
-            return in;
-        }
+    namespace detail {
+        template <typename T>
+        struct default_formatter {
+            format_spec spec;
+            char const* parse(char const* in, char const* end) noexcept;
+            void format(T value, buffer& buf) noexcept;
+        };
 
-        template <typename ValueT>
-        void format(ValueT const&, buffer&) {}
-    };
+        struct char_buf_formatter {
+            std::size_t max_length = 0;
+            format_spec spec;
+            char const* parse(char const* in, char const* end) noexcept;
+            void format(char const* value, buffer& buf) noexcept;
+        };
+
+        struct string_view_formatter_base {
+            format_spec spec;
+            char const* parse(char const* in, char const* end) noexcept;
+            void format(char const* value, std::size_t length, buffer& buf) noexcept;
+        };
+    } // namespace detail
+
+    template <>
+    struct formatter<char> : detail::default_formatter<char> {};
+    template <>
+    struct formatter<bool> : detail::default_formatter<bool> {};
+
+    template <>
+    struct formatter<char*> : detail::default_formatter<char const*> {};
+    template <>
+    struct formatter<char const*> : detail::default_formatter<char const*> {};
+    template <std::size_t N>
+    struct formatter<char const[N]> : detail::char_buf_formatter {};
+
+    template <>
+    struct formatter<signed char> : detail::default_formatter<signed int> {};
+    template <>
+    struct formatter<unsigned char> : detail::default_formatter<unsigned int> {};
+    template <>
+    struct formatter<signed short> : detail::default_formatter<signed int> {};
+    template <>
+    struct formatter<unsigned short> : detail::default_formatter<unsigned int> {};
+    template <>
+    struct formatter<signed int> : detail::default_formatter<signed int> {};
+    template <>
+    struct formatter<unsigned int> : detail::default_formatter<unsigned int> {};
+    template <>
+    struct formatter<signed long> : detail::default_formatter<signed long> {};
+    template <>
+    struct formatter<unsigned long> : detail::default_formatter<unsigned long> {};
+    template <>
+    struct formatter<signed long long> : detail::default_formatter<signed long long> {};
+    template <>
+    struct formatter<unsigned long long> : detail::default_formatter<unsigned long long> {};
+
+    template <>
+    struct formatter<float> : detail::default_formatter<float> {};
+    template <>
+    struct formatter<double> : detail::default_formatter<double> {};
+
+    template <>
+    struct formatter<decltype(nullptr)> : detail::default_formatter<void const*> {};
+    template <>
+    struct formatter<void*> : detail::default_formatter<void const*> {};
+    template <>
+    struct formatter<void const*> : detail::default_formatter<void const*> {};
+
     /// Specialize to customize the conversion of a string type to a format_string
     template <typename StringT>
     constexpr format_string to_format_string(StringT const& value) noexcept {
@@ -193,8 +250,10 @@ namespace NANOFMT_NS {
     /// will be the NUL byte itself.
     template <typename ValueT, std::size_t N>
     char* format_value_to(char (&dest)[N], ValueT const& value, format_string spec) {
-        buffer buf(dest, N);
-        return format_value_to(buf, value, spec);
+        buffer buf(dest, N - 1 /*NUL*/);
+        char* const end = format_value_to(buf, value, spec);
+        *end = '\0';
+        return end;
     }
 
     /// Calculates the length of the buffer required to hold the formatted value,
@@ -208,9 +267,6 @@ namespace NANOFMT_NS {
 } // namespace NANOFMT_NS
 
 #include "format_arg.h"
-#include "formatter_float.h"
-#include "formatter_int.h"
-#include "formatter_string.h"
 
 namespace NANOFMT_NS {
     constexpr int detail::parse_nonnegative(char const*& start, char const* end) noexcept {

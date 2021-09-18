@@ -1,9 +1,11 @@
 // Copyright (c) Sean Middleditch and contributors. See accompanying LICENSE.md for copyright details.
 
+#include "nanofmt/to_chars.h"
 #include "numeric_utils.h"
 #include "dragonbox/dragonbox.h"
 #include "nanofmt/format.h"
-#include "nanofmt/formatter_float.h"
+
+#include <cmath>
 
 namespace NANOFMT_NS::detail {
     template <typename IntegerT>
@@ -144,12 +146,7 @@ namespace NANOFMT_NS {
     }
 
     template <typename CarrierT, typename FloatT>
-    char* detail::to_chars_impl(
-        char* buffer,
-        char const* end,
-        FloatT value,
-        float_format fmt,
-        int precision) noexcept {
+    char* detail::to_chars_impl(char* buffer, char const* end, FloatT value, float_format fmt, int precision) noexcept {
         static_assert(sizeof(CarrierT) == sizeof(FloatT));
 
         if (!std::isfinite(value)) {
