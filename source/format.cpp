@@ -107,13 +107,13 @@ namespace NANOFMT_NS {
     }
 
     void format_args::format(unsigned index, char const** in, char const* end, buffer& buf) const {
-        using types = format_value::type;
+        using types = format_arg::type;
 
         if (index >= count) {
             return;
         }
 
-        format_value const& value = values[index];
+        format_arg const& value = values[index];
 
         auto invoke = [in, end, &buf](auto value) {
             formatter<decltype(value)> fmt;

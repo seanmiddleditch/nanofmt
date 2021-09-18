@@ -9,10 +9,10 @@
 #include <type_traits>
 
 namespace NANOFMT_NS {
+    struct format_arg;
     struct format_args;
     struct format_string;
     struct format_string_view;
-    struct format_value;
 
     /// Specialize to implement format support for a type.
     ///
@@ -95,7 +95,7 @@ namespace NANOFMT_NS {
         const T& declval() noexcept;
 
         template <typename ValueT>
-        constexpr format_value make_format_value(ValueT const& value) noexcept;
+        constexpr format_arg make_format_arg(ValueT const& value) noexcept;
 
         template <typename T, typename = void>
         struct has_formatter;
@@ -270,7 +270,7 @@ namespace NANOFMT_NS {
     }
 
     /// Type-erased wrapper for a formattable value.
-    struct format_value {
+    struct format_arg {
         enum class type {
             t_mono,
             t_int,
@@ -293,20 +293,20 @@ namespace NANOFMT_NS {
             void const* value = nullptr;
         };
 
-        constexpr format_value() noexcept : v_int(0) {}
-        constexpr format_value(int value) noexcept : v_int(value), tag(type::t_int) {}
-        constexpr format_value(unsigned value) noexcept : v_unsigned(value), tag(type::t_uint) {}
-        constexpr format_value(long value) noexcept : v_long(value), tag(type::t_long) {}
-        constexpr format_value(unsigned long value) noexcept : v_ulong(value), tag(type::t_ulong) {}
-        constexpr format_value(long long value) noexcept : v_longlong(value), tag(type::t_longlong) {}
-        constexpr format_value(unsigned long long value) noexcept : v_ulonglong(value), tag(type::t_ulonglong) {}
-        constexpr format_value(char value) noexcept : v_char(value), tag(type::t_char) {}
-        constexpr format_value(float value) noexcept : v_float(value), tag(type::t_float) {}
-        constexpr format_value(double value) noexcept : v_double(value), tag(type::t_double) {}
-        constexpr format_value(bool value) noexcept : v_bool(value), tag(type::t_bool) {}
-        constexpr format_value(char const* value) noexcept : v_cstring(value), tag(type::t_cstring) {}
-        constexpr format_value(void const* value) noexcept : v_voidptr(value), tag(type::t_voidptr) {}
-        constexpr format_value(custom value) noexcept : v_custom(value), tag(type::t_custom) {}
+        constexpr format_arg() noexcept : v_int(0) {}
+        constexpr format_arg(int value) noexcept : v_int(value), tag(type::t_int) {}
+        constexpr format_arg(unsigned value) noexcept : v_unsigned(value), tag(type::t_uint) {}
+        constexpr format_arg(long value) noexcept : v_long(value), tag(type::t_long) {}
+        constexpr format_arg(unsigned long value) noexcept : v_ulong(value), tag(type::t_ulong) {}
+        constexpr format_arg(long long value) noexcept : v_longlong(value), tag(type::t_longlong) {}
+        constexpr format_arg(unsigned long long value) noexcept : v_ulonglong(value), tag(type::t_ulonglong) {}
+        constexpr format_arg(char value) noexcept : v_char(value), tag(type::t_char) {}
+        constexpr format_arg(float value) noexcept : v_float(value), tag(type::t_float) {}
+        constexpr format_arg(double value) noexcept : v_double(value), tag(type::t_double) {}
+        constexpr format_arg(bool value) noexcept : v_bool(value), tag(type::t_bool) {}
+        constexpr format_arg(char const* value) noexcept : v_cstring(value), tag(type::t_cstring) {}
+        constexpr format_arg(void const* value) noexcept : v_voidptr(value), tag(type::t_voidptr) {}
+        constexpr format_arg(custom value) noexcept : v_custom(value), tag(type::t_custom) {}
 
         union {
             int v_int;
@@ -367,13 +367,13 @@ namespace NANOFMT_NS {
         };
 
         template <typename ValueT>
-        constexpr format_value make_format_value(ValueT const& value) noexcept {
+        constexpr format_arg make_format_arg(ValueT const& value) noexcept {
             using MappedT = typename detail::value_type_map<std::decay_t<ValueT>>::type;
-            if constexpr (std::is_constructible_v<format_value, MappedT>) {
+            if constexpr (std::is_constructible_v<format_arg, MappedT>) {
                 return (MappedT)(value);
             }
             else if constexpr (detail::has_formatter<ValueT>::value) {
-                format_value::custom custom;
+                format_arg::custom custom;
                 custom.thunk = +[](void const* value, char const** in, char const* end, buffer& buf) {
                     formatter<ValueT> fmt;
                     if (in != nullptr) {
@@ -398,9 +398,9 @@ namespace NANOFMT_NS {
     /// as a temporary object, and will usually be converted to format_args.
     ///
     template <size_t N>
-    struct format_value_store {
+    struct format_arg_store {
         static constexpr size_t size = N;
-        format_value values[N + 1 /* avoid size 0 */];
+        format_arg values[N + 1 /* avoid size 0 */];
     };
 
     /// List of format args.
@@ -409,12 +409,12 @@ namespace NANOFMT_NS {
     ///
     struct format_args {
         template <size_t N>
-        constexpr /*implicit*/ format_args(format_value_store<N>&& values) noexcept : values(values.values)
-                                                                                    , count(N) {}
+        constexpr /*implicit*/ format_args(format_arg_store<N>&& values) noexcept : values(values.values)
+                                                                                  , count(N) {}
 
         void format(unsigned index, char const** in, char const* end, buffer& buf) const;
 
-        format_value const* values = nullptr;
+        format_arg const* values = nullptr;
         size_t count = 0;
     };
 
@@ -422,6 +422,6 @@ namespace NANOFMT_NS {
     ///
     template <typename... Args>
     constexpr auto make_format_args(Args const&... args) noexcept {
-        return format_value_store<sizeof...(Args)>{detail::make_format_value(args)...};
+        return format_arg_store<sizeof...(Args)>{detail::make_format_arg(args)...};
     }
 } // namespace NANOFMT_NS
