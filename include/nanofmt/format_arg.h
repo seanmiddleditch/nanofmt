@@ -2,9 +2,11 @@
 
 #pragma once
 
+#include "config.h"
+
 #include <type_traits>
 
-namespace nanofmt::detail {
+namespace NANOFMT_NS::detail {
     using thunk_func = void (*)(void const* value, char const** spec, char const* end, buffer& buf);
 
     struct custom {
@@ -106,9 +108,7 @@ namespace nanofmt::detail {
         static constexpr bool value = false;
     };
     template <typename T>
-    struct has_formatter<
-        T,
-        std::void_t<decltype(declval<formatter<T>>().format(declval<T>(), declval<nanofmt::buffer&>()))>> {
+    struct has_formatter<T, std::void_t<decltype(declval<formatter<T>>().format(declval<T>(), declval<buffer&>()))>> {
         static constexpr bool value = true;
     };
 
@@ -120,7 +120,7 @@ namespace nanofmt::detail {
         }
         else if constexpr (has_formatter<T>::value) {
             detail::custom custom;
-            custom.thunk = &nanofmt::detail::thunk_impl<T>;
+            custom.thunk = &detail::thunk_impl<T>;
             custom.pointer = addressof(value);
             return detail::value(custom);
         }
@@ -128,9 +128,9 @@ namespace nanofmt::detail {
             return detail::value(static_cast<std::underlying_type_t<T>>(value));
         }
     };
-} // namespace nanofmt::detail
+} // namespace NANOFMT_NS::detail
 
-namespace nanofmt {
+namespace NANOFMT_NS {
     /// List of format args.
     ///
     /// Only use this type as a temporary value!
@@ -151,4 +151,4 @@ namespace nanofmt {
     constexpr auto make_format_args(Args const&... args) noexcept {
         return detail::value_store<sizeof...(Args)>{detail::make_format_value(args)...};
     }
-} // namespace nanofmt
+} // namespace NANOFMT_NS

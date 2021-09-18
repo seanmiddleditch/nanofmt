@@ -12,7 +12,7 @@ enum class custom_enum { foo, bar };
 
 class custom_type {};
 
-namespace nanofmt {
+namespace NANOFMT_NS {
     template <>
     struct formatter<custom_enum> : formatter<char const*> {
         void format(custom_enum value, buffer& buf) {
@@ -33,10 +33,10 @@ namespace nanofmt {
             formatter<char const*>::format("custom", buf);
         }
     };
-} // namespace nanofmt
+} // namespace NANOFMT_NS
 
 TEST_CASE("nanofmt.format.integers", "[nanofmt][format][integers]") {
-    using namespace nanofmt::test;
+    using namespace NANOFMT_NS::test;
 
     SECTION("width and fill") {
         CHECK(sformat("{:6d}", 1234) == "  1234");
@@ -69,7 +69,7 @@ TEST_CASE("nanofmt.format.integers", "[nanofmt][format][integers]") {
 }
 
 TEST_CASE("nanofmt.format.floating", "[nanofmt][format][floating]") {
-    using namespace nanofmt::test;
+    using namespace NANOFMT_NS::test;
 
     SECTION("precision") {
         CHECK(sformat("{:.1f}", 1.55) == "1.6");
@@ -104,7 +104,7 @@ TEST_CASE("nanofmt.format.floating", "[nanofmt][format][floating]") {
 }
 
 TEST_CASE("nanofmt.format.strings", "[nanofmt][format][strings]") {
-    using namespace nanofmt::test;
+    using namespace NANOFMT_NS::test;
 
     SECTION("char arrays") {
         char const s[] = "array";
@@ -128,7 +128,7 @@ TEST_CASE("nanofmt.format.strings", "[nanofmt][format][strings]") {
 }
 
 TEST_CASE("nanofmt.format.bools", "[nanofmt][format][bools]") {
-    using namespace nanofmt::test;
+    using namespace NANOFMT_NS::test;
 
     SECTION("default") {
         CHECK(sformat("{}", true) == "true");
@@ -142,7 +142,7 @@ TEST_CASE("nanofmt.format.bools", "[nanofmt][format][bools]") {
 }
 
 TEST_CASE("nanofmt.format.pointers", "[nanofmt][format][pointers]") {
-    using namespace nanofmt::test;
+    using namespace NANOFMT_NS::test;
 
     SECTION("nullptr") {
         if constexpr (sizeof(void*) == 8) {
@@ -169,7 +169,7 @@ TEST_CASE("nanofmt.format.pointers", "[nanofmt][format][pointers]") {
 }
 
 TEST_CASE("nanofmt.format.enums", "[nanofmt][format][enums]") {
-    using namespace nanofmt::test;
+    using namespace NANOFMT_NS::test;
 
     SECTION("standard") {
         CHECK(sformat("{0}", standard_enum::two) == "1");
@@ -181,7 +181,7 @@ TEST_CASE("nanofmt.format.enums", "[nanofmt][format][enums]") {
 }
 
 TEST_CASE("nanofmt.format.custom", "[nanofmt][format][custom]") {
-    using namespace nanofmt::test;
+    using namespace NANOFMT_NS::test;
 
     custom_type local;
     custom_type& ref = local;
@@ -194,8 +194,8 @@ TEST_CASE("nanofmt.format.custom", "[nanofmt][format][custom]") {
 // SECTION("errors") {
 //    char buffer[256];
 
-//    CHECK(sformat_to(buffer, "{} {:4d} {:3.5f}", "abc", 9, 12.57) == nanofmt::format_result::success);
-//    CHECK(sformat_to(buffer, "{} {:4d", "abc", 9) == nanofmt::format_result::malformed_input);
-//    CHECK(sformat_to(buffer, "{0} {1}", "abc", 9) == nanofmt::format_result::success);
-//    CHECK(sformat_to(buffer, "{0} {1} {5}", "abc", 9, 12.57) == nanofmt::format_result::out_of_range);
+//    CHECK(sformat_to(buffer, "{} {:4d} {:3.5f}", "abc", 9, 12.57) == NANOFMT_NS::format_result::success);
+//    CHECK(sformat_to(buffer, "{} {:4d", "abc", 9) == NANOFMT_NS::format_result::malformed_input);
+//    CHECK(sformat_to(buffer, "{0} {1}", "abc", 9) == NANOFMT_NS::format_result::success);
+//    CHECK(sformat_to(buffer, "{0} {1} {5}", "abc", 9, 12.57) == NANOFMT_NS::format_result::out_of_range);
 //}

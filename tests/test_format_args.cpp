@@ -8,19 +8,19 @@
 namespace {
     template <typename T>
     constexpr auto to_arg(T const& value) noexcept {
-        return nanofmt::make_format_args(value).values[0];
+        return NANOFMT_NS::make_format_args(value).values[0];
     }
 } // namespace
 
 TEST_CASE("nanofmt.format_arg.misc", "[nanofmt][format_arg]") {
-    using namespace nanofmt;
+    using namespace NANOFMT_NS;
 
     CHECK(to_arg(true).type == detail::value_type::t_bool);
     CHECK(to_arg('c').type == detail::value_type::t_char);
 }
 
 TEST_CASE("nanofmt.format_arg.integers", "[nanofmt][format_arg][integers]") {
-    using namespace nanofmt;
+    using namespace NANOFMT_NS;
 
     SECTION("misc") {
         CHECK(to_arg(true).type == detail::value_type::t_bool);
@@ -50,14 +50,14 @@ TEST_CASE("nanofmt.format_arg.integers", "[nanofmt][format_arg][integers]") {
 }
 
 TEST_CASE("nanofmt.format_arg.floats", "[nanofmt][format_arg][floats]") {
-    using namespace nanofmt;
+    using namespace NANOFMT_NS;
 
     CHECK(to_arg(0.f).type == detail::value_type::t_float);
     CHECK(to_arg(0.0).type == detail::value_type::t_double);
 }
 
 TEST_CASE("nanofmt.format_arg.pointers", "[nanofmt][format_arg][pointers][strings]") {
-    using namespace nanofmt;
+    using namespace NANOFMT_NS;
 
     SECTION("pointers") {
         void const* cptr;
@@ -81,7 +81,7 @@ TEST_CASE("nanofmt.format_arg.pointers", "[nanofmt][format_arg][pointers][string
 }
 
 TEST_CASE("nanofmt.format_arg.enums", "[nanofmt][format_arg][pointers][enums]") {
-    using namespace nanofmt;
+    using namespace NANOFMT_NS;
 
     // clang-format off
     enum NANOFMT_GSL_SUPPRESS(enum.3) cenum { cenum_value };
@@ -100,17 +100,17 @@ namespace custom {
     class class_type {};
 } // namespace custom
 
-namespace nanofmt {
+namespace NANOFMT_NS {
     template <>
     struct formatter<custom::enum_class> : formatter<void> {};
     template <>
     struct formatter<custom::struct_type> : formatter<void> {};
     template <>
     struct formatter<custom::class_type> : formatter<void> {};
-} // namespace nanofmt
+} // namespace NANOFMT_NS
 
 TEST_CASE("nanofmt.format_arg.custom", "[nanofmt][format_arg][pointers][custom]") {
-    using namespace nanofmt;
+    using namespace NANOFMT_NS;
 
     SECTION("enums") {
         CHECK(to_arg(custom::enum_class::value).type == detail::value_type::t_custom);

@@ -2,11 +2,12 @@
 
 #pragma once
 
+#include "config.h"
 #include "to_chars.h"
 
 #include <cmath>
 
-namespace nanofmt::detail {
+namespace NANOFMT_NS::detail {
     template <typename FloatT>
     struct float_formatter {
         format_spec spec;
@@ -57,12 +58,12 @@ namespace nanofmt::detail {
             }
         }
     };
-} // namespace nanofmt::detail
+} // namespace NANOFMT_NS::detail
 
-namespace nanofmt {
+namespace NANOFMT_NS {
     template <>
     struct formatter<double> : detail::float_formatter<double> {};
 
     template <>
     struct formatter<float> : detail::float_formatter<float> {};
-} // namespace nanofmt
+} // namespace NANOFMT_NS

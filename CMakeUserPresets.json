@@ -1,0 +1,17 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "custom-ns",
+      "inherits": "msvc-debug-x64",
+      "cacheVariables": {
+        "NANOFMT_NS": "CUSTOM"
+      }
+    }
+  ]
+}

@@ -6,7 +6,7 @@
 #include <cstring>
 #include <iostream>
 
-namespace nanofmt::test {
+namespace NANOFMT_NS::test {
     template <size_t N>
     struct string_result {
         char buffer[N] = {};
@@ -27,7 +27,7 @@ namespace nanofmt::test {
     template <size_t N = 2048, typename FormatT, typename... ArgsT>
     auto sformat(FormatT&& format_str, ArgsT&&... args) {
         string_result<N> result;
-        char const* const end = nanofmt::format_to_n(
+        char const* const end = NANOFMT_NS::format_to_n(
             result.buffer,
             sizeof result.buffer,
             std::forward<FormatT>(format_str),
@@ -39,25 +39,9 @@ namespace nanofmt::test {
     template <size_t N = 2048, typename ValueT, typename... ArgsT>
     auto to_string(ValueT const& value, ArgsT&&... args) {
         string_result<N> result;
-        char const* const end = nanofmt::to_chars(result.buffer, result.buffer + sizeof result.buffer, value, args...);
+        char const* const end =
+            NANOFMT_NS::to_chars(result.buffer, result.buffer + sizeof result.buffer, value, args...);
         result.size = end - result.buffer;
         return result;
     }
-} // namespace nanofmt::test
-
-// wow this is annoying; see https://github.com/isocpp/CppCoreGuidelines/issues/1173
-//
-#if defined(__has_cpp_attribute)
-#    if __has_cpp_attribute(gsl::suppress)
-#        if defined(__clang__)
-// clang-format off
-#        define NANOFMT_GSL_SUPPRESS(rule) [[gsl::suppress(#rule)]]
-// clang-format on
-#        endif
-#    elif defined(_MSC_VER)
-#        define NANOFMT_GSL_SUPPRESS(rule) [[gsl::suppress(rule)]]
-#    endif
-#endif
-#if !defined(NANOFMT_GSL_SUPPRESS)
-#    define NANOFMT_GSL_SUPPRESS(rule)
-#endif
+} // namespace NANOFMT_NS::test

@@ -2,12 +2,13 @@
 
 #pragma once
 
+#include "config.h"
 #include "to_chars.h"
 
 #include <cmath>
 #include <cstdint>
 
-namespace nanofmt::detail {
+namespace NANOFMT_NS::detail {
     struct int_formatter_base {
         format_spec spec;
 
@@ -106,9 +107,9 @@ namespace nanofmt::detail {
             buf.append(buffer, pos - buffer);
         }
     };
-} // namespace nanofmt::detail
+} // namespace NANOFMT_NS::detail
 
-namespace nanofmt {
+namespace NANOFMT_NS {
     template <>
     struct formatter<signed char> : detail::int_formatter<int> {};
     template <>
@@ -156,4 +157,4 @@ namespace nanofmt {
     struct formatter<void*> : detail::pointer_formatter {};
     template <>
     struct formatter<void const*> : detail::pointer_formatter {};
-} // namespace nanofmt
+} // namespace NANOFMT_NS

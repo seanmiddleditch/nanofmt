@@ -8,8 +8,8 @@
 #include <limits>
 
 TEST_CASE("nanofmt.to_chars.integers", "[nanofmt][to_chars][integers]") {
-    using namespace nanofmt::test;
-    using namespace nanofmt;
+    using namespace NANOFMT_NS::test;
+    using namespace NANOFMT_NS;
 
     SECTION("decimal") {
         CHECK(to_string(0) == "0");
@@ -63,8 +63,8 @@ TEST_CASE("nanofmt.to_chars.integers", "[nanofmt][to_chars][integers]") {
 }
 
 TEST_CASE("nanofmt.to_chars.fixed", "[nanofmt][to_chars][float][fixed]") {
-    using namespace nanofmt::test;
-    using namespace nanofmt;
+    using namespace NANOFMT_NS::test;
+    using namespace NANOFMT_NS;
 
     SECTION("whole numbers") {
         CHECK(to_string(0e0f, float_format::fixed) == "0");
@@ -125,8 +125,8 @@ TEST_CASE("nanofmt.to_chars.fixed", "[nanofmt][to_chars][float][fixed]") {
 }
 
 TEST_CASE("nanofmt.to_chars.scientifix", "[nanofmt][to_chars][float][scientific]") {
-    using namespace nanofmt::test;
-    using namespace nanofmt;
+    using namespace NANOFMT_NS::test;
+    using namespace NANOFMT_NS;
 
     SECTION("whole numbers") {
         CHECK(to_string(0e0f, float_format::scientific) == "0e+00");
@@ -176,8 +176,8 @@ TEST_CASE("nanofmt.to_chars.scientifix", "[nanofmt][to_chars][float][scientific]
 }
 
 TEST_CASE("nanofmt.to_chars.general", "[nanofmt][to_chars][float][general]") {
-    using namespace nanofmt::test;
-    using namespace nanofmt;
+    using namespace NANOFMT_NS::test;
+    using namespace NANOFMT_NS;
 
     SECTION("bounds") {
         CHECK(to_string(std::numeric_limits<float>::max(), float_format::general) == "3.40282e+38");

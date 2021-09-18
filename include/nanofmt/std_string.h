@@ -2,12 +2,13 @@
 
 #pragma once
 
+#include "config.h"
 #include "format.h"
 
 #include <string>
 #include <string_view>
 
-namespace nanofmt {
+namespace NANOFMT_NS {
     template <typename StringCharT, typename TraitsT, typename AllocatorT>
     struct formatter<std::basic_string<StringCharT, TraitsT, AllocatorT>> : detail::string_formatter_base {
         constexpr void format(std::basic_string<StringCharT, TraitsT, AllocatorT> const& value, buffer& buf) {
@@ -21,4 +22,4 @@ namespace nanofmt {
             do_format(buf, value.data(), value.size());
         }
     };
-} // namespace nanofmt
+} // namespace NANOFMT_NS

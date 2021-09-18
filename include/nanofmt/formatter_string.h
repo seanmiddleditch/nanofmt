@@ -2,7 +2,9 @@
 
 #pragma once
 
-namespace nanofmt::detail {
+#include "config.h"
+
+namespace NANOFMT_NS::detail {
     struct string_formatter_base {
         format_spec spec;
 
@@ -27,9 +29,9 @@ namespace nanofmt::detail {
             }
         }
     };
-} // namespace nanofmt::detail
+} // namespace NANOFMT_NS::detail
 
-namespace nanofmt {
+namespace NANOFMT_NS {
     template <>
     struct formatter<char const*> : detail::string_formatter_base {
         void format(char const* const zstr, buffer& buf) const {
@@ -50,4 +52,4 @@ namespace nanofmt {
         }
     };
 
-} // namespace nanofmt
+} // namespace NANOFMT_NS
