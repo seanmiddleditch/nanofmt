@@ -36,6 +36,161 @@ namespace NANOFMT_NS {
         static constexpr void format_float_impl(FloatT value, buffer& buf, format_spec const& spec) noexcept;
     } // namespace detail
 
+    template <>
+    char const* detail::default_formatter<char>::parse(char const* in, char const* end) noexcept {
+        return parse_int_spec(in, end, spec);
+    }
+
+    template <>
+    void detail::default_formatter<char>::format(char value, buffer& buf) noexcept {
+        format_char_impl(value, buf, spec);
+    }
+
+    template <>
+    char const* detail::default_formatter<signed int>::parse(char const* in, char const* end) noexcept {
+        return parse_int_spec(in, end, spec);
+    }
+
+    template <>
+    void detail::default_formatter<signed int>::format(signed int value, buffer& buf) noexcept {
+        return format_int_impl(value, buf, spec);
+    }
+
+    template <>
+    char const* detail::default_formatter<unsigned int>::parse(char const* in, char const* end) noexcept {
+        return parse_int_spec(in, end, spec);
+    }
+
+    template <>
+    void detail::default_formatter<unsigned int>::format(unsigned int value, buffer& buf) noexcept {
+        return format_int_impl(value, buf, spec);
+    }
+
+    template <>
+    char const* detail::default_formatter<signed long>::parse(char const* in, char const* end) noexcept {
+        return parse_int_spec(in, end, spec);
+    }
+
+    template <>
+    void detail::default_formatter<signed long>::format(signed long value, buffer& buf) noexcept {
+        return format_int_impl(value, buf, spec);
+    }
+
+    template <>
+    char const* detail::default_formatter<unsigned long>::parse(char const* in, char const* end) noexcept {
+        return parse_int_spec(in, end, spec);
+    }
+
+    template <>
+    void detail::default_formatter<unsigned long>::format(unsigned long value, buffer& buf) noexcept {
+        return format_int_impl(value, buf, spec);
+    }
+
+    template <>
+    char const* detail::default_formatter<signed long long>::parse(char const* in, char const* end) noexcept {
+        return parse_int_spec(in, end, spec);
+    }
+
+    template <>
+    void detail::default_formatter<signed long long>::format(signed long long value, buffer& buf) noexcept {
+        return format_int_impl(value, buf, spec);
+    }
+
+    template <>
+    char const* detail::default_formatter<unsigned long long>::parse(char const* in, char const* end) noexcept {
+        return parse_int_spec(in, end, spec);
+    }
+
+    template <>
+    void detail::default_formatter<unsigned long long>::format(unsigned long long value, buffer& buf) noexcept {
+        return format_int_impl(value, buf, spec);
+    }
+
+    template <>
+    char const* detail::default_formatter<float>::parse(char const* in, char const* end) noexcept {
+        return parse_float_spec(in, end, spec);
+    }
+
+    template <>
+    void detail::default_formatter<float>::format(float value, buffer& buf) noexcept {
+        return format_float_impl(value, buf, spec);
+    }
+
+    template <>
+    char const* detail::default_formatter<double>::parse(char const* in, char const* end) noexcept {
+        return parse_float_spec(in, end, spec);
+    }
+
+    template <>
+    void detail::default_formatter<double>::format(double value, buffer& buf) noexcept {
+        return format_float_impl(value, buf, spec);
+    }
+
+    template <>
+    char const* detail::default_formatter<bool>::parse(char const* in, char const* end) noexcept {
+        return parse_spec(in, end, spec, "sbBcdoxX");
+    }
+
+    template <>
+    void detail::default_formatter<bool>::format(bool value, buffer& buf) noexcept {
+        switch (spec.type) {
+            case '\0':
+            case 's':
+                buf.append(value ? "true" : "false");
+                break;
+            default:
+                format_int_impl(static_cast<unsigned char>(value), buf, spec);
+                return;
+        }
+    }
+
+    template <>
+    char const* detail::default_formatter<void const*>::parse(char const* in, char const* end) noexcept {
+        return parse_spec(in, end, spec, "p");
+    }
+
+    template <>
+    void detail::default_formatter<void const*>::format(void const* value, buffer& buf) noexcept {
+        // hex encoding is 2 chars per octet
+        char buffer[sizeof(value) * 2];
+        char const* const end =
+            to_chars(buffer, buffer + sizeof buffer, reinterpret_cast<std::uintptr_t>(value), int_format::hex);
+        buf.append("0x");
+        buf.append(buffer, end - buffer);
+    }
+
+    template <>
+    char const* detail::default_formatter<char const*>::parse(char const* in, char const* end) noexcept {
+        return parse_spec(in, end, spec, "s");
+    }
+
+    template <>
+    void detail::default_formatter<char const*>::format(char const* value, buffer& buf) noexcept {
+        if (value != nullptr) {
+            format_string_impl(value, __builtin_strlen(value), buf, spec);
+        }
+    }
+
+    template <>
+    char const* detail::default_formatter<detail::char_buffer>::parse(char const* in, char const* end) noexcept {
+        return parse_spec(in, end, spec, "s");
+    }
+
+    template <>
+    void detail::default_formatter<detail::char_buffer>::format(char_buffer value, buffer& buf) noexcept {
+        format_string_impl(value.buffer, strnlen(value.buffer, value.max_length), buf, spec);
+    }
+
+    template <>
+    char const* detail::default_formatter<format_string_view>::parse(char const* in, char const* end) noexcept {
+        return parse_spec(in, end, spec, "s");
+    }
+
+    template <>
+    void detail::default_formatter<format_string_view>::format(format_string_view value, buffer& buf) noexcept {
+        format_string_impl(value.string, value.length, buf, spec);
+    }
+
     char* detail::vformat(buffer& buf, format_string format_str, format_args&& args) {
         int arg_next_index = 0;
         bool arg_auto_index = true;
@@ -443,160 +598,5 @@ namespace NANOFMT_NS {
                     to_chars(buf.pos, buf.end, value, float_format::fixed, spec.precision < 0 ? 6 : spec.precision));
                 break;
         }
-    }
-
-    template <>
-    char const* detail::default_formatter<char>::parse(char const* in, char const* end) noexcept {
-        return parse_int_spec(in, end, spec);
-    }
-
-    template <>
-    void detail::default_formatter<char>::format(char value, buffer& buf) noexcept {
-        format_char_impl(value, buf, spec);
-    }
-
-    template <>
-    char const* detail::default_formatter<signed int>::parse(char const* in, char const* end) noexcept {
-        return parse_int_spec(in, end, spec);
-    }
-
-    template <>
-    void detail::default_formatter<signed int>::format(signed int value, buffer& buf) noexcept {
-        return format_int_impl(value, buf, spec);
-    }
-
-    template <>
-    char const* detail::default_formatter<unsigned int>::parse(char const* in, char const* end) noexcept {
-        return parse_int_spec(in, end, spec);
-    }
-
-    template <>
-    void detail::default_formatter<unsigned int>::format(unsigned int value, buffer& buf) noexcept {
-        return format_int_impl(value, buf, spec);
-    }
-
-    template <>
-    char const* detail::default_formatter<signed long>::parse(char const* in, char const* end) noexcept {
-        return parse_int_spec(in, end, spec);
-    }
-
-    template <>
-    void detail::default_formatter<signed long>::format(signed long value, buffer& buf) noexcept {
-        return format_int_impl(value, buf, spec);
-    }
-
-    template <>
-    char const* detail::default_formatter<unsigned long>::parse(char const* in, char const* end) noexcept {
-        return parse_int_spec(in, end, spec);
-    }
-
-    template <>
-    void detail::default_formatter<unsigned long>::format(unsigned long value, buffer& buf) noexcept {
-        return format_int_impl(value, buf, spec);
-    }
-
-    template <>
-    char const* detail::default_formatter<signed long long>::parse(char const* in, char const* end) noexcept {
-        return parse_int_spec(in, end, spec);
-    }
-
-    template <>
-    void detail::default_formatter<signed long long>::format(signed long long value, buffer& buf) noexcept {
-        return format_int_impl(value, buf, spec);
-    }
-
-    template <>
-    char const* detail::default_formatter<unsigned long long>::parse(char const* in, char const* end) noexcept {
-        return parse_int_spec(in, end, spec);
-    }
-
-    template <>
-    void detail::default_formatter<unsigned long long>::format(unsigned long long value, buffer& buf) noexcept {
-        return format_int_impl(value, buf, spec);
-    }
-
-    template <>
-    char const* detail::default_formatter<float>::parse(char const* in, char const* end) noexcept {
-        return parse_float_spec(in, end, spec);
-    }
-
-    template <>
-    void detail::default_formatter<float>::format(float value, buffer& buf) noexcept {
-        return format_float_impl(value, buf, spec);
-    }
-
-    template <>
-    char const* detail::default_formatter<double>::parse(char const* in, char const* end) noexcept {
-        return parse_float_spec(in, end, spec);
-    }
-
-    template <>
-    void detail::default_formatter<double>::format(double value, buffer& buf) noexcept {
-        return format_float_impl(value, buf, spec);
-    }
-
-    template <>
-    char const* detail::default_formatter<bool>::parse(char const* in, char const* end) noexcept {
-        return parse_spec(in, end, spec, "sbBcdoxX");
-    }
-
-    template <>
-    void detail::default_formatter<bool>::format(bool value, buffer& buf) noexcept {
-        switch (spec.type) {
-            case '\0':
-            case 's':
-                buf.append(value ? "true" : "false");
-                break;
-            default:
-                format_int_impl(static_cast<unsigned char>(value), buf, spec);
-                return;
-        }
-    }
-
-    template <>
-    char const* detail::default_formatter<void const*>::parse(char const* in, char const* end) noexcept {
-        return parse_spec(in, end, spec, "p");
-    }
-
-    template <>
-    void detail::default_formatter<void const*>::format(void const* value, buffer& buf) noexcept {
-        // hex encoding is 2 chars per octet
-        char buffer[sizeof(value) * 2];
-        char const* const end =
-            to_chars(buffer, buffer + sizeof buffer, reinterpret_cast<std::uintptr_t>(value), int_format::hex);
-        buf.append("0x");
-        buf.append(buffer, end - buffer);
-    }
-
-    template <>
-    char const* detail::default_formatter<char const*>::parse(char const* in, char const* end) noexcept {
-        return parse_spec(in, end, spec, "s");
-    }
-
-    template <>
-    void detail::default_formatter<char const*>::format(char const* value, buffer& buf) noexcept {
-        if (value != nullptr) {
-            format_string_impl(value, __builtin_strlen(value), buf, spec);
-        }
-    }
-
-    template <>
-    char const* detail::default_formatter<detail::char_buffer>::parse(char const* in, char const* end) noexcept {
-        return parse_spec(in, end, spec, "s");
-    }
-
-    template <>
-    void detail::default_formatter<detail::char_buffer>::format(char_buffer value, buffer& buf) noexcept {
-        format_string_impl(value.buffer, strnlen(value.buffer, value.max_length), buf, spec);
-    }
-
-    template <>
-    char const* detail::default_formatter<format_string_view>::parse(char const* in, char const* end) noexcept {
-        return parse_spec(in, end, spec, "s");
-    }
-
-    template <>
-    void detail::default_formatter<format_string_view>::format(format_string_view value, buffer& buf) noexcept {
-        format_string_impl(value.string, value.length, buf, spec);
     }
 } // namespace NANOFMT_NS

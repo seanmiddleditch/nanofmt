@@ -389,6 +389,7 @@ namespace NANOFMT_NS {
             else if constexpr (std::is_enum_v<ValueT>) {
                 return static_cast<typename detail::value_type_map<std::underlying_type_t<ValueT>>::type>(value);
             }
+            return {};
         };
     } // namespace detail
 
