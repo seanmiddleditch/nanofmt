@@ -6,7 +6,7 @@ target_sources(nanofmt_test PRIVATE
     "test_format_args.cpp"
     "test_to_chars.cpp"
     "test_utils.h"
-)
+ "test_format_value.cpp")
 target_link_libraries(nanofmt_test PRIVATE
     nanofmt
     Catch2::Catch2WithMain

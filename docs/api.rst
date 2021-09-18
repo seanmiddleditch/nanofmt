@@ -38,8 +38,22 @@ Buffers
 
 .. doxygenstruct:: nanofmt::buffer
 
+Values
+^^^^^^
+
+Individual values can be formatted with nanofmt without requiring a full
+format string.
+
+.. doxygenfunction:: nanofmt::format_value_to(char (&dest)[N], ValueT const&, format_string)
+
+.. doxygenfunction:: nanofmt::format_value_to(buffer&, ValueT const&, format_string)
+
+.. doxygenfunction:: nanofmt::format_value_to_n(char*, std::size_t, ValueT const&, format_string)
+
+.. doxygenfunction:: nanofmt::format_value_size(ValueT const&, format_string)
+
 Miscellaneous
-^^^^^^^
+^^^^^^^^^^^^^
 
 nanofmt uses a ``format_string`` type for receiving its format strings, to
 decouple from and support various string types and classes. Many string
