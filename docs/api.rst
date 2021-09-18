@@ -12,7 +12,6 @@ API
 Formatting
 ----------
 
-
 Core API
 ^^^^^^^^
 
@@ -81,7 +80,8 @@ that don't already support conversion to ``format_string``, a
 
 A very simple ``format_string_view`` that wraps a ``char const*`` and a
 ``std::size_t`` is provided to make it easier to write ``formatter``
-specializations that work on length-delimited string views.
+specializations that work on length-delimited string views, by deriving
+from ``formatter<format_string_view>``.
 
 .. doxygenstruct:: nanofmt::format_string
 
