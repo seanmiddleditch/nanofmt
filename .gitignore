@@ -11,3 +11,4 @@
 enc_temp_folder
 docs/build
 docs/doxyoutput
+CMakeUserPresets.json
