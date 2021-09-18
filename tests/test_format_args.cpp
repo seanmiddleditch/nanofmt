@@ -100,14 +100,14 @@ namespace custom {
     class class_type {};
 } // namespace custom
 
-namespace nanofmt {
+namespace NANOFMT_NS {
     template <>
     struct formatter<custom::enum_class> : formatter<void> {};
     template <>
     struct formatter<custom::struct_type> : formatter<void> {};
     template <>
     struct formatter<custom::class_type> : formatter<void> {};
-} // namespace nanofmt
+} // namespace NANOFMT_NS
 
 TEST_CASE("nanofmt.format_arg.custom", "[nanofmt][format_arg][pointers][custom]") {
     using namespace NANOFMT_NS;
