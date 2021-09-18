@@ -9,6 +9,11 @@
 
 // utilities
 namespace NANOFMT_NS::detail {
+    static constexpr char const* parse_spec(
+        char const* in,
+        char const* end,
+        format_spec& spec,
+        char const* allowed_types) noexcept;
     static constexpr void format_int_chars(
         buffer& buf,
         char const* digits,
@@ -29,6 +34,141 @@ namespace NANOFMT_NS::detail {
         format_spec const& spec) noexcept;
     template <typename FloatT>
     static constexpr void format_float(FloatT value, buffer& buf, format_spec const& spec) noexcept;
+
+    static constexpr char const* parse_spec(
+        char const* in,
+        char const* end,
+        format_spec& spec,
+        char const* allowed_types) noexcept {
+        if (in == end) {
+            return in;
+        }
+
+        auto const is_align = [](char const* c, char const* e) noexcept {
+            return c != e && (*c == '<' || *c == '>' || *c == '^');
+        };
+
+        // -- parse fill -
+        //
+        // fixme: fill should be any character except { and } but only when followed
+        //  by an alignment
+        //
+        if (*in != '{' && *in != '}' && is_align(in + 1, end)) {
+            spec.fill = *in;
+            ++in;
+
+            if (in == end) {
+                return in;
+            }
+        }
+
+        // -- parse alignment --
+        //
+        switch (*in) {
+            case '<':
+                spec.align = -1;
+                ++in;
+                break;
+            case '>':
+                spec.align = +1;
+                ++in;
+                break;
+            case '^':
+                spec.align = 0;
+                ++in;
+                break;
+            default:
+                break;
+        }
+        if (in == end) {
+            return in;
+        }
+
+        // -- parse sign --
+        //
+        switch (*in) {
+            case '+':
+            case '-':
+            case ' ':
+                spec.sign = *in++;
+                if (in == end) {
+                    return in;
+                }
+                break;
+            default:
+                break;
+        }
+
+        // -- parse alternate form flag --
+        //
+        if (*in == '#') {
+            spec.alt_form = true;
+            ++in;
+            if (in == end) {
+                return in;
+            }
+        }
+
+        // -- parse zero pad flag --
+        //
+        if (*in == '0') {
+            spec.zero_pad = true;
+            ++in;
+            if (in == end) {
+                return in;
+            }
+        }
+
+        // -- parse width
+        //
+        if (int const width = detail::parse_nonnegative(in, end); width >= 0) {
+            spec.width = width;
+            if (in == end) {
+                return in;
+            }
+
+            // a width of 0 is not allowed
+            if (width == 0) {
+                return --in;
+            }
+        }
+
+        // -- parse precision
+        //
+        if (*in == '.') {
+            ++in;
+            int const precision = detail::parse_nonnegative(in, end);
+
+            if (precision < 0 || in == end) {
+                return in;
+            }
+
+            spec.precision = precision;
+        }
+
+        // -- parse locale flag
+        //
+        if (*in == 'L') {
+            spec.locale = true;
+            ++in;
+            if (in == end) {
+                return in;
+            }
+        }
+
+        // -- parse type
+        //
+        if (allowed_types != nullptr) {
+            for (char const* t = allowed_types; *t != 0; ++t) {
+                if (*in == *t) {
+                    spec.type = *in++;
+                    break;
+                }
+            }
+        }
+
+        return in;
+    }
 
     static constexpr void format_int_chars(
         buffer& buf,

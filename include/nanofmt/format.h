@@ -86,31 +86,22 @@ namespace NANOFMT_NS {
     template <typename... Args>
     constexpr auto make_format_args(Args const&... args) noexcept;
 
-    constexpr char const* parse_spec(
-        char const* in,
-        char const* end,
-        format_spec& spec,
-        char const* allowed_types = nullptr) noexcept;
-
     namespace detail {
         char* vformat(buffer& buf, format_string format_str, format_args&& args);
         constexpr int parse_nonnegative(char const*& start, char const* end) noexcept;
-    } // namespace detail
 
-    /// Default formatter spec options
-    struct format_spec {
-        int width = -1;
-        int precision = -1;
-        signed char align = -1; // -1 left, 0 center, +1 right
-        char sign = '-'; // -, +, or space
-        char fill = ' ';
-        char type = '\0';
-        bool zero_pad = false;
-        bool alt_form = false;
-        bool locale = false;
-    };
+        struct format_spec {
+            int width = -1;
+            int precision = -1;
+            signed char align = -1; // -1 left, 0 center, +1 right
+            char sign = '-'; // -, +, or space
+            char fill = ' ';
+            char type = '\0';
+            bool zero_pad = false;
+            bool alt_form = false;
+            bool locale = false;
+        };
 
-    namespace detail {
         template <typename T>
         struct default_formatter {
             format_spec spec;
@@ -294,143 +285,5 @@ namespace NANOFMT_NS {
             ++start;
         }
         return result;
-    }
-
-    /// Parses standard format specification options into the provided
-    /// spec object. Returns a pointer to the next unconsumed character
-    /// from the input range.
-    constexpr char const* parse_spec(
-        char const* in,
-        char const* end,
-        format_spec& spec,
-        char const* allowed_types) noexcept {
-        if (in == end) {
-            return in;
-        }
-
-        auto const is_align = [](char const* c, char const* e) noexcept {
-            return c != e && (*c == '<' || *c == '>' || *c == '^');
-        };
-
-        // -- parse fill -
-        //
-        // fixme: fill should be any character except { and } but only when followed
-        //  by an alignment
-        //
-        if (*in != '{' && *in != '}' && is_align(in + 1, end)) {
-            spec.fill = *in;
-            ++in;
-
-            if (in == end) {
-                return in;
-            }
-        }
-
-        // -- parse alignment --
-        //
-        switch (*in) {
-            case '<':
-                spec.align = -1;
-                ++in;
-                break;
-            case '>':
-                spec.align = +1;
-                ++in;
-                break;
-            case '^':
-                spec.align = 0;
-                ++in;
-                break;
-            default:
-                break;
-        }
-        if (in == end) {
-            return in;
-        }
-
-        // -- parse sign --
-        //
-        switch (*in) {
-            case '+':
-            case '-':
-            case ' ':
-                spec.sign = *in++;
-                if (in == end) {
-                    return in;
-                }
-                break;
-            default:
-                break;
-        }
-
-        // -- parse alternate form flag --
-        //
-        if (*in == '#') {
-            spec.alt_form = true;
-            ++in;
-            if (in == end) {
-                return in;
-            }
-        }
-
-        // -- parse zero pad flag --
-        //
-        if (*in == '0') {
-            spec.zero_pad = true;
-            ++in;
-            if (in == end) {
-                return in;
-            }
-        }
-
-        // -- parse width
-        //
-        if (int const width = detail::parse_nonnegative(in, end); width >= 0) {
-            spec.width = width;
-            if (in == end) {
-                return in;
-            }
-
-            // a width of 0 is not allowed
-            if (width == 0) {
-                return --in;
-            }
-        }
-
-        // -- parse precision
-        //
-        if (*in == '.') {
-            ++in;
-            int const precision = detail::parse_nonnegative(in, end);
-
-            if (precision < 0 || in == end) {
-                return in;
-            }
-
-            spec.precision = precision;
-        }
-
-        // -- parse locale flag
-        //
-        if (*in == 'L') {
-            spec.locale = true;
-            ++in;
-            if (in == end) {
-                return in;
-            }
-        }
-
-        // -- parse type
-        //
-        if (allowed_types != nullptr) {
-            for (char const* t = allowed_types; *t != 0; ++t) {
-                if (*in == *t) {
-                    spec.type = *in++;
-                    break;
-                }
-            }
-        }
-
-        return in;
     }
 } // namespace NANOFMT_NS

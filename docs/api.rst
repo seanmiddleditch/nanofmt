@@ -76,13 +76,6 @@ specializations that work on length-delimited string views.
 
 .. doxygenstruct:: nanofmt::format_string_view
 
-Syntax Parsers
-^^^^^^^^^^^^^^
-
-.. doxygenstruct:: nanofmt::format_spec
-
-.. doxygenfunction:: nanofmt::parse_spec
-
 Variadic Arguments
 ^^^^^^^^^^^^^^^^^^
 
