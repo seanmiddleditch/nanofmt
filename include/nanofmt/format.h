@@ -11,6 +11,7 @@ namespace NANOFMT_NS {
     struct format_args;
     struct format_spec;
     struct format_string;
+    struct format_string_view;
 
     /// Specialize to implement format support for a type.
     ///
@@ -41,6 +42,12 @@ namespace NANOFMT_NS {
 
         char const* begin = nullptr;
         char const* end = nullptr;
+    };
+
+    /// Small wrapper to assist in formatting types like std::string_view
+    struct format_string_view {
+        char const* string = nullptr;
+        std::size_t length = 0;
     };
 
     template <typename... Args>
@@ -117,12 +124,6 @@ namespace NANOFMT_NS {
             char const* parse(char const* in, char const* end) noexcept;
             void format(char const* value, buffer& buf) noexcept;
         };
-
-        struct string_view_formatter_base {
-            format_spec spec;
-            char const* parse(char const* in, char const* end) noexcept;
-            void format(char const* value, std::size_t length, buffer& buf) noexcept;
-        };
     } // namespace detail
 
     template <>
@@ -136,6 +137,8 @@ namespace NANOFMT_NS {
     struct formatter<char const*> : detail::default_formatter<char const*> {};
     template <std::size_t N>
     struct formatter<char const[N]> : detail::char_buf_formatter {};
+    template <>
+    struct formatter<format_string_view> : detail::default_formatter<format_string_view> {};
 
     template <>
     struct formatter<signed char> : detail::default_formatter<signed int> {};

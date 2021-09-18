@@ -12,6 +12,11 @@ API
 Formatting
 ----------
 
+The format API is available in the header ``nanofmt/format.h``.
+
+Extensions for C++ standard library string types are in the header
+``nanofmt/std_string.h``.
+
 Core API
 ^^^^^^^^
 
@@ -61,10 +66,15 @@ types should automatically convert to ``format_string``; for string types
 that don't already support conversion to ``format_string``, a
 ``to_format_string`` function can be implemented.
 
+A very simple ``format_string_view`` that wraps a ``char const*`` and a
+``std::size_t`` is provided to make it easier to write ``formatter``
+specializations that work on length-delimited string views.
+
 .. doxygenstruct:: nanofmt::format_string
 
 .. doxygenfunction:: nanofmt::to_format_string
 
+.. doxygenstruct:: nanofmt::format_string_view
 
 Syntax Parsers
 ^^^^^^^^^^^^^^
@@ -84,6 +94,8 @@ Variadic Arguments
 
 Character Conversion
 --------------------
+
+The character conversion API is available in the header ``nanofmt/to_chars.h``.
 
 Integral Types
 ^^^^^^^^^^^^^^

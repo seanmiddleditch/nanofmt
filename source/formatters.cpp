@@ -332,11 +332,11 @@ namespace NANOFMT_NS::detail {
         }
     }
 
-    char const* string_view_formatter_base::parse(char const* in, char const* end) noexcept {
+    char const* default_formatter<format_string_view>::parse(char const* in, char const* end) noexcept {
         return parse_spec(in, end, spec, "s");
     }
 
-    void string_view_formatter_base::format(char const* value, std::size_t length, buffer& buf) noexcept {
-        format_string(value, length, buf, spec);
+    void default_formatter<format_string_view>::format(format_string_view value, buffer& buf) noexcept {
+        format_string(value.string, value.length, buf, spec);
     }
 } // namespace NANOFMT_NS::detail
