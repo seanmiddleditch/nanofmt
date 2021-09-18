@@ -26,6 +26,7 @@ namespace NANOFMT_NS {
     /// is updated appropriately.
     ///
     struct buffer {
+        constexpr buffer() noexcept = default;
         constexpr buffer(char* const dest, std::size_t count) noexcept : pos(dest), end(dest + count) {}
 
         constexpr buffer& append(char const* const zstr) noexcept {
