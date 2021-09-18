@@ -54,6 +54,10 @@ TEST_CASE("nanofmt.format.integers", "[nanofmt][format][integers]") {
         CHECK(sformat("{:.4b}", 0b1001'0110) == "1001");
     }
 
+    SECTION("char") {
+        CHECK(sformat("{:d}", ' ') == "32");
+    }
+
     SECTION("hex") {
         CHECK(sformat("{:x}", ~16u) == "ffffffef");
         CHECK(sformat("{:08x}", 0xDEAD) == "0000dead");
@@ -145,26 +149,15 @@ TEST_CASE("nanofmt.format.pointers", "[nanofmt][format][pointers]") {
     using namespace NANOFMT_NS::test;
 
     SECTION("nullptr") {
-        if constexpr (sizeof(void*) == 8) {
-            CHECK(sformat("{}", nullptr) == "0x0000000000000000");
-        }
-        else {
-            CHECK(sformat("{}", nullptr) == "0x00000000");
-        }
+        CHECK(sformat("{}", nullptr) == "0x0");
     }
 
     SECTION("raw") {
         void const* ptr = reinterpret_cast<void const*>(static_cast<std::uintptr_t>(0xDEADC0DE));
         int const* iptr = reinterpret_cast<int const*>(static_cast<std::uintptr_t>(0xFEFEFEFE));
 
-        if constexpr (sizeof(void*) == 8) {
-            CHECK(sformat("{}", ptr) == "0x00000000deadc0de");
-            CHECK(sformat("{:X}", iptr) == "0X00000000FEFEFEFE");
-        }
-        else {
-            CHECK(sformat("{}", ptr) == "0xdeadc0de");
-            CHECK(sformat("{:X}", iptr) == "0XFEFEFEFE");
-        }
+        CHECK(sformat("{}", ptr) == "0xdeadc0de");
+        CHECK(sformat("{}", iptr) == "0xfefefefe");
     }
 }
 

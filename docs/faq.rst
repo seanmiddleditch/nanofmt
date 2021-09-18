@@ -12,8 +12,8 @@ Developers and teams who are still choosing to use `snprintf`_ or related
 technologies instead of `fmtlib`_ or `std::format`_.
 
 Developers and teams who are using ``snprintf`` and have explicitly
-rejected `fmtlib`_, but still want to get its two biggest features: type-aware
-formatting and user-extensible type support.
+rejected `fmtlib`_, but still want to get its two biggest features:
+type-aware formatting and user-extensible type support.
 
 Said developers are still okay with accepting ``snprintf``'s other
 limitation of only being able to write to character buffers.
@@ -21,10 +21,8 @@ limitation of only being able to write to character buffers.
 Why??
 -----
 
-Because.
-
-More seriously, the author works on a team (and has worked on numerous teams)
-that have strong cultural tendencies to prefering ``snprintf`` for all string
+The author has worked on multiples teams in the AAA games industry that have
+strong cultural tendencies to prefering ``snprintf`` for all string
 formatting. Reasons cited are usually something like:
 
 - Minimizing dependencies, as a reason not to use `fmtlib`_.
@@ -32,8 +30,8 @@ formatting. Reasons cited are usually something like:
 - Deep distrust of standard headers, as a reason to avoid ``std::format``;
   and any library that uses many standard headers, as a reason not to use
   `fmtlib`_.
-- Dislike of namespaces. Note that nanofmt at this time doesn't "help" here but
-  it's a very possible/probable future evolution.
+- Dislike of namespaces. Note that nanofmt at this time doesn't "help" here
+  but it's a very possible/probable future evolution.
 - Compile times, as a reason to reinvent every wheel.
 
 Compile Times? Really?
@@ -133,16 +131,16 @@ ecosystem support can best be described as nascent.
 Further, note that modules only help *part* of the compile time overhead.
 At best, we can expect modules to reduce the cost of parsing large header
 hierarchies. While that is a significant amount of the time incurred with
-compiling libraries like `fmtlib`_ or ``std::format``, another large chunk of the
-time goes into instantiating templates, resolving function overloads,
+compiling libraries like `fmtlib`_ or ``std::format``, another large chunk of
+the time goes into instantiating templates, resolving function overloads,
 evaluating constexpr functions, and so on.
 
 nanofmt, by virtue of steeply limiting its feature set and general
 applicability, aims to reduce the need for as much of that "use time"
 overhead as possible. While it's almost certainly impossible to hit the
-minimal compile-time of ``snprintf``, the goal is to keep the difference small
-enough that the "developer time" benefits of a type-safe user-extensible
-format library outweighs the compile time costs.
+minimal compile-time of ``snprintf``, the goal is to keep the difference
+small enough that the "developer time" benefits of a type-safe user-
+extensible format library outweighs the compile time costs.
 
 What Does nanofmt Support?
 --------------------------
@@ -212,10 +210,11 @@ Excellent question.
 ... too soon to tell. If having a dedicated maintainer is important to you,
 this library might be a little too new and untested for your needs.
 
-As stated in the :ref:`C++ modules FAQ question<faq-modules>`, there's a very real future where this entire
-library is obsolete. To that end, while nanofmt is not a direct drop-in
-replacement for ``std::format``, it aims to be "close enough" that migrating
-from nanofmt to the standard equivalent is meant to be straightforward.
+As stated in the :ref:`C++ modules FAQ question<faq-modules>`, there's a very
+real future where this entire library is obsolete. To that end, while nanofmt
+is not a direct drop-in replacement for ``std::format``, it aims to be "close
+enough" that migrating from nanofmt to the standard equivalent is meant to be
+straightforward.
 
 .. _snprintf: https://en.cppreference.com/w/c/io/fprintf
 .. _std::format: https://en.cppreference.com/w/cpp/utility/format/format

@@ -1,5 +1,6 @@
 // Copyright (c) Sean Middleditch and contributors. See accompanying LICENSE.md for copyright details.
 
+#include "parse_utils.h"
 #include "nanofmt/format.h"
 
 namespace NANOFMT_NS::detail {

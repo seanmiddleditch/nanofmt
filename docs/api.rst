@@ -12,8 +12,13 @@ API
 Formatting
 ----------
 
-Core API
-^^^^^^^^
+Core Format API
+^^^^^^^^^^^^^^^
+
+The format API is available in the header ``nanofmt/format.h``.
+
+Extensions for C++ standard library string types are in the header
+``nanofmt/std_string.h``.
 
 .. doxygenfunction:: nanofmt::format_to(char (&dest)[N], format_string, Args const&...)
 
@@ -36,10 +41,22 @@ Core API
 Buffers
 ^^^^^^^
 
+The buffer API is available in the header ``nanofmt/buffer.h``.
+
 .. doxygenstruct:: nanofmt::buffer
+
+.. doxygenfunction:: copy_to(char*, char const*, char const*) noexcept
+
+.. doxygenfunction:: copy_to_n(char*, char const*, char const*, std::size_t) noexcept
+
+.. doxygenfunction:: put(char*, char const*, char) noexcept
+
+.. doxygenfunction:: fill_n(char*, char const*, char, std::size_t) noexcept
 
 Values
 ^^^^^^
+
+The format API is available in the header ``nanofmt/format.h``.
 
 Individual values can be formatted with nanofmt without requiring a full
 format string.
@@ -61,17 +78,16 @@ types should automatically convert to ``format_string``; for string types
 that don't already support conversion to ``format_string``, a
 ``to_format_string`` function can be implemented.
 
+A very simple ``format_string_view`` that wraps a ``char const*`` and a
+``std::size_t`` is provided to make it easier to write ``formatter``
+specializations that work on length-delimited string views, by deriving
+from ``formatter<format_string_view>``.
+
 .. doxygenstruct:: nanofmt::format_string
 
 .. doxygenfunction:: nanofmt::to_format_string
 
-
-Syntax Parsers
-^^^^^^^^^^^^^^
-
-.. doxygenstruct:: nanofmt::format_spec
-
-.. doxygenfunction:: nanofmt::parse_spec
+.. doxygenstruct:: nanofmt::format_string_view
 
 Variadic Arguments
 ^^^^^^^^^^^^^^^^^^
@@ -85,40 +101,20 @@ Variadic Arguments
 Character Conversion
 --------------------
 
-Integral Types
-^^^^^^^^^^^^^^
+Core Conversion API
+^^^^^^^^^^^^^^^^^^^
+
+The character conversion API is available in the header ``nanofmt/to_chars.h``.
+
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, IntegerT, int_format) noexcept
+
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, FloatT, float_format) noexcept
+
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, FloatT, float_format, int) noexcept
+
+Supporting Types
+^^^^^^^^^^^^^^^^
 
 .. doxygenenum:: nanofmt::int_format
 
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, signed char, int_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, signed short, int_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, signed int, int_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, signed long, int_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, signed long long, int_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, unsigned char, int_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, unsigned short, int_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, unsigned int, int_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, unsigned long, int_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, unsigned long long, int_format) noexcept
-
-Floating Point Types
-^^^^^^^^^^^^^^^^^^^^
-
 .. doxygenenum:: nanofmt::float_format
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, float, float_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, double, float_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, float, float_format, int) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, double, float_format, int) noexcept

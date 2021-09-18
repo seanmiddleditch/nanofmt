@@ -101,12 +101,20 @@ namespace custom {
 } // namespace custom
 
 namespace NANOFMT_NS {
+    struct custom_formatter_base {
+        constexpr char const* parse(char const* in, char const* end) noexcept {
+            return in;
+        }
+        template <typename T>
+        void format(T const&, buffer&) {}
+    };
+
     template <>
-    struct formatter<custom::enum_class> : formatter<void> {};
+    struct formatter<custom::enum_class> : custom_formatter_base {};
     template <>
-    struct formatter<custom::struct_type> : formatter<void> {};
+    struct formatter<custom::struct_type> : custom_formatter_base {};
     template <>
-    struct formatter<custom::class_type> : formatter<void> {};
+    struct formatter<custom::class_type> : custom_formatter_base {};
 } // namespace NANOFMT_NS
 
 TEST_CASE("nanofmt.format_arg.custom", "[nanofmt][format_arg][pointers][custom]") {

@@ -66,6 +66,9 @@ namespace NANOFMT_NS {
         std::size_t advance = 0;
     };
 
+    /// Copy the source string to the destination buffer, but not extending
+    /// past the provided buffer end pointer. Returns the pointer past the
+    /// last character written.
     constexpr char* copy_to(char* buffer, char const* end, char const* source) noexcept {
         char const* ptr = source;
         while (*ptr != 0 && buffer != end)
@@ -74,6 +77,9 @@ namespace NANOFMT_NS {
         return buffer;
     }
 
+    /// Copies up to length characters of source string to the destination
+    /// buffer, but not extending past the provided buffer end pointer.
+    /// Returns the pointer past the last character written.
     constexpr char* copy_to_n(char* buffer, char const* end, char const* source, std::size_t length) noexcept {
         char const* source_end = source + length;
         while (source != source_end && buffer != end)
@@ -82,6 +88,9 @@ namespace NANOFMT_NS {
         return buffer;
     }
 
+    /// Copies the provided character ch to the destination buffer, but not
+    /// extending past the provided buffer end pointer. Returns the pointer
+    /// past the last character written.
     constexpr char* put(char* buffer, char const* end, char ch) noexcept {
         if (buffer != end) {
             *buffer++ = ch;
@@ -89,6 +98,9 @@ namespace NANOFMT_NS {
         return buffer;
     }
 
+    /// Copies count copies of the charcter ch to the destination buffer, but
+    /// not extending past the provided buffer end pointer. Returns the
+    /// pointer past the last character written.
     constexpr char* fill_n(char* buffer, char const* end, char ch, std::size_t count) noexcept {
         char const pad_buffer[] = {ch, ch, ch, ch, ch, ch, ch, ch};
         constexpr std::size_t pad_length = sizeof pad_buffer;
