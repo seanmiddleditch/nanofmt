@@ -12,8 +12,8 @@ API
 Formatting
 ----------
 
-Core API
-^^^^^^^^
+Core Format API
+^^^^^^^^^^^^^^^
 
 The format API is available in the header ``nanofmt/format.h``.
 
@@ -101,42 +101,20 @@ Variadic Arguments
 Character Conversion
 --------------------
 
+Core Conversion API
+^^^^^^^^^^^^^^^^^^^
+
 The character conversion API is available in the header ``nanofmt/to_chars.h``.
 
-Integral Types
-^^^^^^^^^^^^^^
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, IntegerT, int_format) noexcept
+
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, FloatT, float_format) noexcept
+
+.. doxygenfunction:: nanofmt::to_chars(char *, char const *, FloatT, float_format, int) noexcept
+
+Supporting Types
+^^^^^^^^^^^^^^^^
 
 .. doxygenenum:: nanofmt::int_format
 
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, signed char, int_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, signed short, int_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, signed int, int_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, signed long, int_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, signed long long, int_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, unsigned char, int_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, unsigned short, int_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, unsigned int, int_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, unsigned long, int_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, unsigned long long, int_format) noexcept
-
-Floating Point Types
-^^^^^^^^^^^^^^^^^^^^
-
 .. doxygenenum:: nanofmt::float_format
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, float, float_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, double, float_format) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, float, float_format, int) noexcept
-
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, double, float_format, int) noexcept

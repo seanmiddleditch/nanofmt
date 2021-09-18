@@ -33,13 +33,16 @@ namespace NANOFMT_NS {
     };
     // clang-format on
 
+#if defined(DOXYGEN_SHOULD_SKIP_THIS)
     /// @brief Format an integer value to the target character buffer.
     /// @param buffer target buffer to write characters to.
     /// @param end the end of the target buffer.
     /// @param value the value to format.
     /// @param fmt formatting options.
     /// @return one past the last character written.
-    /// @{
+    template <typename IntegerT>
+    char* to_chars(char* buffer, char const* end, IntegerT value, int_format fmt = int_format::decimal) noexcept;
+#else
     char* to_chars(char* buffer, char const* end, signed char value, int_format fmt = int_format::decimal) noexcept;
     char* to_chars(char* buffer, char const* end, unsigned char value, int_format fmt = int_format::decimal) noexcept;
     char* to_chars(char* buffer, char const* end, signed short value, int_format fmt = int_format::decimal) noexcept;
@@ -58,7 +61,7 @@ namespace NANOFMT_NS {
         char const* end,
         unsigned long long value,
         int_format fmt = int_format::decimal) noexcept;
-    /// @}
+#endif
 
     // plain char is disallowed, cast to signed or unsigned char for integer formatting
     char* to_chars(char* buffer, char const* end, char value, int_format) noexcept = delete;
@@ -66,15 +69,15 @@ namespace NANOFMT_NS {
     // bools are disallowed, cast to an integer type if a 0 or 1 format is required
     char* to_chars(char* buffer, char const* end, bool value, int_format) noexcept = delete;
 
+#if defined(DOXYGEN_SHOULD_SKIP_THIS)
     /// @brief Format a single-precision floating point value to the target character buffer.
     /// @param buffer target buffer to write characters to.
     /// @param end the end of the target buffer.
     /// @param value the value to format.
     /// @param fmt formatting options.
     /// @return one past the last character written.
-    char* to_chars(char* buffer, char const* end, float value, float_format fmt) noexcept;
-
-    char* to_chars(char* buffer, char const* end, double value, float_format fmt) noexcept;
+    template <typename FloatT>
+    char* to_chars(char* buffer, char const* end, FloatT value, float_format fmt) noexcept;
 
     /// @brief Format a single-precision floating point value to the target character buffer.
     /// @param buffer target buffer to write characters to.
@@ -83,9 +86,16 @@ namespace NANOFMT_NS {
     /// @param fmt formatting options.
     /// @param precision target precision for the output.
     /// @return one past the last character written.
-    char* to_chars(char* buffer, char const* end, float value, float_format fmt, int precision) noexcept;
+    template <typename FloatT>
+    char* to_chars(char* buffer, char const* end, FloatT value, float_format fmt, int precision) noexcept;
+#else
+    char* to_chars(char* buffer, char const* end, float value, float_format fmt) noexcept;
+    char* to_chars(char* buffer, char const* end, double value, float_format fmt) noexcept;
 
+    char* to_chars(char* buffer, char const* end, float value, float_format fmt, int precision) noexcept;
     char* to_chars(char* buffer, char const* end, double value, float_format fmt, int precision) noexcept;
+#endif
+    /// @}
 
     // to_chars for floating-point types requires explicit use of float_format
     char* to_chars(char* buffer, char const* end, float value) noexcept = delete;
