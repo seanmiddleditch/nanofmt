@@ -8,8 +8,9 @@ on:
   pull_request:
 
 jobs:
-  build:
+  build-docs:
     runs-on: 'ubuntu-latest'
+    name: Sphinx
     
     env:
       BUILD_TYPE: RELEASE

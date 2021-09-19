@@ -459,12 +459,14 @@ namespace NANOFMT_NS {
         char const sign_char = negative ? '-' : (spec.sign == '+') ? '+' : (spec.sign == ' ') ? ' ' : '\0';
 
         size_t const zero_padding =
-            spec.zero_pad && (spec.width > count + (sign_char != '\0')) ? spec.width - count - (sign_char != '\0') : 0;
+            spec.zero_pad && ((spec.width > 0 && static_cast<std::size_t>(spec.width) > count + (sign_char != '\0')))
+            ? spec.width - count - (sign_char != '\0')
+            : 0;
 
         size_t const total_length = (sign_char != '\0') + count + zero_padding;
 
-        if (spec.width > 0 && spec.align > 0 && spec.width > total_length) {
-            buf.fill_n(spec.fill, spec.width - total_length);
+        if (spec.width > 0 && spec.align > 0 && static_cast<std::size_t>(spec.width) > total_length) {
+            buf.fill_n(spec.fill, static_cast<std::size_t>(spec.width) - total_length);
         }
 
         if (sign_char != '\0') {
@@ -527,7 +529,8 @@ namespace NANOFMT_NS {
         char buffer[sizeof(value) * 8];
 
         size_t const available = buf.end - buf.pos;
-        size_t const length = spec.precision < available ? spec.precision : available;
+        size_t const length =
+            (spec.precision < 0 || static_cast<std::size_t>(spec.precision) < available) ? spec.precision : available;
 
         const char* const end = to_chars(buffer, buffer + length, value, select_int_format(spec.type));
         format_int_chars(buf, buffer, end - buffer, value < 0, spec);

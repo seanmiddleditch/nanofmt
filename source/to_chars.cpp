@@ -1,5 +1,9 @@
 // Copyright (c) Sean Middleditch and contributors. See accompanying LICENSE.md for copyright details.
 
+// just in case another library links dragonbox, make ours "private" to
+// avoid version/ODR problems
+#define jkj nanofmt_jkj
+
 #include "nanofmt/to_chars.h"
 #include "numeric_utils.h"
 #include "dragonbox/dragonbox.h"
@@ -24,7 +28,7 @@ namespace NANOFMT_NS::detail {
     static char* to_chars_impl_binary(char* buffer, char const* end, UnsignedIntT value) noexcept;
 
     template <typename UnsignedIntT>
-    static char* to_chars_n_round(char* buffer, char const* end, UnsignedIntT value, int count) noexcept;
+    static char* to_chars_n_round(char* buffer, char const* end, UnsignedIntT value, std::size_t count) noexcept;
 
     template <char E = 'e', bool TrailingZeroes = true, typename CarrierT>
     char* to_chars_impl_scientific(
@@ -299,7 +303,7 @@ namespace NANOFMT_NS {
     }
 
     template <typename UnsignedIntT>
-    char* detail::to_chars_n_round(char* buffer, char const* end, UnsignedIntT value, int count) noexcept {
+    char* detail::to_chars_n_round(char* buffer, char const* end, UnsignedIntT value, std::size_t count) noexcept {
         static_assert(std::is_unsigned_v<UnsignedIntT>);
 
         if (count == 0) {

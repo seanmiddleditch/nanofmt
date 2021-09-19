@@ -12,9 +12,13 @@
       "description": "Build with current MSC compiler for Windows x64 (Debug)",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "toolset": "x64",
       "architecture": {
         "value": "x64",
         "strategy": "external"
+      },
+      "environment": {
+        "CXXFLAGS": "/W4 /WX"
       },
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
@@ -31,18 +35,19 @@
       "displayName": "WSL-GCC x64 (Debug)",
       "description": "Build with installed GCC compiler on WSL for x64 (Debug)",
       "generator": "Ninja",
-      "binaryDir": "${sourceDir}\\out\\build\\${presetName}",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
       "architecture": {
         "value": "x64",
         "strategy": "external"
       },
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}\\out\\install\\${presetName}"
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
       },
       "environment": {
         "CXX": "g++",
-        "CC": "gcc"
+        "CC": "gcc",
+        "CXXFLAGS": "-Wall -Werror -pedantic"
       },
       "vendor": {
         "microsoft.com/VisualStudioSettings/CMake/1.0": {
@@ -56,19 +61,20 @@
       "displayName": "WSL-Clang x64 Debug",
       "description": "Build with installed clang compiler on WSL for x64 (Debug)",
       "generator": "Ninja",
-      "binaryDir": "${sourceDir}\\out\\build\\${presetName}",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
       "architecture": {
         "value": "x64",
         "strategy": "external"
       },
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}\\out\\install\\${presetName}",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
         "CMAKE_EXPORT_COMPILE_COMMANDS": true
       },
       "environment": {
         "CXX": "clang++",
         "CC": "clang",
+        "CXXFLAGS": "-Wall -Werror -pedantic"
       },
       "vendor": {
         "microsoft.com/VisualStudioSettings/CMake/1.0": {

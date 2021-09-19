@@ -14,13 +14,19 @@ jobs:
         runs-on: ['ubuntu-latest']
         compiler: ['g++', 'clang++']
         config: ['DEBUG', 'RELEASE']
+        cxxflags: ['-Wall -Werror -pedantic']
         include:
         - runs-on: 'windows-latest'
+          compiler: cl.exe
           config: 'DEBUG'
+          cxxflags: /W4 /WX
         - runs-on: 'windows-latest'
+          compiler: cl.exe
           config: 'RELEASE'
+          cxxflags: /W4 /WX
 
     runs-on: ${{ matrix.runs-on }}
+    name: Build (${{ matrix.compiler }}, ${{ matrix.config }})
 
     steps:
     - uses: actions/checkout@v2
@@ -28,6 +34,7 @@ jobs:
     - name: Configure
       env:
         CXX: ${{ matrix.compiler }}
+        CXXFLAGS: ${{ matrix.cxxflags }}
       run: cmake -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=${{ matrix.config }}
 
     - name: Build
@@ -36,4 +43,15 @@ jobs:
     - name: Test
       working-directory: ${{ github.workspace }}/build
       run: ctest -C ${{ matrix.config }}
-      
+
+    - name: Install
+      working-directory: ${{ github.workspace }}/build
+      if: ${{ matrix.config }} == 'RELEASE'
+      run: cmake --install ${{ github.workspace }}/build --prefix ${{ github.workspace }}/install --config ${{ matrix.config }}
+
+    - name: Archive
+      uses: actions/upload-artifact@v2
+      if: ${{ matrix.config }} == 'RELEASE'
+      with:
+        name: build-${{ matrix.compiler }}
+        path: ${{ github.workspace }}/install

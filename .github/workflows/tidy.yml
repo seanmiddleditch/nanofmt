@@ -8,8 +8,9 @@ on:
   pull_request:
 
 jobs:
-  build:
+  clang-tidy:
     runs-on: 'ubuntu-latest'
+    name: Tidy
 
     env:
       BUILD_TYPE: RELEASE

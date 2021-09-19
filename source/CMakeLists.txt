@@ -6,5 +6,4 @@ target_sources(nanofmt PRIVATE
     "parse_utils.h"
     "to_chars.cpp"
 )
-
-target_link_libraries(nanofmt PRIVATE dragonbox::dragonbox_to_chars)
+target_include_directories(nanofmt SYSTEM PRIVATE ${nanofmt_dragonbox_SOURCE_DIR}/include)
