@@ -191,7 +191,7 @@ namespace NANOFMT_NS {
         };
         template <>
         struct value_type_map<unsigned char> {
-            using type = signed int;
+            using type = unsigned int;
         };
         template <>
         struct value_type_map<signed short> {
@@ -199,7 +199,7 @@ namespace NANOFMT_NS {
         };
         template <>
         struct value_type_map<unsigned short> {
-            using type = signed int;
+            using type = unsigned int;
         };
         template <>
         struct value_type_map<decltype(nullptr)> {
