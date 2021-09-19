@@ -1,5 +1,9 @@
 // Copyright (c) Sean Middleditch and contributors. See accompanying LICENSE.md for copyright details.
 
+// just in case another library links dragonbox, make ours "private" to
+// avoid version/ODR problems
+#define jkj nanofmt_jkj
+
 #include "nanofmt/to_chars.h"
 #include "numeric_utils.h"
 #include "dragonbox/dragonbox.h"

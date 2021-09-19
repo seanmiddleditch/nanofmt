@@ -7,4 +7,4 @@ target_sources(nanofmt PRIVATE
     "to_chars.cpp"
 )
 
-target_link_libraries(nanofmt PRIVATE dragonbox::dragonbox)
+target_link_libraries(nanofmt PRIVATE nanofmt_dragonbox)
