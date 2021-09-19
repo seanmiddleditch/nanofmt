@@ -4,6 +4,8 @@
 #    error "format.inl is a private header; inglure format.h instead"
 #endif
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+
 namespace NANOFMT_NS {
     namespace detail {
         char* vformat(format_buffer& buf, format_string format_str, format_args&& args);
@@ -255,3 +257,5 @@ namespace NANOFMT_NS {
         return format_arg_store<sizeof...(Args)>{detail::make_format_arg(args)...};
     }
 } // namespace NANOFMT_NS
+
+#endif

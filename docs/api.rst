@@ -12,109 +12,227 @@ API
 Formatting
 ----------
 
-Core Format API
-^^^^^^^^^^^^^^^
-
 The format API is available in the header ``nanofmt/format.h``.
+
+The buffer API is available in the header ``nanofmt/buffer.h``.
 
 Extensions for C++ standard library string types are in the header
 ``nanofmt/std_string.h``.
 
-.. doxygenfunction:: nanofmt::format_to(char (&dest)[N], format_string, Args const&...)
+Format to Buffer
+^^^^^^^^^^^^^^^^
 
-.. doxygenfunction:: nanofmt::format_to(format_buffer&, format_string, Args const&...)
+The :cpp:func:`nanofmt::format_to` functions format a given format string
+and arguments into the target buffer. The result will be NUL-terminated.
+The return value is a pointer to the terminating NUL character.
 
-.. doxygenfunction:: nanofmt::vformat_to(char (&dest)[N], format_string, format_args&&)
+.. cpp:function:: char* nanofmt::format_to(char (&dest)[N], format_string format_str, Args const&... args)
 
-.. doxygenfunction:: nanofmt::vformat_to(format_buffer&, format_string, format_args&&)
+.. cpp:function:: char* nanofmt::format_to(format_buffer& buf, format_string format_str, Args const&... args)
 
-.. doxygenfunction:: nanofmt::format_to_n(char*, std::size_t, format_string, Args const&...)
+.. cpp:function:: char* nanofmt::vformat_to(char (&dest)[N], format_string format_str, format_args&& args)
 
-.. doxygenfunction:: nanofmt::vformat_to_n(char*, std::size_t, format_string, format_args&&)
+.. cpp:function:: char* nanofmt::vformat_to(format_buffer& buf, format_string format_str, format_args&& args)
 
-.. doxygenfunction:: nanofmt::format_size
+Length-Delimited Formatting
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. doxygenfunction:: nanofmt::vformat_size
+The :cpp:func:`nanofmt::format_to_n` functions format a given format string
+and arguments into the target buffer, up to the given number of characters.
+The result will **NOT** be NUL-terminated. The return value is a pointer to
+one past the last character written.
 
-.. doxygenfunction:: nanofmt::make_format_args
+.. cpp:function:: char* nanofmt::format_to_n(char* dest, std::size_t count, format_string format_str, Args const&... args)
+
+.. cpp:function:: char* nanofmt::vformat_to_n(char* dest, std::size_t count, format_string format_str, format_args&&)
+
+Custom Formatters
+^^^^^^^^^^^^^^^^^
+
+The :cpp:struct:`nanofmt::formatter<T>` template must be specialized to add
+support for user-provided types.
+
+Two member functions, ``parse`` and ``format``, must be implemented on the
+specialized structure for nanofmt to work.
+
+.. cpp:struct:: template <typename T> struct nanofmt::formatter
+
+  Custom formatter. May include any member variables necesasry to convey
+  format information from ``parse`` to ``format``.
+
+  .. cpp:function:: char const* parse(char const* in, char const* end)
+
+    Consumes characters from ``in`` up to, but not including, ``end``.
+    Returns a pointer to one past the last character consumed.
+
+  .. cpp:function:: void format(T const& value, format_buffer& buffer) const
+
+    Formats ``value`` to ``buffer``.
+
+Format Length
+^^^^^^^^^^^^^
+
+The :cpp:func:`nanofmt::format_size` function returns the length of result
+of formatting the given format string and arguments, excluding any
+terminating NUL character.
+
+.. cpp:function:: size_t nanofmt::format_size(format_string format_str, Args const&... args)
+
+.. cpp:function:: size_t nanofmt::vformat_size(format_string format_str, format_args&& args)
 
 Buffers
 ^^^^^^^
 
-The buffer API is available in the header ``nanofmt/buffer.h``.
+.. cpp:struct:: nanofmt::format_buffer
 
-.. doxygenstruct:: nanofmt::format_buffer
+.. cpp:function:: char* copy_to(char* buffer, char const* end, char const* source) noexcept
 
-.. doxygenfunction:: copy_to(char*, char const*, char const*) noexcept
+  Copy the source string to the destination buffer, but not extending past
+  the provided buffer end pointer. Returns the pointer one past the last
+  character written. 
 
-.. doxygenfunction:: copy_to_n(char*, char const*, char const*, std::size_t) noexcept
+.. cpp:function:: char* copy_to_n(char* buffer, char const* end, char const* source, std::size_t length) noexcept
 
-.. doxygenfunction:: put(char*, char const*, char) noexcept
+  Copies up to ``length`` characters of source string to the destination
+  buffer, but not extending past the provided buffer end pointer. Returns
+  the pointer past the last character written.
 
-.. doxygenfunction:: fill_n(char*, char const*, char, std::size_t) noexcept
+.. cpp:function:: char* put(char* buffer, char const* end, char ch) noexcept
+
+  Copies the provided character ``ch`` to the destination buffer, but not
+  extending past the provided buffer end pointer. Returns the pointer past
+  the last character written. 
+
+.. cpp:function:: char* fill_n(char* buffer, char const* end, char ch, std::size_t count) noexcept
+
+  Copies ``count`` copies of the charcter ``ch`` to the destination buffer,
+  but not extending past the provided buffer end pointer. Returns the
+  pointer past the last character written. 
 
 Values
 ^^^^^^
 
-The format API is available in the header ``nanofmt/format.h``.
-
 Individual values can be formatted with nanofmt without requiring a full
 format string.
 
-.. doxygenfunction:: nanofmt::format_value_to(char (&dest)[N], ValueT const&, format_string)
+.. cpp:function:: char* nanofmt::format_value_to(char (&dest)[N], ValueT const& value, format_string spec = {})
 
-.. doxygenfunction:: nanofmt::format_value_to(format_buffer&, ValueT const&, format_string)
+.. cpp:function:: char* nanofmt::format_value_to(format_buffer& buffer, ValueT const& value, format_string spec = {})
 
-.. doxygenfunction:: nanofmt::format_value_to_n(char*, std::size_t, ValueT const&, format_string)
+.. cpp:function:: char* nanofmt::format_value_to_n(char* buffer, std::size_t, ValueT const& value, format_string spec = {})
 
-.. doxygenfunction:: nanofmt::format_value_size(ValueT const&, format_string)
+.. cpp:function:: char* nanofmt::format_value_size(ValueT const& value, format_string spec = {})
 
-Miscellaneous
-^^^^^^^^^^^^^
+Format Strings
+^^^^^^^^^^^^^^
 
-nanofmt uses a ``format_string`` type for receiving its format strings, to
-decouple from and support various string types and classes. Many string
-types should automatically convert to ``format_string``; for string types
-that don't already support conversion to ``format_string``, a
-``to_format_string`` function can be implemented.
+nanofmt uses a :cpp:struct:`nanofmt::format_string` structure for receiving
+its format strings, to decouple from and support various string types and
+classes. Many string types should automatically convert to ``format_string``;
+for string types that don't already support conversion to ``format_string``,
+a :cpp:func:`nanofmt::to_format_string` function can be implemented.
 
-A very simple ``format_string_view`` that wraps a ``char const*`` and a
-``std::size_t`` is provided to make it easier to write ``formatter``
-specializations that work on length-delimited string views, by deriving
-from ``formatter<format_string_view>``.
+.. cpp:struct:: nanofmt::format_string
 
-.. doxygenstruct:: nanofmt::format_string
+  Receiver for format strings. Only implicitly constructs from string
+  literals (constant character arrays). Can be explicitly constructed
+  from other string types.
 
-.. doxygenfunction:: nanofmt::to_format_string
+.. cpp:function:: template <typename T> format_string nanofmt::to_format_string(T const& value) noexcept
 
-.. doxygenstruct:: nanofmt::format_string_view
+  Converts a given string type to a :cpp:struct:`nanofmt::format_string`.
+  Works on most standard string types with ``data()`` and ``size()``
+  member functions.
+
+  Overload to add support for other string types that require different
+  means of converted to a ``format_string``.
+
+.. cpp:struct:: nanofmt::format_string_view
+
+  A very simple wrapper around a pointer and length. This is provided to make
+  it easier to write :cpp:struct:`nanofmt::formatter<T>` specializations that
+  work on length-delimited string views, by deriving from
+  ``nanofmt::formatter<format_string_view>``.
+
+  .. cpp:member:: char const* string = nullptr
+
+  .. cpp:member:: std::size_t length = 0
 
 Variadic Arguments
 ^^^^^^^^^^^^^^^^^^
 
-.. doxygenstruct:: nanofmt::format_args
+.. cpp:struct:: nanofmt::format_args
 
-.. doxygenfunction:: nanofmt::make_format_args
+  List of format args. Typically only constructed from
+  :cpp:func:`nanofmt::make_format_args`. Does not take ownership of any
+  internal data. 
+
+  .. warning:: Storing an instance of ``format_args`` can result
+    in dangling references.
+
+.. cpp:function:: nanofmt::make_format_args
+
+  .. danger:: This function should usually only be used directly in
+    a call to a function accepting a :cpp:struct:`nanofmt::format_args`
+    parameter.
 
 .. _to-char-api:
 
 Character Conversion
 --------------------
 
-Core Conversion API
-^^^^^^^^^^^^^^^^^^^
-
 The character conversion API is available in the header ``nanofmt/to_chars.h``.
 
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, IntegerT, int_format) noexcept
+.. cpp:function:: char* nanofmt::to_chars(char* buffer, char const* end, IntegerT value, int_format fmt = int_format::decimal) noexcept
 
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, FloatT, float_format) noexcept
+  Formats ``value`` into the buffer using the base specified in ``fmt``.
 
-.. doxygenfunction:: nanofmt::to_chars(char *, char const *, FloatT, float_format, int) noexcept
+.. cpp:function:: char* nanofmt::to_chars(char* buffer, char const* end, FloatT value, float_format fmt) noexcept
 
-Supporting Types
-^^^^^^^^^^^^^^^^
+  Formats ``value`` into the buffer using the base specified in ``fmt``. Uses
+  the shortest precision.
 
-.. doxygenenum:: nanofmt::int_format
+.. cpp:function:: char* nanofmt::to_chars(char* buffer, char const* end, FloatT value, float_format fmt) noexcept
 
-.. doxygenenum:: nanofmt::float_format
+  Formats ``value`` into the buffer using the base specified in ``fmt``. Uses
+  the given ``precision``, whose meaning depends on the specified format.
+
+.. cpp:enum-class:: nanofmt::int_format
+
+  Specify whether to use base 10, base 16, or base 2. Base 16 has an uppercase
+  variant.
+
+  .. cpp:enumerator:: decimal
+
+    Base 10.
+
+  .. cpp:enumerator:: hex
+
+    Base 16.
+
+  .. cpp:enumerator:: hex_upper
+  .. cpp:enumerator:: binary
+
+    Base 2.
+
+.. cpp:enum-class:: nanofmt::float_format
+
+  Specify whether to use scientific, fixed, or general precision formatting.
+  Scientific and general also have uppercase variants.
+
+  .. cpp:enumerator:: scientific
+  
+    Scientific notation formats floating point values as ``[-]d.de[+-]dd``.
+
+  .. cpp:enumerator:: scientific_upper
+
+  .. cpp:enumerator:: fixed
+
+    Fixed-point notation formats floating point values as ``[-]d.dddd``.
+
+  .. cpp:enumerator:: general
+
+    General precision notation formats in either scientific or fixed-point
+    notation, depending on the exponent of the value.
+
+  .. cpp:enumerator:: general_upper

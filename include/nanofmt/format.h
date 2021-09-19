@@ -22,7 +22,7 @@ namespace NANOFMT_NS {
     /// Wrapper for format strings.
     struct format_string;
 
-    /// Small wrapper to assist in formatting types like std::string_view
+    /// Small wrapper to assist in formatting types like std::string_view.
     struct format_string_view;
 
     /// Holds a list of N format_value objects.
