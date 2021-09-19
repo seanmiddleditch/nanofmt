@@ -17,9 +17,11 @@ jobs:
         cxxflags: ['-Wall -Werror -pedantic']
         include:
         - runs-on: 'windows-latest'
+          compiler: cl.exe
           config: 'DEBUG'
           cxxflags: /W4 /WX
         - runs-on: 'windows-latest'
+          compiler: cl.exe
           config: 'RELEASE'
           cxxflags: /W4 /WX
 
