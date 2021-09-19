@@ -40,4 +40,7 @@ jobs:
     - name: Test
       working-directory: ${{ github.workspace }}/build
       run: ctest -C ${{ matrix.config }}
-      
+
+    - name: Install
+      working-directory: ${{ github.workspace }}/build
+      run: cmake --install ${{ github.workspace }}/build --prefix ${{ github.workspace }}/install
