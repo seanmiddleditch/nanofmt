@@ -43,6 +43,7 @@ if (NANOFMT_INSTALL)
         PATTERN "*.h"
     )
     install(EXPORT nanofmtTargets
+        NAMESPACE nanofmt
         FILE nanofmtTargets.cmake
         DESTINATION lib/cmake/nanofmt
     )
