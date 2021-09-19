@@ -55,7 +55,7 @@ support for user-provided types.
 Two member functions, ``parse`` and ``format``, must be implemented on the
 specialized structure for nanofmt to work.
 
-.. cpp:struct:: template <typename T> struct nanofmt::formatter
+.. cpp:struct:: template<typename T> nanofmt::formatter
 
   Custom formatter. May include any member variables necesasry to convey
   format information from ``parse`` to ``format``.
@@ -170,7 +170,7 @@ Variadic Arguments
   .. warning:: Storing an instance of ``format_args`` can result
     in dangling references.
 
-.. cpp:function:: nanofmt::make_format_args
+.. cpp:function:: auto nanofmt::make_format_args(Args const&... args)
 
   .. danger:: This function should usually only be used directly in
     a call to a function accepting a :cpp:struct:`nanofmt::format_args`
@@ -192,7 +192,7 @@ The character conversion API is available in the header ``nanofmt/to_chars.h``.
   Formats ``value`` into the buffer using the base specified in ``fmt``. Uses
   the shortest precision.
 
-.. cpp:function:: char* nanofmt::to_chars(char* buffer, char const* end, FloatT value, float_format fmt) noexcept
+.. cpp:function:: char* nanofmt::to_chars(char* buffer, char const* end, FloatT value, float_format fmt, int precision) noexcept
 
   Formats ``value`` into the buffer using the base specified in ``fmt``. Uses
   the given ``precision``, whose meaning depends on the specified format.
