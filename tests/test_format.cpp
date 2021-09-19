@@ -35,6 +35,28 @@ namespace NANOFMT_NS {
     };
 } // namespace NANOFMT_NS
 
+TEST_CASE("nanofmt.format.core", "[nanofmt][format]") {
+    using namespace NANOFMT_NS;
+
+    SECTION("format_to overflow") {
+        char buf[12];
+        std::memset(buf, 0xfe, sizeof buf);
+
+        char const* const end = format_to(buf, "Hello, {}! {:09d}", "World", 9001);
+        REQUIRE(*end == '\0');
+
+        CHECK(std::strcmp(buf, "Hello, Worl") == 0);
+    }
+
+    SECTION("format_to_n overflow") {
+        char buf[12];
+        char* const end = format_to_n(buf, sizeof buf, "Hello, {}! {:09d}", "World", 9001);
+
+        CHECK((end - buf) == 12);
+        CHECK(std::strncmp(buf, "Hello, World", sizeof buf) == 0);
+    }
+}
+
 TEST_CASE("nanofmt.format.integers", "[nanofmt][format][integers]") {
     using namespace NANOFMT_NS::test;
 

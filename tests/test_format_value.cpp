@@ -17,12 +17,28 @@ TEST_CASE("nanofmt.format_value", "[nanofmt][format_value]") {
     }
 
     SECTION("format_value_to_n") {
-        char buf[4];
-        char* const end = format_value_to_n(buf, sizeof buf - 1, 9001, "09d");
+        char buf[32];
 
-        CHECK((end - buf) == 3);
-        *end = '\0';
+        char* const end = format_value_to_n(buf, sizeof buf, 9001, "09d");
+
+        CHECK(std::strncmp(buf, "000009001", end - buf) == 0);
+    }
+
+    SECTION("format_value_to overflow") {
+        char buf[4];
+        std::memset(buf, 0xfe, sizeof buf);
+
+        char* const end = format_value_to(buf, 9001, "09d");
+        REQUIRE(*end == '\0');
         CHECK(std::strcmp(buf, "000") == 0);
+    }
+
+    SECTION("format_value_to_n overflow") {
+        char buf[4];
+        char* const end = format_value_to_n(buf, sizeof buf, 9001, "09d");
+
+        CHECK((end - buf) == 4);
+        CHECK(std::strncmp(buf, "0000", sizeof buf) == 0);
     }
 
     SECTION("format_value_size") {
