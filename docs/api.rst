@@ -92,6 +92,52 @@ Buffers
 
 .. cpp:struct:: nanofmt::format_buffer
 
+  .. cpp:function:: constexpr format_buffer& append(char const* const zstr) noexcept
+
+    Appends the contents of ``zstr`` to the buffer.
+
+  .. cpp:function:: constexpr format_buffer& append(char const* source, std::size_t length) noexcept
+
+    Appends ``length`` characters from ``source`` to the buffer.
+
+  .. cpp:function:: constexpr format_buffer& append(char ch) noexcept
+
+    Appends the character ``ch`` to the buffer.
+
+  .. cpp:function:: constexpr format_buffer& fill_n(char ch, std::size_t count) noexcept
+
+    Appends ``count`` copies of the character ``ch`` to the buffer.
+
+  .. cpp:function:: constexpr format_buffer& advance_to(char* const p) noexcept
+
+    Updates the buffer position to ``p`` and adjusts the ``advance`` member appropriately.
+
+  .. cpp:member:: char* pos = nullptr
+
+    Current output position of the buffer. For custom formatting operations,
+    use this value for the output position. The :cpp:func:`advance_to`
+    function should always be preferred for mutating the ``pos`` member.
+
+  .. cpp:member:: char const* end = nullptr
+
+    The end pointer for the buffer. Custom formatting code should never
+    advance ``pos`` past the ``end`` pointer, and should never dereference
+    ``end``.
+
+  .. cpp:member:: std::size_t advance = 0
+
+    The number of characters that were written to the buffer, ignoring any
+    truncation. Even when ``pos`` equals ``end``, operations on the buffer
+    will still increment ``advance``.
+
+    The :cpp:func:`advance_to` member function should be preferred over
+    directly mutating ``advance``.
+
+String Utilities
+^^^^^^^^^^^^^^^^
+
+General string utiltities that are useful in implementing formatting.
+
 .. cpp:function:: char* copy_to(char* buffer, char const* end, char const* source) noexcept
 
   Copy the source string to the destination buffer, but not extending past
