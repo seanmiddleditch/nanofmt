@@ -55,7 +55,7 @@ namespace NANOFMT_NS {
     /// bytes. The destination will **NOT** be NUL-terminated. Returns a
     /// pointer to the last character written.
     template <typename... Args>
-    char* format_to_n(char* dest, std::size_t count, format_string format_str, Args const&... args);
+    [[nodiscard]] char* format_to_n(char* dest, std::size_t count, format_string format_str, Args const&... args);
 
     /// Formats a string and arguments into dest, writing no more than count
     /// bytes. The destination will **NOT** be NUL-terminated. Returns a
@@ -75,9 +75,9 @@ namespace NANOFMT_NS {
     /// destination buffer (_excluding_ any terminating NUL) for the
     /// given format string and arguments
     template <typename... Args>
-    std::size_t format_length(format_string format_str, Args const&... args);
+    [[nodiscard]] std::size_t format_length(format_string format_str, Args const&... args);
 
-    inline std::size_t vformat_length(format_string format_str, format_args&& args);
+    [[nodiscard]] inline std::size_t vformat_length(format_string format_str, format_args&& args);
 
     struct format_string {
         constexpr format_string() noexcept = default;
@@ -112,17 +112,21 @@ namespace NANOFMT_NS {
     /// destination will **NOT** be NUL-terminated. Returns a pointer to
     /// the last character written.
     template <typename ValueT>
-    char* format_value_to_n(char* dest, std::size_t count, ValueT const& value, format_string spec = format_string{});
+    [[nodiscard]] char* format_value_to_n(
+        char* dest,
+        std::size_t count,
+        ValueT const& value,
+        format_string spec = format_string{});
 
     /// Calculates the length of the buffer required to hold the formatted value,
     /// excluded the trailing NUL byte.
     template <typename ValueT>
-    std::size_t format_value_size(ValueT const& value, format_string spec = format_string{});
+    [[nodiscard]] std::size_t format_value_length(ValueT const& value, format_string spec = format_string{});
 
     /// Constructs a format_args from a list of values.
     ///
     template <typename... Args>
-    constexpr auto make_format_args(Args const&... args) noexcept;
+    [[nodiscard]] constexpr auto make_format_args(Args const&... args) noexcept;
 
     namespace detail {
         struct format_spec {

@@ -42,13 +42,13 @@ namespace NANOFMT_NS {
         return detail::vformat(buf, format_str, static_cast<format_args&&>(args));
     }
 
-    char* vformat_to_n(char* dest, std::size_t count, format_string format_str, format_args&& args) {
+    [[nodiscard]] char* vformat_to_n(char* dest, std::size_t count, format_string format_str, format_args&& args) {
         format_buffer buf(dest, count);
         return detail::vformat(buf, format_str, static_cast<format_args&&>(args));
     }
 
     template <typename... Args>
-    char* format_to_n(char* dest, std::size_t count, format_string format_str, Args const&... args) {
+    [[nodiscard]] char* format_to_n(char* dest, std::size_t count, format_string format_str, Args const&... args) {
         format_buffer buf(dest, count);
         return detail::vformat(buf, format_str, make_format_args(args...));
     }
@@ -67,13 +67,13 @@ namespace NANOFMT_NS {
     }
 
     template <typename... Args>
-    std::size_t format_length(format_string format_str, Args const&... args) {
+    [[nodiscard]] std::size_t format_length(format_string format_str, Args const&... args) {
         format_buffer buf(nullptr, 0);
         detail::vformat(buf, format_str, make_format_args(args...));
         return buf.advance;
     }
 
-    std::size_t vformat_length(format_string format_str, format_args&& args) {
+    [[nodiscard]] std::size_t vformat_length(format_string format_str, format_args&& args) {
         format_buffer buf(nullptr, 0);
         detail::vformat(buf, format_str, static_cast<format_args&&>(args));
         return buf.advance;
@@ -90,7 +90,7 @@ namespace NANOFMT_NS {
     }
 
     template <typename ValueT>
-    char* format_value_to_n(char* dest, std::size_t count, ValueT const& value, format_string spec) {
+    [[nodiscard]] char* format_value_to_n(char* dest, std::size_t count, ValueT const& value, format_string spec) {
         format_buffer buf(dest, count);
         return format_value_to(buf, value, spec);
     }
@@ -104,7 +104,7 @@ namespace NANOFMT_NS {
     }
 
     template <typename ValueT>
-    std::size_t format_value_size(ValueT const& value, format_string spec) {
+    [[nodiscard]] std::size_t format_value_length(ValueT const& value, format_string spec) {
         format_buffer buf(nullptr, 0);
         format_value_to(buf, value, spec);
         return buf.advance;
@@ -253,7 +253,7 @@ namespace NANOFMT_NS {
     };
 
     template <typename... Args>
-    constexpr auto make_format_args(Args const&... args) noexcept {
+    [[nodiscard]] constexpr auto make_format_args(Args const&... args) noexcept {
         return format_arg_store<sizeof...(Args)>{detail::make_format_arg(args)...};
     }
 } // namespace NANOFMT_NS

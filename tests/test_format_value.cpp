@@ -26,8 +26,8 @@ TEST_CASE("nanofmt.format_value", "[nanofmt][format_value]") {
     }
 
     SECTION("format_value_size") {
-        std::size_t const size = format_value_size(9001, "+7d");
+        std::size_t const length = format_value_length(9001, "+7d");
 
-        CHECK(size == 7);
+        CHECK(length == 7);
     }
 }
