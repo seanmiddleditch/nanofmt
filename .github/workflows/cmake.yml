@@ -46,10 +46,12 @@ jobs:
 
     - name: Install
       working-directory: ${{ github.workspace }}/build
+      if: ${{ matrix.config }} == 'RELEASE'
       run: cmake --install ${{ github.workspace }}/build --prefix ${{ github.workspace }}/install --config ${{ matrix.config }}
 
     - name: Archive
       uses: actions/upload-artifact@v2
+      if: ${{ matrix.config }} == 'RELEASE'
       with:
-        name: build
+        name: build-${{ matrix.compiler }}
         path: ${{ github.workspace }}/install
