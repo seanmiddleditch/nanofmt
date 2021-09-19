@@ -24,6 +24,7 @@ jobs:
           cxxflags: /W4 /WX
 
     runs-on: ${{ matrix.runs-on }}
+    name: Build (${{ matrix.compiler }}, ${{ matrix.config }})
 
     steps:
     - uses: actions/checkout@v2
