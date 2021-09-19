@@ -7,7 +7,13 @@ set(NANOFMT_NS "" CACHE STRING "Namespace for nanofmt API and implementation")
 
 add_library(nanofmt STATIC)
 add_library(nanofmt::nanofmt ALIAS nanofmt)
-target_include_directories(nanofmt PUBLIC include)
+target_include_directories(nanofmt
+    PRIVATE
+        include
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+)
 target_compile_features(nanofmt PUBLIC cxx_std_17)
 
 if (NANOFMT_NS)
@@ -17,3 +23,33 @@ endif()
 add_subdirectory(source)
 add_subdirectory(include/nanofmt)
 add_subdirectory(tests)
+
+install(TARGETS nanofmt DESTINATION lib EXPORT nanofmtTargets)
+install(DIRECTORY include/nanofmt
+    TYPE INCLUDE
+    FILES_MATCHING
+    PATTERN "*.h"
+)
+install(EXPORT nanofmtTargets
+    FILE nanofmtTargets.cmake
+    DESTINATION lib/cmake/nanofmt
+)
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/nanofmtConfig.cmake"
+    INSTALL_DESTINATION "lib/cmake/example"
+    NO_SET_AND_CHECK_MACRO
+    NO_CHECK_REQUIRED_COMPONENTS_MACRO
+)
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/nanofmtConfigVersion.cmake"
+    VERSION "${nanofmt_VERSION_MAJOR}.${nanofmt_VERSION_MINOR}"
+    COMPATIBILITY AnyNewerVersion
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/nanofmtConfig.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/nanofmtConfigVersion.cmake
+    DESTINATION lib/cmake/nanofmt
+)
