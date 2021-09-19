@@ -14,11 +14,14 @@ jobs:
         runs-on: ['ubuntu-latest']
         compiler: ['g++', 'clang++']
         config: ['DEBUG', 'RELEASE']
+        cxxflags: ['-Wall -Werror -pedantic']
         include:
         - runs-on: 'windows-latest'
           config: 'DEBUG'
+          cxxflags: /W4 /WX
         - runs-on: 'windows-latest'
           config: 'RELEASE'
+          cxxflags: /W4 /WX
 
     runs-on: ${{ matrix.runs-on }}
 
@@ -28,6 +31,7 @@ jobs:
     - name: Configure
       env:
         CXX: ${{ matrix.compiler }}
+        CXXFLAGS: ${{ matrix.cxxflags }}
       run: cmake -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=${{ matrix.config }}
 
     - name: Build

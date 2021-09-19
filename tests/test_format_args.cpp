@@ -60,8 +60,8 @@ TEST_CASE("nanofmt.format_arg.pointers", "[nanofmt][format_arg][pointers][string
     using namespace NANOFMT_NS;
 
     SECTION("pointers") {
-        void const* cptr;
-        void* ptr;
+        void const* cptr = nullptr;
+        void* ptr = nullptr;
 
         CHECK(to_arg(cptr).tag == format_arg::type::t_voidptr);
         CHECK(to_arg(ptr).tag == format_arg::type::t_voidptr);
@@ -102,7 +102,7 @@ namespace custom {
 
 namespace NANOFMT_NS {
     struct custom_formatter_base {
-        constexpr char const* parse(char const* in, char const* end) noexcept {
+        constexpr char const* parse(char const* in, char const*) noexcept {
             return in;
         }
         template <typename T>

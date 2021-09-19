@@ -7,6 +7,3 @@ FetchContent_Declare(
 )
 
 FetchContent_Populate(nanofmt_dragonbox)
-
-add_library(nanofmt_dragonbox INTERFACE)
-target_include_directories(nanofmt_dragonbox INTERFACE ${nanofmt_dragonbox_SOURCE_DIR}/include)

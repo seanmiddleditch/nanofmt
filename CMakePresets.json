@@ -12,9 +12,13 @@
       "description": "Build with current MSC compiler for Windows x64 (Debug)",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "toolset": "x64",
       "architecture": {
         "value": "x64",
         "strategy": "external"
+      },
+      "environment": {
+        "CXXFLAGS": "/W4 /WX"
       },
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
@@ -42,7 +46,8 @@
       },
       "environment": {
         "CXX": "g++",
-        "CC": "gcc"
+        "CC": "gcc",
+        "CXXFLAGS": "-Wall -Werror -pedantic"
       },
       "vendor": {
         "microsoft.com/VisualStudioSettings/CMake/1.0": {
@@ -69,6 +74,7 @@
       "environment": {
         "CXX": "clang++",
         "CC": "clang",
+        "CXXFLAGS": "-Wall -Werror -pedantic"
       },
       "vendor": {
         "microsoft.com/VisualStudioSettings/CMake/1.0": {
