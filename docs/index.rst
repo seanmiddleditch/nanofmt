@@ -72,11 +72,11 @@ flags of `std::format`_.
   // buffer: First then Second
 
 If the length of formatted text is required, e.g. for allocating buffer space,
-the ``format_size`` function can be used:
+the :cpp:func:`nanofmt::format_length` function can be used:
 
 .. code-block:: c++
 
-  size_t const length = format_size("{} plus {}", 7, 7);
+  size_t const length = format_length("{} plus {}", 7, 7);
 
   char* buffer = (char*)malloc(length + 1/*NUL byte*/);
   format_to_n(buffer, length + 1, "{} plus {}", 7, 7);
@@ -84,7 +84,7 @@ the ``format_size`` function can be used:
 nanofmt also includes implementation of the C++17 standard `to_chars`_
 functions, for codebases that are unable or unwilling to use the standard
 versions, or who are using older compilers that lack support for
-floating-point ``to_chars``
+floating-point ``std::to_chars``
 
 See the :ref:`api` for more in-depth coverage of the nanofmt facilities.
 
@@ -116,7 +116,7 @@ Detailed Examples
 Custom Types
 ------------
 
-Provide a specialization of `nanofmt::formatter` to enable nanofmt to consume
+Provide a specialization of :cpp:struct:`nanofmt::formatter` to enable nanofmt to consume
 values of a custom type.
 
 .. code-block:: c++

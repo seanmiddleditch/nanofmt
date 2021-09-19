@@ -15,7 +15,7 @@ namespace NANOFMT_NS {
             format_spec& spec,
             char const* allowed_types) noexcept;
         static void format_int_chars(
-            buffer& buf,
+            format_buffer& buf,
             char const* digits,
             size_t count,
             bool negative,
@@ -24,16 +24,16 @@ namespace NANOFMT_NS {
         static constexpr char const* parse_int_spec(char const* in, char const* end, format_spec& spec) noexcept;
         static constexpr char const* parse_float_spec(char const* in, char const* end, format_spec& spec) noexcept;
         static constexpr std::size_t strnlen(char const* string, std::size_t max_length) noexcept;
-        static void format_char_impl(char value, buffer& buf, format_spec const& spec) noexcept;
+        static void format_char_impl(char value, format_buffer& buf, format_spec const& spec) noexcept;
         template <typename IntT>
-        static void format_int_impl(IntT value, buffer& buf, format_spec const& spec) noexcept;
+        static void format_int_impl(IntT value, format_buffer& buf, format_spec const& spec) noexcept;
         static void format_string_impl(
             char const* value,
             std::size_t length,
-            buffer& buf,
+            format_buffer& buf,
             format_spec const& spec) noexcept;
         template <typename FloatT>
-        static void format_float_impl(FloatT value, buffer& buf, format_spec const& spec) noexcept;
+        static void format_float_impl(FloatT value, format_buffer& buf, format_spec const& spec) noexcept;
     } // namespace detail
 
     template <>
@@ -42,7 +42,7 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<char>::format(char value, buffer& buf) noexcept {
+    void detail::default_formatter<char>::format(char value, format_buffer& buf) noexcept {
         format_char_impl(value, buf, spec);
     }
 
@@ -52,7 +52,7 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<signed int>::format(signed int value, buffer& buf) noexcept {
+    void detail::default_formatter<signed int>::format(signed int value, format_buffer& buf) noexcept {
         return format_int_impl(value, buf, spec);
     }
 
@@ -62,7 +62,7 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<unsigned int>::format(unsigned int value, buffer& buf) noexcept {
+    void detail::default_formatter<unsigned int>::format(unsigned int value, format_buffer& buf) noexcept {
         return format_int_impl(value, buf, spec);
     }
 
@@ -72,7 +72,7 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<signed long>::format(signed long value, buffer& buf) noexcept {
+    void detail::default_formatter<signed long>::format(signed long value, format_buffer& buf) noexcept {
         return format_int_impl(value, buf, spec);
     }
 
@@ -82,7 +82,7 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<unsigned long>::format(unsigned long value, buffer& buf) noexcept {
+    void detail::default_formatter<unsigned long>::format(unsigned long value, format_buffer& buf) noexcept {
         return format_int_impl(value, buf, spec);
     }
 
@@ -92,7 +92,7 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<signed long long>::format(signed long long value, buffer& buf) noexcept {
+    void detail::default_formatter<signed long long>::format(signed long long value, format_buffer& buf) noexcept {
         return format_int_impl(value, buf, spec);
     }
 
@@ -102,7 +102,7 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<unsigned long long>::format(unsigned long long value, buffer& buf) noexcept {
+    void detail::default_formatter<unsigned long long>::format(unsigned long long value, format_buffer& buf) noexcept {
         return format_int_impl(value, buf, spec);
     }
 
@@ -112,7 +112,7 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<float>::format(float value, buffer& buf) noexcept {
+    void detail::default_formatter<float>::format(float value, format_buffer& buf) noexcept {
         return format_float_impl(value, buf, spec);
     }
 
@@ -122,7 +122,7 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<double>::format(double value, buffer& buf) noexcept {
+    void detail::default_formatter<double>::format(double value, format_buffer& buf) noexcept {
         return format_float_impl(value, buf, spec);
     }
 
@@ -132,7 +132,7 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<bool>::format(bool value, buffer& buf) noexcept {
+    void detail::default_formatter<bool>::format(bool value, format_buffer& buf) noexcept {
         switch (spec.type) {
             case '\0':
             case 's':
@@ -150,7 +150,7 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<void const*>::format(void const* value, buffer& buf) noexcept {
+    void detail::default_formatter<void const*>::format(void const* value, format_buffer& buf) noexcept {
         // hex encoding is 2 chars per octet
         char buffer[sizeof(value) * 2];
         char const* const end =
@@ -165,7 +165,7 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<char const*>::format(char const* value, buffer& buf) noexcept {
+    void detail::default_formatter<char const*>::format(char const* value, format_buffer& buf) noexcept {
         if (value != nullptr) {
             format_string_impl(value, __builtin_strlen(value), buf, spec);
         }
@@ -177,7 +177,7 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<detail::char_buffer>::format(char_buffer value, buffer& buf) noexcept {
+    void detail::default_formatter<detail::char_buffer>::format(char_buffer value, format_buffer& buf) noexcept {
         format_string_impl(value.buffer, strnlen(value.buffer, value.max_length), buf, spec);
     }
 
@@ -187,11 +187,11 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<format_string_view>::format(format_string_view value, buffer& buf) noexcept {
+    void detail::default_formatter<format_string_view>::format(format_string_view value, format_buffer& buf) noexcept {
         format_string_impl(value.string, value.length, buf, spec);
     }
 
-    char* detail::vformat(buffer& buf, format_string format_str, format_args&& args) {
+    char* detail::vformat(format_buffer& buf, format_string format_str, format_args&& args) {
         int arg_next_index = 0;
         bool arg_auto_index = true;
 
@@ -261,7 +261,7 @@ namespace NANOFMT_NS {
         return buf.pos;
     }
 
-    void format_args::format(unsigned index, char const** in, char const* end, buffer& buf) const {
+    void format_args::format(unsigned index, char const** in, char const* end, format_buffer& buf) const {
         using types = format_arg::type;
 
         if (index >= count) {
@@ -446,7 +446,7 @@ namespace NANOFMT_NS {
     }
 
     void detail::format_int_chars(
-        buffer& buf,
+        format_buffer& buf,
         char const* digits,
         size_t count,
         bool negative,
@@ -508,7 +508,7 @@ namespace NANOFMT_NS {
         return max_length;
     }
 
-    void detail::format_char_impl(char value, buffer& buf, format_spec const& spec) noexcept {
+    void detail::format_char_impl(char value, format_buffer& buf, format_spec const& spec) noexcept {
         switch (spec.type) {
             case '\0':
             case 'c':
@@ -520,7 +520,7 @@ namespace NANOFMT_NS {
     }
 
     template <typename IntT>
-    void detail::format_int_impl(IntT value, buffer& buf, format_spec const& spec) noexcept {
+    void detail::format_int_impl(IntT value, format_buffer& buf, format_spec const& spec) noexcept {
         if (spec.type == 'c') {
             return format_char_impl(static_cast<char>(value), buf, spec);
         }
@@ -530,7 +530,7 @@ namespace NANOFMT_NS {
 
         size_t const available = buf.end - buf.pos;
         size_t const length =
-            (spec.precision < 0 || static_cast<std::size_t>(spec.precision) < available) ? spec.precision : available;
+            (spec.precision >= 0 && static_cast<std::size_t>(spec.precision) < available) ? spec.precision : available;
 
         const char* const end = to_chars(buffer, buffer + length, value, select_int_format(spec.type));
         format_int_chars(buf, buffer, end - buffer, value < 0, spec);
@@ -539,7 +539,7 @@ namespace NANOFMT_NS {
     void detail::format_string_impl(
         char const* value,
         std::size_t length,
-        buffer& buf,
+        format_buffer& buf,
         format_spec const& spec) noexcept {
         if (spec.width < 0 || length >= static_cast<size_t>(spec.width)) {
             buf.append(value, length);
@@ -565,7 +565,7 @@ namespace NANOFMT_NS {
     }
 
     template <typename FloatT>
-    void detail::format_float_impl(FloatT value, buffer& buf, format_spec const& spec) noexcept {
+    void detail::format_float_impl(FloatT value, format_buffer& buf, format_spec const& spec) noexcept {
         if (!std::signbit(value)) {
             if (spec.sign == '+') {
                 buf.append('+');

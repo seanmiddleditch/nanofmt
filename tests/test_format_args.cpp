@@ -106,7 +106,7 @@ namespace NANOFMT_NS {
             return in;
         }
         template <typename T>
-        void format(T const&, buffer&) {}
+        void format(T const&, format_buffer&) {}
     };
 
     template <>

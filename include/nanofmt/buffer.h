@@ -7,7 +7,7 @@
 #include <cstddef>
 
 namespace NANOFMT_NS {
-    struct buffer;
+    struct format_buffer;
 
     [[nodiscard]] constexpr char* copy_to(char* buffer, char const* end, char const* source) noexcept;
     [[nodiscard]] constexpr char* copy_to_n(
@@ -25,11 +25,11 @@ namespace NANOFMT_NS {
     /// Use advance_to to update the pos pointer to ensure the advance field
     /// is updated appropriately.
     ///
-    struct buffer {
-        constexpr buffer() noexcept = default;
-        constexpr buffer(char* const dest, std::size_t count) noexcept : pos(dest), end(dest + count) {}
+    struct format_buffer {
+        constexpr format_buffer() noexcept = default;
+        constexpr format_buffer(char* const dest, std::size_t count) noexcept : pos(dest), end(dest + count) {}
 
-        constexpr buffer& append(char const* const zstr) noexcept {
+        constexpr format_buffer& append(char const* const zstr) noexcept {
             char* const p = copy_to(pos, end, zstr);
             std::size_t const consumed = p - pos;
             advance += consumed;
@@ -38,25 +38,25 @@ namespace NANOFMT_NS {
             return *this;
         }
 
-        constexpr buffer& append(char const* source, std::size_t length) noexcept {
+        constexpr format_buffer& append(char const* source, std::size_t length) noexcept {
             advance += length;
             pos = copy_to_n(pos, end, source, length);
             return *this;
         }
 
-        constexpr buffer& append(char ch) noexcept {
+        constexpr format_buffer& append(char ch) noexcept {
             ++advance;
             pos = put(pos, end, ch);
             return *this;
         }
 
-        constexpr buffer& fill_n(char ch, std::size_t count) noexcept {
+        constexpr format_buffer& fill_n(char ch, std::size_t count) noexcept {
             advance += count;
             pos = NANOFMT_NS::fill_n(pos, end, ch, count);
             return *this;
         }
 
-        constexpr buffer& advance_to(char* const p) noexcept {
+        constexpr format_buffer& advance_to(char* const p) noexcept {
             advance += p - pos;
             pos = p;
             return *this;

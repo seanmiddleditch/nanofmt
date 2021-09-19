@@ -18,19 +18,20 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: apt-get
+    - name: Install
+      working-directory: ${{ github.workspace }}/docs
       run: |
-        sudo apt-get install doxygen
+        sudo pip3 install -r requirements.txt
 
-    - name: pip
-      run: |
-        sudo pip3 install -r docs/requirements.txt
+    - name: Mkdir
+      run: mkdir -p ${{ github.workspace }}/build
 
     - name: Sphinx
-      run: sphinx-build ${{ github.workspace }}/docs ${{ github.workspace }}/build/docs
+      working-directory: ${{ github.workspace }}/build
+      run: sphinx-build -W ${{ github.workspace }}/docs ${{ github.workspace }}/build/html
 
     - name: Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: docs
-        path: build/docs
+        name: html-docs
+        path: build/html

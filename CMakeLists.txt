@@ -11,6 +11,7 @@ endif()
 set(NANOFMT_NS "" CACHE STRING "Namespace for nanofmt API and implementation")
 
 option(NANOFMT_TESTS "Build nanofmt tests" ${NANOFMT_IS_TOPLEVEL})
+option(NANOFMT_DOCS "Build sphinx and doxygen documentation" OFF)
 option(NANOFMT_INSTALL "Add install targets for nanofmt" ON)
 
 add_library(nanofmt STATIC)
@@ -33,6 +34,10 @@ add_subdirectory(include/nanofmt)
 
 if (NANOFMT_TESTS)
     add_subdirectory(tests)
+endif()
+
+if (NANOFMT_DOCS)
+    add_subdirectory(docs)
 endif()
 
 if (NANOFMT_INSTALL)
