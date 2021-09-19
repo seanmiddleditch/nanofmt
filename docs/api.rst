@@ -19,8 +19,8 @@ The buffer API is available in the header ``nanofmt/buffer.h``.
 Extensions for C++ standard library string types are in the header
 ``nanofmt/std_string.h``.
 
-Format to Buffer
-^^^^^^^^^^^^^^^^
+Format to Array
+^^^^^^^^^^^^^^^
 
 The :cpp:func:`nanofmt::format_to` functions format a given format string
 and arguments into the target buffer. The result will be NUL-terminated.
@@ -28,11 +28,18 @@ The return value is a pointer to the terminating NUL character.
 
 .. cpp:function:: char* nanofmt::format_to(char (&dest)[N], format_string format_str, Args const&... args)
 
-.. cpp:function:: char* nanofmt::format_to(format_buffer& buf, format_string format_str, Args const&... args)
-
 .. cpp:function:: char* nanofmt::vformat_to(char (&dest)[N], format_string format_str, format_args&& args)
 
-.. cpp:function:: char* nanofmt::vformat_to(format_buffer& buf, format_string format_str, format_args&& args)
+Format to Buffer
+^^^^^^^^^^^^^^^^
+
+The ``nanofmt::format_buffer&`` overloads of :cpp:func:`nanofmt::format_to`
+format a given format string and arguments into the target buffer. The result
+will **not** be NUL-terminated. The return value is the buffer object itself.
+
+.. cpp:function:: format_buffer& nanofmt::format_to(format_buffer& buf, format_string format_str, Args const&... args)
+
+.. cpp:function:: format_buffer& nanofmt::vformat_to(format_buffer& buf, format_string format_str, format_args&& args)
 
 Length-Delimited Formatting
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^

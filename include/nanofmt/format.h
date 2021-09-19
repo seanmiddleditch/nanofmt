@@ -47,9 +47,9 @@ namespace NANOFMT_NS {
     constexpr format_string to_format_string(StringT const& value) noexcept;
 
     template <typename... Args>
-    char* format_to(format_buffer& buf, format_string format_str, Args const&... args);
+    format_buffer& format_to(format_buffer& buf, format_string format_str, Args const&... args);
 
-    inline char* vformat_to(format_buffer& buf, format_string format_str, format_args&& args);
+    inline format_buffer& vformat_to(format_buffer& buf, format_string format_str, format_args&& args);
 
     /// Formats a string and arguments into dest, writing no more than count
     /// bytes. The destination will **NOT** be NUL-terminated. Returns a

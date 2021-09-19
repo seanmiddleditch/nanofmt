@@ -38,8 +38,9 @@ namespace NANOFMT_NS {
         return {value.data(), value.size()};
     }
 
-    char* vformat_to(format_buffer& buf, format_string format_str, format_args&& args) {
-        return detail::vformat(buf, format_str, static_cast<format_args&&>(args));
+    format_buffer& vformat_to(format_buffer& buf, format_string format_str, format_args&& args) {
+        detail::vformat(buf, format_str, static_cast<format_args&&>(args));
+        return buf;
     }
 
     [[nodiscard]] char* vformat_to_n(char* dest, std::size_t count, format_string format_str, format_args&& args) {
@@ -54,8 +55,9 @@ namespace NANOFMT_NS {
     }
 
     template <typename... Args>
-    char* format_to(format_buffer& buf, format_string format_str, Args const&... args) {
-        return detail::vformat(buf, format_str, make_format_args(args...));
+    format_buffer& format_to(format_buffer& buf, format_string format_str, Args const&... args) {
+        detail::vformat(buf, format_str, make_format_args(args...));
+        return buf;
     }
 
     template <std::size_t N, typename... Args>
