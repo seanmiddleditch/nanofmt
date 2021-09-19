@@ -27,7 +27,7 @@ jobs:
         sudo pip3 install -r docs/requirements.txt
 
     - name: Sphinx
-      run: sphinx-build ${{ github.workspace }}/docs ${{ github.workspace }}/build
+      run: sphinx-build -W ${{ github.workspace }}/docs ${{ github.workspace }}/build
 
     - name: Artifact
       uses: actions/upload-artifact@v2
