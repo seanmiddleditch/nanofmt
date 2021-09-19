@@ -530,7 +530,7 @@ namespace NANOFMT_NS {
 
         size_t const available = buf.end - buf.pos;
         size_t const length =
-            (spec.precision < 0 || static_cast<std::size_t>(spec.precision) < available) ? spec.precision : available;
+            (spec.precision >= 0 && static_cast<std::size_t>(spec.precision) < available) ? spec.precision : available;
 
         const char* const end = to_chars(buffer, buffer + length, value, select_int_format(spec.type));
         format_int_chars(buf, buffer, end - buffer, value < 0, spec);
