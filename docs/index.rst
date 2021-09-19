@@ -72,11 +72,11 @@ flags of `std::format`_.
   // buffer: First then Second
 
 If the length of formatted text is required, e.g. for allocating buffer space,
-the :cpp:func:`nanofmt::format_size` function can be used:
+the :cpp:func:`nanofmt::format_length` function can be used:
 
 .. code-block:: c++
 
-  size_t const length = format_size("{} plus {}", 7, 7);
+  size_t const length = format_length("{} plus {}", 7, 7);
 
   char* buffer = (char*)malloc(length + 1/*NUL byte*/);
   format_to_n(buffer, length + 1, "{} plus {}", 7, 7);

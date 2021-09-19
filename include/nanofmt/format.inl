@@ -67,13 +67,13 @@ namespace NANOFMT_NS {
     }
 
     template <typename... Args>
-    std::size_t format_size(format_string format_str, Args const&... args) {
+    std::size_t format_length(format_string format_str, Args const&... args) {
         format_buffer buf(nullptr, 0);
         detail::vformat(buf, format_str, make_format_args(args...));
         return buf.advance;
     }
 
-    std::size_t vformat_size(format_string format_str, format_args&& args) {
+    std::size_t vformat_length(format_string format_str, format_args&& args) {
         format_buffer buf(nullptr, 0);
         detail::vformat(buf, format_str, static_cast<format_args&&>(args));
         return buf.advance;

@@ -75,9 +75,9 @@ namespace NANOFMT_NS {
     /// destination buffer (_excluding_ any terminating NUL) for the
     /// given format string and arguments
     template <typename... Args>
-    std::size_t format_size(format_string format_str, Args const&... args);
+    std::size_t format_length(format_string format_str, Args const&... args);
 
-    inline std::size_t vformat_size(format_string format_str, format_args&& args);
+    inline std::size_t vformat_length(format_string format_str, format_args&& args);
 
     struct format_string {
         constexpr format_string() noexcept = default;

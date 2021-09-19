@@ -72,13 +72,13 @@ specialized structure for nanofmt to work.
 Format Length
 ^^^^^^^^^^^^^
 
-The :cpp:func:`nanofmt::format_size` function returns the length of result
+The :cpp:func:`nanofmt::format_length` function returns the length of result
 of formatting the given format string and arguments, excluding any
 terminating NUL character.
 
-.. cpp:function:: size_t nanofmt::format_size(format_string format_str, Args const&... args)
+.. cpp:function:: size_t nanofmt::format_length(format_string format_str, Args const&... args)
 
-.. cpp:function:: size_t nanofmt::vformat_size(format_string format_str, format_args&& args)
+.. cpp:function:: size_t nanofmt::vformat_length(format_string format_str, format_args&& args)
 
 Buffers
 ^^^^^^^
