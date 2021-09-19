@@ -17,7 +17,6 @@ namespace NANOFMT_NS {
     /// List of format args.
     ///
     /// Only use this type as a temporary value!
-    ///
     struct format_args;
 
     /// Wrapper for format strings.

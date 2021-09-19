@@ -22,11 +22,11 @@ Extensions for C++ standard library string types are in the header
 
 .. doxygenfunction:: nanofmt::format_to(char (&dest)[N], format_string, Args const&...)
 
-.. doxygenfunction:: nanofmt::format_to(buffer&, format_string, Args const&...)
+.. doxygenfunction:: nanofmt::format_to(format_buffer&, format_string, Args const&...)
 
 .. doxygenfunction:: nanofmt::vformat_to(char (&dest)[N], format_string, format_args&&)
 
-.. doxygenfunction:: nanofmt::vformat_to(buffer&, format_string, format_args&&)
+.. doxygenfunction:: nanofmt::vformat_to(format_buffer&, format_string, format_args&&)
 
 .. doxygenfunction:: nanofmt::format_to_n(char*, std::size_t, format_string, Args const&...)
 
@@ -43,7 +43,7 @@ Buffers
 
 The buffer API is available in the header ``nanofmt/buffer.h``.
 
-.. doxygenstruct:: nanofmt::buffer
+.. doxygenstruct:: nanofmt::format_buffer
 
 .. doxygenfunction:: copy_to(char*, char const*, char const*) noexcept
 
@@ -63,7 +63,7 @@ format string.
 
 .. doxygenfunction:: nanofmt::format_value_to(char (&dest)[N], ValueT const&, format_string)
 
-.. doxygenfunction:: nanofmt::format_value_to(buffer&, ValueT const&, format_string)
+.. doxygenfunction:: nanofmt::format_value_to(format_buffer&, ValueT const&, format_string)
 
 .. doxygenfunction:: nanofmt::format_value_to_n(char*, std::size_t, ValueT const&, format_string)
 
