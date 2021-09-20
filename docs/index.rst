@@ -78,7 +78,7 @@ the :cpp:func:`nanofmt::format_length` function can be used:
 
   size_t const length = format_length("{} plus {}", 7, 7);
 
-  char* buffer = (char*)malloc(length + 1/*NUL byte*/);
+  char* dest = (char*)malloc(length + 1/*NUL byte*/);
   format_to_n(buffer, length + 1, "{} plus {}", 7, 7);
 
 nanofmt also includes implementation of the C++17 standard `to_chars`_

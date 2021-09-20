@@ -7,38 +7,38 @@
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
 namespace NANOFMT_NS {
-    constexpr char* copy_to(char* buffer, char const* end, char const* source) noexcept {
+    constexpr char* copy_to(char* dest, char const* end, char const* source) noexcept {
         char const* ptr = source;
-        while (*ptr != 0 && buffer != end)
-            *buffer++ = *ptr++;
+        while (*ptr != 0 && dest != end)
+            *dest++ = *ptr++;
 
-        return buffer;
+        return dest;
     }
 
-    constexpr char* copy_to_n(char* buffer, char const* end, char const* source, std::size_t length) noexcept {
+    constexpr char* copy_to_n(char* dest, char const* end, char const* source, std::size_t length) noexcept {
         char const* source_end = source + length;
-        while (source != source_end && buffer != end)
-            *buffer++ = *source++;
+        while (source != source_end && dest != end)
+            *dest++ = *source++;
 
-        return buffer;
+        return dest;
     }
 
-    constexpr char* put(char* buffer, char const* end, char ch) noexcept {
-        if (buffer != end) {
-            *buffer++ = ch;
+    constexpr char* put(char* dest, char const* end, char ch) noexcept {
+        if (dest != end) {
+            *dest++ = ch;
         }
-        return buffer;
+        return dest;
     }
 
-    constexpr char* fill_n(char* buffer, char const* end, char ch, std::size_t count) noexcept {
+    constexpr char* fill_n(char* dest, char const* end, char ch, std::size_t count) noexcept {
         char const pad_buffer[] = {ch, ch, ch, ch, ch, ch, ch, ch};
         constexpr std::size_t pad_length = sizeof pad_buffer;
 
         while (count >= pad_length) {
-            buffer = copy_to_n(buffer, end, pad_buffer, pad_length);
+            dest = copy_to_n(dest, end, pad_buffer, pad_length);
             count -= pad_length;
         }
-        return copy_to_n(buffer, end, pad_buffer, count);
+        return copy_to_n(dest, end, pad_buffer, count);
     }
 
     constexpr format_buffer& format_buffer::append(char const* const zstr) noexcept {

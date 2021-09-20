@@ -13,26 +13,26 @@
 
 namespace NANOFMT_NS::detail {
     template <typename IntegerT>
-    static char* to_chars_impl(char* buffer, char const* end, IntegerT value, int_format fmt) noexcept;
+    static char* to_chars_impl(char* dest, char const* end, IntegerT value, int_format fmt) noexcept;
 
     template <typename CarrierT, typename FloatT>
-    static char* to_chars_impl(char* buffer, char const* end, FloatT value, float_format fmt, int precision) noexcept;
+    static char* to_chars_impl(char* dest, char const* end, FloatT value, float_format fmt, int precision) noexcept;
 
     template <typename UnsignedIntT>
-    static char* to_chars_impl_decimal(char* buffer, char const* end, UnsignedIntT value) noexcept;
+    static char* to_chars_impl_decimal(char* dest, char const* end, UnsignedIntT value) noexcept;
 
     template <char A = 'a', typename UnsignedIntT>
-    static char* to_chars_impl_hex(char* buffer, char const* end, UnsignedIntT value) noexcept;
+    static char* to_chars_impl_hex(char* dest, char const* end, UnsignedIntT value) noexcept;
 
     template <typename UnsignedIntT>
-    static char* to_chars_impl_binary(char* buffer, char const* end, UnsignedIntT value) noexcept;
+    static char* to_chars_impl_binary(char* dest, char const* end, UnsignedIntT value) noexcept;
 
     template <typename UnsignedIntT>
-    static char* to_chars_n_round(char* buffer, char const* end, UnsignedIntT value, std::size_t count) noexcept;
+    static char* to_chars_n_round(char* dest, char const* end, UnsignedIntT value, std::size_t count) noexcept;
 
     template <char E = 'e', bool TrailingZeroes = true, typename CarrierT>
     char* to_chars_impl_scientific(
-        char* buffer,
+        char* dest,
         char const* end,
         CarrierT significand,
         int exponent,
@@ -40,7 +40,7 @@ namespace NANOFMT_NS::detail {
 
     template <bool TrailingZeroes = true, typename CarrierT>
     static char* to_chars_impl_fixed(
-        char* buffer,
+        char* dest,
         char const* end,
         CarrierT significand,
         int exponent,
@@ -48,14 +48,14 @@ namespace NANOFMT_NS::detail {
 
     template <char E = 'e', typename CarrierT>
     static char* to_chars_impl_general(
-        char* buffer,
+        char* dest,
         char const* end,
         CarrierT significand,
         int exponent,
         int precision) noexcept;
 
     static char* to_chars_impl_nonfinite(
-        char* buffer,
+        char* dest,
         char const* end,
         bool negative,
         bool infinite,
@@ -66,101 +66,101 @@ namespace NANOFMT_NS::detail {
 } // namespace NANOFMT_NS::detail
 
 namespace NANOFMT_NS {
-    char* to_chars(char* buffer, char const* end, signed char value, int_format fmt) noexcept {
-        return detail::to_chars_impl(buffer, end, value, fmt);
+    char* to_chars(char* dest, char const* end, signed char value, int_format fmt) noexcept {
+        return detail::to_chars_impl(dest, end, value, fmt);
     }
 
-    char* to_chars(char* buffer, char const* end, unsigned char value, int_format fmt) noexcept {
-        return detail::to_chars_impl(buffer, end, value, fmt);
+    char* to_chars(char* dest, char const* end, unsigned char value, int_format fmt) noexcept {
+        return detail::to_chars_impl(dest, end, value, fmt);
     }
 
-    char* to_chars(char* buffer, char const* end, signed short value, int_format fmt) noexcept {
-        return detail::to_chars_impl(buffer, end, value, fmt);
+    char* to_chars(char* dest, char const* end, signed short value, int_format fmt) noexcept {
+        return detail::to_chars_impl(dest, end, value, fmt);
     }
 
-    char* to_chars(char* buffer, char const* end, unsigned short value, int_format fmt) noexcept {
-        return detail::to_chars_impl(buffer, end, value, fmt);
+    char* to_chars(char* dest, char const* end, unsigned short value, int_format fmt) noexcept {
+        return detail::to_chars_impl(dest, end, value, fmt);
     }
 
-    char* to_chars(char* buffer, char const* end, signed int value, int_format fmt) noexcept {
-        return detail::to_chars_impl(buffer, end, value, fmt);
+    char* to_chars(char* dest, char const* end, signed int value, int_format fmt) noexcept {
+        return detail::to_chars_impl(dest, end, value, fmt);
     }
 
-    char* to_chars(char* buffer, char const* end, unsigned int value, int_format fmt) noexcept {
-        return detail::to_chars_impl(buffer, end, value, fmt);
+    char* to_chars(char* dest, char const* end, unsigned int value, int_format fmt) noexcept {
+        return detail::to_chars_impl(dest, end, value, fmt);
     }
 
-    char* to_chars(char* buffer, char const* end, signed long value, int_format fmt) noexcept {
-        return detail::to_chars_impl(buffer, end, value, fmt);
+    char* to_chars(char* dest, char const* end, signed long value, int_format fmt) noexcept {
+        return detail::to_chars_impl(dest, end, value, fmt);
     }
 
-    char* to_chars(char* buffer, char const* end, unsigned long value, int_format fmt) noexcept {
-        return detail::to_chars_impl(buffer, end, value, fmt);
+    char* to_chars(char* dest, char const* end, unsigned long value, int_format fmt) noexcept {
+        return detail::to_chars_impl(dest, end, value, fmt);
     }
 
-    char* to_chars(char* buffer, char const* end, signed long long value, int_format fmt) noexcept {
-        return detail::to_chars_impl(buffer, end, value, fmt);
+    char* to_chars(char* dest, char const* end, signed long long value, int_format fmt) noexcept {
+        return detail::to_chars_impl(dest, end, value, fmt);
     }
 
-    char* to_chars(char* buffer, char const* end, unsigned long long value, int_format fmt) noexcept {
-        return detail::to_chars_impl(buffer, end, value, fmt);
+    char* to_chars(char* dest, char const* end, unsigned long long value, int_format fmt) noexcept {
+        return detail::to_chars_impl(dest, end, value, fmt);
     }
 
-    char* to_chars(char* buffer, char const* end, float value, float_format fmt) noexcept {
-        return detail::to_chars_impl<std::uint32_t>(buffer, end, value, fmt, -1);
+    char* to_chars(char* dest, char const* end, float value, float_format fmt) noexcept {
+        return detail::to_chars_impl<std::uint32_t>(dest, end, value, fmt, -1);
     }
 
-    char* to_chars(char* buffer, char const* end, double value, float_format fmt) noexcept {
-        return detail::to_chars_impl<std::uint64_t>(buffer, end, value, fmt, -1);
+    char* to_chars(char* dest, char const* end, double value, float_format fmt) noexcept {
+        return detail::to_chars_impl<std::uint64_t>(dest, end, value, fmt, -1);
     }
 
-    char* to_chars(char* buffer, char const* end, float value, float_format fmt, int precision) noexcept {
-        return detail::to_chars_impl<std::uint32_t>(buffer, end, value, fmt, precision);
+    char* to_chars(char* dest, char const* end, float value, float_format fmt, int precision) noexcept {
+        return detail::to_chars_impl<std::uint32_t>(dest, end, value, fmt, precision);
     }
 
-    char* to_chars(char* buffer, char const* end, double value, float_format fmt, int precision) noexcept {
-        return detail::to_chars_impl<std::uint64_t>(buffer, end, value, fmt, precision);
+    char* to_chars(char* dest, char const* end, double value, float_format fmt, int precision) noexcept {
+        return detail::to_chars_impl<std::uint64_t>(dest, end, value, fmt, precision);
     }
 
     template <typename IntegerT>
-    char* detail::to_chars_impl(char* buffer, char const* end, IntegerT value, int_format fmt) noexcept {
-        if (value < 0 && buffer != end) {
-            *buffer++ = '-';
+    char* detail::to_chars_impl(char* dest, char const* end, IntegerT value, int_format fmt) noexcept {
+        if (value < 0 && dest != end) {
+            *dest++ = '-';
         }
 
         if (value == 0) {
-            *buffer++ = '0';
-            return buffer;
+            *dest++ = '0';
+            return dest;
         }
 
         auto const abs_value = detail::abs(value);
 
         switch (fmt) {
             case int_format::decimal:
-                return detail::to_chars_impl_decimal(buffer, end, abs_value);
+                return detail::to_chars_impl_decimal(dest, end, abs_value);
             case int_format::hex:
-                return detail::to_chars_impl_hex<'a'>(buffer, end, abs_value);
+                return detail::to_chars_impl_hex<'a'>(dest, end, abs_value);
             case int_format::hex_upper:
-                return detail::to_chars_impl_hex<'A'>(buffer, end, abs_value);
+                return detail::to_chars_impl_hex<'A'>(dest, end, abs_value);
             case int_format::binary:
-                return detail::to_chars_impl_binary(buffer, end, abs_value);
+                return detail::to_chars_impl_binary(dest, end, abs_value);
             default:
-                return buffer;
+                return dest;
         }
     }
 
     template <typename CarrierT, typename FloatT>
-    char* detail::to_chars_impl(char* buffer, char const* end, FloatT value, float_format fmt, int precision) noexcept {
+    char* detail::to_chars_impl(char* dest, char const* end, FloatT value, float_format fmt, int precision) noexcept {
         static_assert(sizeof(CarrierT) == sizeof(FloatT));
 
         if (!std::isfinite(value)) {
             switch (fmt) {
                 case float_format::scientific_upper:
                 case float_format::general_upper:
-                    return to_chars_impl_nonfinite(buffer, end, std::signbit(value), std::isinf(value), /*upper=*/true);
+                    return to_chars_impl_nonfinite(dest, end, std::signbit(value), std::isinf(value), /*upper=*/true);
                 default:
                     return to_chars_impl_nonfinite(
-                        buffer,
+                        dest,
                         end,
                         std::signbit(value),
                         std::isinf(value),
@@ -184,41 +184,41 @@ namespace NANOFMT_NS {
 
         // sign
         if (std::signbit(value)) {
-            buffer = put(buffer, end, '-');
+            dest = put(dest, end, '-');
         }
 
         switch (fmt) {
             case float_format::scientific:
-                return detail::to_chars_impl_scientific(buffer, end, significand, exponent, precision);
+                return detail::to_chars_impl_scientific(dest, end, significand, exponent, precision);
             case float_format::scientific_upper:
-                return detail::to_chars_impl_scientific<'E'>(buffer, end, significand, exponent, precision);
+                return detail::to_chars_impl_scientific<'E'>(dest, end, significand, exponent, precision);
             case float_format::fixed:
-                return detail::to_chars_impl_fixed(buffer, end, significand, exponent, precision);
+                return detail::to_chars_impl_fixed(dest, end, significand, exponent, precision);
             case float_format::general:
-                return detail::to_chars_impl_general(buffer, end, significand, exponent, precision);
+                return detail::to_chars_impl_general(dest, end, significand, exponent, precision);
             case float_format::general_upper:
-                return detail::to_chars_impl_general<'E'>(buffer, end, significand, exponent, precision);
+                return detail::to_chars_impl_general<'E'>(dest, end, significand, exponent, precision);
             case float_format::hex: // FIXME: implement
             case float_format::hex_upper: // FIXME: implement
             default:
-                return buffer;
+                return dest;
         }
     }
 
     template <typename UnsignedIntT>
-    char* detail::to_chars_impl_decimal(char* buffer, char const* end, UnsignedIntT value) noexcept {
+    char* detail::to_chars_impl_decimal(char* dest, char const* end, UnsignedIntT value) noexcept {
         static_assert(std::is_unsigned_v<UnsignedIntT>);
 
         // pathological case of an empty buffer;
         // checking this here simplifies following code
         // by assuring we can write at least one character
         //
-        if (buffer == end) {
-            return buffer;
+        if (dest == end) {
+            return dest;
         }
 
         int const total_digits = count_digits(value);
-        size_t const available = end - buffer;
+        size_t const available = end - dest;
         int const digits = min<int>(total_digits, static_cast<int>(available));
 
         // trim any trailing digits if our value exceeds our buffer size
@@ -230,17 +230,17 @@ namespace NANOFMT_NS {
         // write digits; FIXME add table to do this in two-digit
         // batches to reduce divisions
         //
-        char* ptr = buffer + digits;
+        char* ptr = dest + digits;
         do {
             *--ptr = '0' + (value % 10);
             value /= 10;
         } while (value != 0);
 
-        return buffer + digits;
+        return dest + digits;
     }
 
     template <char A, typename UnsignedIntT>
-    char* detail::to_chars_impl_hex(char* buffer, char const* end, UnsignedIntT value) noexcept {
+    char* detail::to_chars_impl_hex(char* dest, char const* end, UnsignedIntT value) noexcept {
         static_assert(std::is_unsigned_v<UnsignedIntT>);
 
         // constants to process nibbles (half-bytes, or 4 bits)
@@ -265,25 +265,25 @@ namespace NANOFMT_NS {
         // we slide the mask as we chop nibbles and have finished
         // when the mask completely slides off to zero
         //
-        while (mask != 0 && buffer != end) {
+        while (mask != 0 && dest != end) {
             UnsignedIntT const nibble = (value & mask) >> shift;
 
             if (nibble < 10) {
-                *buffer++ = static_cast<char>('0' + nibble);
+                *dest++ = static_cast<char>('0' + nibble);
             }
             else {
-                *buffer++ = static_cast<char>(A + nibble - 10);
+                *dest++ = static_cast<char>(A + nibble - 10);
             }
 
             shift -= bits_per_nibble;
             mask >>= bits_per_nibble;
         }
 
-        return buffer;
+        return dest;
     }
 
     template <typename UnsignedIntT>
-    char* detail::to_chars_impl_binary(char* buffer, char const* end, UnsignedIntT value) noexcept {
+    char* detail::to_chars_impl_binary(char* dest, char const* end, UnsignedIntT value) noexcept {
         static_assert(std::is_unsigned_v<UnsignedIntT>);
 
         // find the initial non-zero bit in the input
@@ -294,20 +294,20 @@ namespace NANOFMT_NS {
         // iterate the bits from MSB to LSB, so that we
         // can terminate if the buffer becomes full
         //
-        while (mask != 0 && buffer != end) {
-            *buffer++ = '0' + ((value & mask) != 0);
+        while (mask != 0 && dest != end) {
+            *dest++ = '0' + ((value & mask) != 0);
             mask >>= 1;
         }
 
-        return buffer;
+        return dest;
     }
 
     template <typename UnsignedIntT>
-    char* detail::to_chars_n_round(char* buffer, char const* end, UnsignedIntT value, std::size_t count) noexcept {
+    char* detail::to_chars_n_round(char* dest, char const* end, UnsignedIntT value, std::size_t count) noexcept {
         static_assert(std::is_unsigned_v<UnsignedIntT>);
 
         if (count == 0) {
-            return buffer;
+            return dest;
         }
 
         char tmp[significand_max_digits10] = {};
@@ -321,14 +321,14 @@ namespace NANOFMT_NS {
         // to round from)
         //
         if (tmp_len <= count) {
-            return copy_to_n(buffer, end, tmp, tmp_len);
+            return copy_to_n(dest, end, tmp, tmp_len);
         }
 
         char const remainder_digit = tmp[count];
 
         // if the remainder is less than 1/2 then we have no rounding to do
         if (remainder_digit < '5') {
-            return copy_to_n(buffer, end, tmp, count);
+            return copy_to_n(dest, end, tmp, count);
         }
 
         // if our remainder is exactly 1/2 we round to nearest even;
@@ -343,7 +343,7 @@ namespace NANOFMT_NS {
             char const last_digit = tmp[count - 1];
             bool const is_even = ((last_digit - '0') & 1) == 0;
             if (is_even) {
-                return copy_to_n(buffer, end, tmp, count);
+                return copy_to_n(dest, end, tmp, count);
             }
         }
 
@@ -360,12 +360,12 @@ namespace NANOFMT_NS {
             break;
         }
 
-        return copy_to_n(buffer, end, tmp, count);
+        return copy_to_n(dest, end, tmp, count);
     }
 
     template <char E, bool TrailingZeroes, typename CarrierT>
     char* detail::to_chars_impl_scientific(
-        char* buffer,
+        char* dest,
         char const* end,
         CarrierT significand,
         int exponent,
@@ -395,38 +395,38 @@ namespace NANOFMT_NS {
         int const fract_digits = precision < 0 ? digits_count - 1 : precision;
 
         // write most significant digit
-        buffer = put(buffer, end, digits[0]);
+        dest = put(dest, end, digits[0]);
 
         // write fractional part, if any
         if (fract_digits > 0) {
-            buffer = put(buffer, end, '.');
+            dest = put(dest, end, '.');
 
             int const fract_available = digits_count - 1;
             int const fract_buffer_size = min<int>(fract_available, fract_digits);
-            buffer = copy_to_n(buffer, end, digits + 1, fract_buffer_size);
+            dest = copy_to_n(dest, end, digits + 1, fract_buffer_size);
 
             // fill in any trailing zeroes only if our mode allows it; this is effectively
             // always going to be the precision minus the number of fractional digits pulled
             // from the significand
             //
             if constexpr (TrailingZeroes) {
-                buffer = fill_n(buffer, end, '0', static_cast<size_t>(fract_digits) - fract_buffer_size);
+                dest = fill_n(dest, end, '0', static_cast<size_t>(fract_digits) - fract_buffer_size);
             }
         }
 
         // write exponent, format [eE][+-][d]dd (zero-padded if exponent if less than two digits)
         //
-        buffer = put(buffer, end, E);
-        buffer = put(buffer, end, adjusted_exp < 0 ? '-' : '+');
+        dest = put(dest, end, E);
+        dest = put(dest, end, adjusted_exp < 0 ? '-' : '+');
         if (absolute_exp < 10) {
-            buffer = put(buffer, end, '0');
+            dest = put(dest, end, '0');
         }
-        return to_chars(buffer, end, absolute_exp);
+        return to_chars(dest, end, absolute_exp);
     }
 
     template <bool TrailingZeroes, typename CarrierT>
     char* detail::to_chars_impl_fixed(
-        char* buffer,
+        char* dest,
         char const* end,
         CarrierT significand,
         int exponent,
@@ -447,11 +447,11 @@ namespace NANOFMT_NS {
             // we will only display zeroes due to truncation
             if constexpr (TrailingZeroes) {
                 if (precision > 0) {
-                    buffer = copy_to_n(buffer, end, "0.", 2);
-                    return fill_n(buffer, end, '0', precision);
+                    dest = copy_to_n(dest, end, "0.", 2);
+                    return fill_n(dest, end, '0', precision);
                 }
             }
-            return put(buffer, end, '0');
+            return put(dest, end, '0');
         }
 
         // calculate how many of the significant digits _might_ be visible,
@@ -479,13 +479,13 @@ namespace NANOFMT_NS {
         // the decimal point; if there is no integer portion of the significand,
         // just write a zero
         if (decimal_pos > 0) {
-            buffer = copy_to_n(buffer, end, digits, integer_digits);
+            dest = copy_to_n(dest, end, digits, integer_digits);
             if (integer_length > integer_digits) {
-                buffer = fill_n(buffer, end, '0', static_cast<size_t>(integer_length) - integer_digits);
+                dest = fill_n(dest, end, '0', static_cast<size_t>(integer_length) - integer_digits);
             }
         }
         else {
-            buffer = put(buffer, end, '0');
+            dest = put(dest, end, '0');
         }
 
         // write the fractional portion of the signifand and any appropriate trailing zeroes
@@ -493,23 +493,23 @@ namespace NANOFMT_NS {
         if (fract_digits > 0 || (precision > 0 && TrailingZeroes)) {
             int const fract_offset = max<int>(-decimal_pos, 0);
 
-            buffer = put(buffer, end, '.');
-            buffer = fill_n(buffer, end, '0', fract_offset);
-            buffer = copy_to_n(buffer, end, digits + integer_digits, fract_digits);
+            dest = put(dest, end, '.');
+            dest = fill_n(dest, end, '0', fract_offset);
+            dest = copy_to_n(dest, end, digits + integer_digits, fract_digits);
 
             if constexpr (TrailingZeroes) {
                 int const fract_length_unused = fract_digits + fract_offset;
                 int const fract_tail_zeroes = max<int>(precision - fract_length_unused, 0);
-                buffer = fill_n(buffer, end, '0', fract_tail_zeroes);
+                dest = fill_n(dest, end, '0', fract_tail_zeroes);
             }
         }
 
-        return buffer;
+        return dest;
     }
 
     template <char E, typename CarrierT>
     char* detail::to_chars_impl_general(
-        char* buffer,
+        char* dest,
         char const* end,
         CarrierT significand,
         int exponent,
@@ -534,23 +534,23 @@ namespace NANOFMT_NS {
         int const X = exponent + sig_digits - 1;
 
         if (P > X && X >= -4) {
-            return to_chars_impl_fixed</*TrailingZeroes=*/false>(buffer, end, significand, exponent, P - 1 - exponent);
+            return to_chars_impl_fixed</*TrailingZeroes=*/false>(dest, end, significand, exponent, P - 1 - exponent);
         }
-        return to_chars_impl_scientific<E, /*TrailingZeroes=*/false>(buffer, end, significand, exponent, P - 1);
+        return to_chars_impl_scientific<E, /*TrailingZeroes=*/false>(dest, end, significand, exponent, P - 1);
     }
 
     char* detail::to_chars_impl_nonfinite(
-        char* buffer,
+        char* dest,
         char const* end,
         bool negative,
         bool infinite,
         bool upper) noexcept {
         if (negative) {
-            buffer = put(buffer, end, '-');
+            dest = put(dest, end, '-');
         }
         if (infinite) {
-            return copy_to(buffer, end, upper ? "INF" : "inf");
+            return copy_to(dest, end, upper ? "INF" : "inf");
         }
-        return copy_to(buffer, end, upper ? "NAN" : "nan");
+        return copy_to(dest, end, upper ? "NAN" : "nan");
     }
 } // namespace NANOFMT_NS

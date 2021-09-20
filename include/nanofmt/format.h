@@ -68,13 +68,13 @@ namespace NANOFMT_NS {
     /// Copy the source string to the destination buffer, but not extending
     /// past the provided buffer end pointer. Returns the pointer past the
     /// last character written.
-    [[nodiscard]] constexpr char* copy_to(char* buffer, char const* end, char const* source) noexcept;
+    [[nodiscard]] constexpr char* copy_to(char* dest, char const* end, char const* source) noexcept;
 
     /// Copies length characters of source string to the destination
     /// buffer, but not extending past the provided buffer end pointer.
     /// Returns the pointer past the last character written.
     [[nodiscard]] constexpr char* copy_to_n(
-        char* buffer,
+        char* dest,
         char const* end,
         char const* source,
         std::size_t length) noexcept;
@@ -82,12 +82,12 @@ namespace NANOFMT_NS {
     /// Copies the provided character ch to the destination buffer, but not
     /// extending past the provided buffer end pointer. Returns the pointer
     /// past the last character written.
-    [[nodiscard]] constexpr char* put(char* buffer, char const* end, char ch) noexcept;
+    [[nodiscard]] constexpr char* put(char* dest, char const* end, char ch) noexcept;
 
     /// Copies count copies of the charcter ch to the destination buffer, but
     /// not extending past the provided buffer end pointer. Returns the
     /// pointer past the last character written.
-    [[nodiscard]] constexpr char* fill_n(char* buffer, char const* end, char ch, std::size_t count) noexcept;
+    [[nodiscard]] constexpr char* fill_n(char* dest, char const* end, char ch, std::size_t count) noexcept;
 
     /// Overload to support converting user-defined string types to format_string.
     template <typename StringT>
