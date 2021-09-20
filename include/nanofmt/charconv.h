@@ -34,52 +34,48 @@ namespace NANOFMT_NS {
     // clang-format on
 
 #if defined(DOXYGEN_SHOULD_SKIP_THIS)
-    /// @brief Format an integer value to the target character buffer.
+    /// @brief Format an integer value to the target buffer.
     /// @param buffer target buffer to write characters to.
     /// @param end the end of the target buffer.
     /// @param value the value to format.
     /// @param fmt formatting options.
     /// @return one past the last character written.
     template <typename IntegerT>
-    char* to_chars(char* buffer, char const* end, IntegerT value, int_format fmt = int_format::decimal) noexcept;
+    char* to_chars(char* dest, char const* end, IntegerT value, int_format fmt = int_format::decimal) noexcept;
 #else
-    char* to_chars(char* buffer, char const* end, signed char value, int_format fmt = int_format::decimal) noexcept;
-    char* to_chars(char* buffer, char const* end, unsigned char value, int_format fmt = int_format::decimal) noexcept;
-    char* to_chars(char* buffer, char const* end, signed short value, int_format fmt = int_format::decimal) noexcept;
-    char* to_chars(char* buffer, char const* end, unsigned short value, int_format fmt = int_format::decimal) noexcept;
-    char* to_chars(char* buffer, char const* end, signed int value, int_format fmt = int_format::decimal) noexcept;
-    char* to_chars(char* buffer, char const* end, unsigned int value, int_format fmt = int_format::decimal) noexcept;
-    char* to_chars(char* buffer, char const* end, signed long value, int_format fmt = int_format::decimal) noexcept;
-    char* to_chars(char* buffer, char const* end, unsigned long value, int_format fmt = int_format::decimal) noexcept;
+    char* to_chars(char* dest, char const* end, signed char value, int_format fmt = int_format::decimal) noexcept;
+    char* to_chars(char* dest, char const* end, unsigned char value, int_format fmt = int_format::decimal) noexcept;
+    char* to_chars(char* dest, char const* end, signed short value, int_format fmt = int_format::decimal) noexcept;
+    char* to_chars(char* dest, char const* end, unsigned short value, int_format fmt = int_format::decimal) noexcept;
+    char* to_chars(char* dest, char const* end, signed int value, int_format fmt = int_format::decimal) noexcept;
+    char* to_chars(char* dest, char const* end, unsigned int value, int_format fmt = int_format::decimal) noexcept;
+    char* to_chars(char* dest, char const* end, signed long value, int_format fmt = int_format::decimal) noexcept;
+    char* to_chars(char* dest, char const* end, unsigned long value, int_format fmt = int_format::decimal) noexcept;
+    char* to_chars(char* dest, char const* end, signed long long value, int_format fmt = int_format::decimal) noexcept;
     char* to_chars(
-        char* buffer,
-        char const* end,
-        signed long long value,
-        int_format fmt = int_format::decimal) noexcept;
-    char* to_chars(
-        char* buffer,
+        char* dest,
         char const* end,
         unsigned long long value,
         int_format fmt = int_format::decimal) noexcept;
 #endif
 
     // plain char is disallowed, cast to signed or unsigned char for integer formatting
-    char* to_chars(char* buffer, char const* end, char value, int_format) noexcept = delete;
+    char* to_chars(char* dest, char const* end, char value, int_format) noexcept = delete;
 
     // bools are disallowed, cast to an integer type if a 0 or 1 format is required
-    char* to_chars(char* buffer, char const* end, bool value, int_format) noexcept = delete;
+    char* to_chars(char* dest, char const* end, bool value, int_format) noexcept = delete;
 
 #if defined(DOXYGEN_SHOULD_SKIP_THIS)
-    /// @brief Format a single-precision floating point value to the target character buffer.
+    /// @brief Format a single-precision floating point value to the target buffer.
     /// @param buffer target buffer to write characters to.
     /// @param end the end of the target buffer.
     /// @param value the value to format.
     /// @param fmt formatting options.
     /// @return one past the last character written.
     template <typename FloatT>
-    char* to_chars(char* buffer, char const* end, FloatT value, float_format fmt) noexcept;
+    char* to_chars(char* dest, char const* end, FloatT value, float_format fmt) noexcept;
 
-    /// @brief Format a single-precision floating point value to the target character buffer.
+    /// @brief Format a single-precision floating point value to the target buffer.
     /// @param buffer target buffer to write characters to.
     /// @param end the end of the target buffer.
     /// @param value the value to format.
@@ -87,22 +83,22 @@ namespace NANOFMT_NS {
     /// @param precision target precision for the output.
     /// @return one past the last character written.
     template <typename FloatT>
-    char* to_chars(char* buffer, char const* end, FloatT value, float_format fmt, int precision) noexcept;
+    char* to_chars(char* dest, char const* end, FloatT value, float_format fmt, int precision) noexcept;
 #else
-    char* to_chars(char* buffer, char const* end, float value, float_format fmt) noexcept;
-    char* to_chars(char* buffer, char const* end, double value, float_format fmt) noexcept;
+    char* to_chars(char* dest, char const* end, float value, float_format fmt) noexcept;
+    char* to_chars(char* dest, char const* end, double value, float_format fmt) noexcept;
 
-    char* to_chars(char* buffer, char const* end, float value, float_format fmt, int precision) noexcept;
-    char* to_chars(char* buffer, char const* end, double value, float_format fmt, int precision) noexcept;
+    char* to_chars(char* dest, char const* end, float value, float_format fmt, int precision) noexcept;
+    char* to_chars(char* dest, char const* end, double value, float_format fmt, int precision) noexcept;
 #endif
     /// @}
 
     // to_chars for floating-point types requires explicit use of float_format
-    char* to_chars(char* buffer, char const* end, float value) noexcept = delete;
-    char* to_chars(char* buffer, char const* end, double value) noexcept = delete;
+    char* to_chars(char* dest, char const* end, float value) noexcept = delete;
+    char* to_chars(char* dest, char const* end, double value) noexcept = delete;
 
     // long doubles are not supported
-    char* to_chars(char* buffer, char const* end, long double value) noexcept = delete;
-    char* to_chars(char* buffer, char const* end, long double value, float_format fmt) noexcept = delete;
-    char* to_chars(char* buffer, char const* end, long double value, float_format fmt, int precision) noexcept = delete;
+    char* to_chars(char* dest, char const* end, long double value) noexcept = delete;
+    char* to_chars(char* dest, char const* end, long double value, float_format fmt) noexcept = delete;
+    char* to_chars(char* dest, char const* end, long double value, float_format fmt, int precision) noexcept = delete;
 } // namespace NANOFMT_NS

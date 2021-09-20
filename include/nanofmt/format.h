@@ -4,7 +4,6 @@
 #define NANOFMT_FORMAT_H_ 1
 #pragma once
 
-#include "buffer.h"
 #include "config.h"
 
 #include <cstddef>
@@ -20,10 +19,57 @@ namespace NANOFMT_NS {
     struct format_args;
 
     /// Wrapper for format strings.
-    struct format_string;
+    struct format_string {
+        constexpr format_string() noexcept = default;
+        constexpr format_string(char const* string, std::size_t length) noexcept
+            : begin(string)
+            , end(string + length) {}
+        template <std::size_t N>
+        constexpr /*implicit*/ format_string(char const (&str)[N]) noexcept
+            : begin(str)
+            , end(begin + __builtin_strlen(begin)) {}
+        constexpr explicit format_string(char const* const zstr) noexcept
+            : begin(zstr)
+            , end(begin + __builtin_strlen(begin)) {}
+
+        template <typename StringT>
+        constexpr format_string(StringT const& string) noexcept;
+
+        char const* begin = nullptr;
+        char const* end = nullptr;
+    };
 
     /// Small wrapper to assist in formatting types like std::string_view.
     struct format_string_view;
+
+    /// Wrapper around a destination sequence of characters.
+    ///
+    /// Counts the number of characters that are written to the buffer,
+    /// excluding truncating, and stores them in the advance member.
+    ///
+    /// Use advance_to to update the pos pointer to ensure the advance field
+    /// is updated appropriately.
+    struct format_output {
+        char* pos = nullptr;
+        char const* end = nullptr;
+        std::size_t advance = 0;
+
+        constexpr format_output& append(char const* zstr) noexcept;
+        constexpr format_output& append(char const* source, std::size_t length) noexcept;
+        constexpr format_output& append(char ch) noexcept;
+
+        constexpr format_output& fill_n(char ch, std::size_t count) noexcept;
+
+        template <typename... Args>
+        format_output& format(format_string fmt, Args const&... args);
+
+        inline format_output& vformat(format_string fmt, format_args&& args);
+
+        template <typename ValueT>
+        format_output& format_value(ValueT const& value, format_string spec = {});
+
+        constexpr format_output& advance_to(char* p) noexcept;
+    };
 
     /// Holds a list of N format_value objects.
     ///
@@ -38,18 +84,40 @@ namespace NANOFMT_NS {
     ///
     /// constexpr char const* parse(char const* in, char const* end) noexcept;
     ///
-    /// void format(T const& value, buffer& buf);
+    /// void format(T const& value, format_output& out);
     template <typename T>
     struct formatter;
+
+    /// Copy the source string to the destination buffer, but not extending
+    /// past the provided buffer end pointer. Returns the pointer past the
+    /// last character written.
+    [[nodiscard]] constexpr char* copy_to(char* dest, char const* end, char const* source) noexcept;
+
+    /// Copies length characters of source string to the destination
+    /// buffer, but not extending past the provided buffer end pointer.
+    /// Returns the pointer past the last character written.
+    [[nodiscard]] constexpr char* copy_to_n(
+        char* dest,
+        char const* end,
+        char const* source,
+        std::size_t length) noexcept;
+
+    /// Copies the provided character ch to the destination buffer, but not
+    /// extending past the provided buffer end pointer. Returns the pointer
+    /// past the last character written.
+    [[nodiscard]] constexpr char* put(char* dest, char const* end, char ch) noexcept;
+
+    /// Copies count copies of the charcter ch to the destination buffer, but
+    /// not extending past the provided buffer end pointer. Returns the
+    /// pointer past the last character written.
+    [[nodiscard]] constexpr char* fill_n(char* dest, char const* end, char ch, std::size_t count) noexcept;
 
     /// Overload to support converting user-defined string types to format_string.
     template <typename StringT>
     constexpr format_string to_format_string(StringT const& value) noexcept;
 
-    template <typename... Args>
-    format_buffer& format_to(format_buffer& buf, format_string format_str, Args const&... args);
-
-    inline format_buffer& vformat_to(format_buffer& buf, format_string format_str, format_args&& args);
+    template <typename StringT>
+    constexpr format_string::format_string(StringT const& string) noexcept : format_string(to_format_string(string)) {}
 
     /// Formats a string and arguments into dest, writing no more than count
     /// bytes. The destination will **NOT** be NUL-terminated. Returns a
@@ -78,29 +146,6 @@ namespace NANOFMT_NS {
     [[nodiscard]] std::size_t format_length(format_string format_str, Args const&... args);
 
     [[nodiscard]] inline std::size_t vformat_length(format_string format_str, format_args&& args);
-
-    struct format_string {
-        constexpr format_string() noexcept = default;
-        constexpr format_string(char const* string, std::size_t length) noexcept
-            : begin(string)
-            , end(string + length) {}
-        template <std::size_t N>
-        constexpr /*implicit*/ format_string(char const (&str)[N]) noexcept
-            : begin(str)
-            , end(begin + __builtin_strlen(begin)) {}
-        constexpr explicit format_string(char const* const zstr) noexcept
-            : begin(zstr)
-            , end(begin + __builtin_strlen(begin)) {}
-
-        template <typename StringT>
-        constexpr format_string(StringT const& string) noexcept : format_string(to_format_string(string)) {}
-
-        char const* begin = nullptr;
-        char const* end = nullptr;
-    };
-
-    template <typename ValueT>
-    char* format_value_to(format_buffer& buf, ValueT const& value, format_string spec = format_string{});
 
     /// Formats a value into dest, writing no more than N bytes. The output will
     /// be NUL-terminated. Returns a pointer to the last character written, which
@@ -147,7 +192,7 @@ namespace NANOFMT_NS {
         struct default_formatter {
             format_spec spec;
             char const* parse(char const* in, char const* end) noexcept;
-            void format(T value, format_buffer& buf) noexcept;
+            void format(T value, format_output& out) noexcept;
         };
     } // namespace detail
 
