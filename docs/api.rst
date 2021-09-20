@@ -234,7 +234,7 @@ Variadic Arguments
 Character Conversion
 --------------------
 
-The character conversion API is available in the header ``nanofmt/to_chars.h``.
+The character conversion API is available in the header ``nanofmt/charconv.h``.
 
 .. cpp:function:: char* nanofmt::to_chars(char* buffer, char const* end, IntegerT value, int_format fmt = int_format::decimal) noexcept
 
