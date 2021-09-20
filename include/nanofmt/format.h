@@ -54,7 +54,7 @@ namespace NANOFMT_NS {
         char const* end = nullptr;
         std::size_t advance = 0;
 
-        constexpr format_output& append(char const* const zstr) noexcept;
+        constexpr format_output& append(char const* zstr) noexcept;
         constexpr format_output& append(char const* source, std::size_t length) noexcept;
         constexpr format_output& append(char ch) noexcept;
 
@@ -68,7 +68,7 @@ namespace NANOFMT_NS {
         template <typename ValueT>
         format_output& format_value(ValueT const& value, format_string spec = {});
 
-        constexpr format_output& advance_to(char* const p) noexcept;
+        constexpr format_output& advance_to(char* p) noexcept;
     };
 
     /// Holds a list of N format_value objects.

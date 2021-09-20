@@ -147,7 +147,7 @@ namespace NANOFMT_NS {
 
     template <typename... Args>
     [[nodiscard]] std::size_t format_length(format_string format_str, Args const&... args) {
-        return detail::vformat(format_output(nullptr, 0), format_str, make_format_args(args...)).advance;
+        return detail::vformat(format_output{}, format_str, make_format_args(args...)).advance;
     }
 
     [[nodiscard]] std::size_t vformat_length(format_string format_str, format_args&& args) {
