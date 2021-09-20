@@ -14,8 +14,6 @@ Formatting
 
 The format API is available in the header ``nanofmt/format.h``.
 
-The buffer API is available in the header ``nanofmt/buffer.h``.
-
 Extensions for C++ standard library string types are in the header
 ``nanofmt/std_string.h``.
 
