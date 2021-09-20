@@ -28,17 +28,6 @@ The return value is a pointer to the terminating NUL character.
 
 .. cpp:function:: char* nanofmt::vformat_to(char (&dest)[N], format_string format_str, format_args&& args)
 
-Format to Buffer
-^^^^^^^^^^^^^^^^
-
-The ``nanofmt::format_output&`` overloads of :cpp:func:`nanofmt::format_to`
-format a given format string and arguments into the target buffer. The result
-will **not** be NUL-terminated. The return value is the buffer object itself.
-
-.. cpp:function:: format_output& nanofmt::format_to(format_output& out, format_string format_str, Args const&... args)
-
-.. cpp:function:: format_output& nanofmt::vformat_to(format_output& out, format_string format_str, format_args&& args)
-
 Length-Delimited Formatting
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -85,10 +74,29 @@ terminating NUL character.
 
 .. cpp:function:: size_t nanofmt::vformat_length(format_string format_str, format_args&& args)
 
-Buffers
-^^^^^^^
+Output Buffers
+^^^^^^^^^^^^^^
 
 .. cpp:struct:: nanofmt::format_output
+
+Format to Buffer
+^^^^^^^^^^^^^^^^
+
+The ``nanofmt::format_output&`` overloads of :cpp:func:`nanofmt::format_to`
+format a given format string and arguments into the target buffer. The result
+will **not** be NUL-terminated. The return value is the buffer object itself.
+
+  .. cpp:function:: format_output& format(format_string fmt, Args const&... args)
+
+    Formats the given format string and argument into the buffer.
+
+  .. cpp:function:: format_output& vformat(format_string fmt, format_args&& args)
+
+    Formats the given format string and argument into the buffer.
+    
+  .. cpp:function:: format_output& nanofmt::format_value(ValueT const& value, format_string spec = {})
+
+    Formats the given value into the buffer.
 
   .. cpp:function:: constexpr format_output& append(char const* const zstr) noexcept
 
@@ -167,8 +175,6 @@ Individual values can be formatted with nanofmt without requiring a full
 format string.
 
 .. cpp:function:: char* nanofmt::format_value_to(char (&dest)[N], ValueT const& value, format_string spec = {})
-
-.. cpp:function:: char* nanofmt::format_value_to(format_output& out, ValueT const& value, format_string spec = {})
 
 .. cpp:function:: char* nanofmt::format_value_to_n(char* dest, std::size_t, ValueT const& value, format_string spec = {})
 

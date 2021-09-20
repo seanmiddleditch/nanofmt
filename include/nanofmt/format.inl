@@ -7,6 +7,30 @@
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
 namespace NANOFMT_NS {
+    namespace detail {
+        format_output vformat(format_output out, format_string format_str, format_args&& args);
+
+        template <typename ValueT>
+        format_output format_value(format_output out, ValueT const& value, format_string spec);
+
+        // avoid explicitly pulling in <utility>
+        template <typename T>
+        const T& declval() noexcept;
+
+        template <typename ValueT>
+        constexpr format_arg make_format_arg(ValueT const& value) noexcept;
+
+        template <typename T, typename = void>
+        struct has_formatter;
+        template <typename T>
+        struct value_type_map;
+
+        struct char_buffer {
+            char const* chars = nullptr;
+            std::size_t max_length = 0;
+        };
+    } // namespace detail
+
     constexpr char* copy_to(char* dest, char const* end, char const* source) noexcept {
         char const* ptr = source;
         while (*ptr != 0 && dest != end)
@@ -68,33 +92,26 @@ namespace NANOFMT_NS {
         return *this;
     }
 
+    template <typename... Args>
+    format_output& format_output::format(format_string fmt, Args const&... args) {
+        return *this = detail::vformat(*this, fmt, make_format_args(args...));
+    }
+
+    format_output& format_output::vformat(format_string fmt, format_args&& args) {
+        return *this = detail::vformat(*this, fmt, static_cast<format_args&&>(args));
+    }
+
+    template <typename ValueT>
+    format_output& format_output::format_value(ValueT const& value, format_string spec) {
+        return *this = detail::format_value(*this, value, spec);
+    }
+
     constexpr format_output& format_output::advance_to(char* const p) noexcept {
         size_t const diff = p - pos;
         pos = p;
         advance += diff;
         return *this;
     }
-
-    namespace detail {
-        format_output vformat(format_output out, format_string format_str, format_args&& args);
-
-        // avoid explicitly pulling in <utility>
-        template <typename T>
-        const T& declval() noexcept;
-
-        template <typename ValueT>
-        constexpr format_arg make_format_arg(ValueT const& value) noexcept;
-
-        template <typename T, typename = void>
-        struct has_formatter;
-        template <typename T>
-        struct value_type_map;
-
-        struct char_buffer {
-            char const* chars = nullptr;
-            std::size_t max_length = 0;
-        };
-    } // namespace detail
 
     struct format_string_view {
         char const* string = nullptr;
@@ -104,10 +121,6 @@ namespace NANOFMT_NS {
     template <typename StringT>
     constexpr format_string to_format_string(StringT const& value) noexcept {
         return {value.data(), value.size()};
-    }
-
-    format_output& vformat_to(format_output& out, format_string format_str, format_args&& args) {
-        return out = detail::vformat(out, format_str, static_cast<format_args&&>(args));
     }
 
     [[nodiscard]] char* vformat_to_n(char* dest, std::size_t count, format_string format_str, format_args&& args) {
@@ -141,17 +154,15 @@ namespace NANOFMT_NS {
         return detail::vformat(format_output{}, format_str, static_cast<format_args&&>(args)).advance;
     }
 
-    namespace detail {
-        template <typename ValueT>
-        format_output format_value(format_output out, ValueT const& value, format_string spec) {
-            formatter<ValueT> fmt;
-            if (char const* const spec_end = fmt.parse(spec.begin, spec.end); spec_end != spec.end) {
-                return out;
-            }
-            fmt.format(value, out);
+    template <typename ValueT>
+    format_output detail::format_value(format_output out, ValueT const& value, format_string spec) {
+        formatter<ValueT> fmt;
+        if (char const* const spec_end = fmt.parse(spec.begin, spec.end); spec_end != spec.end) {
             return out;
         }
-    } // namespace detail
+        fmt.format(value, out);
+        return out;
+    }
 
     template <typename ValueT>
     char* format_value_to(format_output& out, ValueT const& value, format_string spec) {
