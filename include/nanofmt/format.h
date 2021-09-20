@@ -4,7 +4,6 @@
 #define NANOFMT_FORMAT_H_ 1
 #pragma once
 
-#include "buffer.h"
 #include "config.h"
 
 #include <cstddef>
@@ -25,6 +24,30 @@ namespace NANOFMT_NS {
     /// Small wrapper to assist in formatting types like std::string_view.
     struct format_string_view;
 
+    /// Wrapper around a destination sequence of characters.
+    ///
+    /// Counts the number of characters that are written to the buffer,
+    /// excluding truncating, and stores them in the advance member.
+    ///
+    /// Use advance_to to update the pos pointer to ensure the advance field
+    /// is updated appropriately.
+    struct format_buffer {
+        constexpr format_buffer() noexcept = default;
+        constexpr format_buffer(char* const dest, std::size_t count) noexcept : pos(dest), end(dest + count) {}
+
+        constexpr format_buffer& append(char const* const zstr) noexcept;
+        constexpr format_buffer& append(char const* source, std::size_t length) noexcept;
+        constexpr format_buffer& append(char ch) noexcept;
+
+        constexpr format_buffer& fill_n(char ch, std::size_t count) noexcept;
+
+        constexpr format_buffer& advance_to(char* const p) noexcept;
+
+        char* pos = nullptr;
+        char const* end = nullptr;
+        std::size_t advance = 0;
+    };
+
     /// Holds a list of N format_value objects.
     ///
     /// This is primarily meant to be an intermediate that holds onto values
@@ -41,6 +64,30 @@ namespace NANOFMT_NS {
     /// void format(T const& value, buffer& buf);
     template <typename T>
     struct formatter;
+
+    /// Copy the source string to the destination buffer, but not extending
+    /// past the provided buffer end pointer. Returns the pointer past the
+    /// last character written.
+    [[nodiscard]] constexpr char* copy_to(char* buffer, char const* end, char const* source) noexcept;
+
+    /// Copies length characters of source string to the destination
+    /// buffer, but not extending past the provided buffer end pointer.
+    /// Returns the pointer past the last character written.
+    [[nodiscard]] constexpr char* copy_to_n(
+        char* buffer,
+        char const* end,
+        char const* source,
+        std::size_t length) noexcept;
+
+    /// Copies the provided character ch to the destination buffer, but not
+    /// extending past the provided buffer end pointer. Returns the pointer
+    /// past the last character written.
+    [[nodiscard]] constexpr char* put(char* buffer, char const* end, char ch) noexcept;
+
+    /// Copies count copies of the charcter ch to the destination buffer, but
+    /// not extending past the provided buffer end pointer. Returns the
+    /// pointer past the last character written.
+    [[nodiscard]] constexpr char* fill_n(char* buffer, char const* end, char ch, std::size_t count) noexcept;
 
     /// Overload to support converting user-defined string types to format_string.
     template <typename StringT>

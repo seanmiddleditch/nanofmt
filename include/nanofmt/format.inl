@@ -7,6 +7,73 @@
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
 namespace NANOFMT_NS {
+    constexpr char* copy_to(char* buffer, char const* end, char const* source) noexcept {
+        char const* ptr = source;
+        while (*ptr != 0 && buffer != end)
+            *buffer++ = *ptr++;
+
+        return buffer;
+    }
+
+    constexpr char* copy_to_n(char* buffer, char const* end, char const* source, std::size_t length) noexcept {
+        char const* source_end = source + length;
+        while (source != source_end && buffer != end)
+            *buffer++ = *source++;
+
+        return buffer;
+    }
+
+    constexpr char* put(char* buffer, char const* end, char ch) noexcept {
+        if (buffer != end) {
+            *buffer++ = ch;
+        }
+        return buffer;
+    }
+
+    constexpr char* fill_n(char* buffer, char const* end, char ch, std::size_t count) noexcept {
+        char const pad_buffer[] = {ch, ch, ch, ch, ch, ch, ch, ch};
+        constexpr std::size_t pad_length = sizeof pad_buffer;
+
+        while (count >= pad_length) {
+            buffer = copy_to_n(buffer, end, pad_buffer, pad_length);
+            count -= pad_length;
+        }
+        return copy_to_n(buffer, end, pad_buffer, count);
+    }
+
+    constexpr format_buffer& format_buffer::append(char const* const zstr) noexcept {
+        char* const p = copy_to(pos, end, zstr);
+        std::size_t const consumed = p - pos;
+        advance += consumed;
+        advance += __builtin_strlen(zstr + consumed);
+        pos = p;
+        return *this;
+    }
+
+    constexpr format_buffer& format_buffer::append(char const* source, std::size_t length) noexcept {
+        advance += length;
+        pos = copy_to_n(pos, end, source, length);
+        return *this;
+    }
+
+    constexpr format_buffer& format_buffer::append(char ch) noexcept {
+        ++advance;
+        pos = put(pos, end, ch);
+        return *this;
+    }
+
+    constexpr format_buffer& format_buffer::fill_n(char ch, std::size_t count) noexcept {
+        advance += count;
+        pos = NANOFMT_NS::fill_n(pos, end, ch, count);
+        return *this;
+    }
+
+    constexpr format_buffer& format_buffer::advance_to(char* const p) noexcept {
+        advance += p - pos;
+        pos = p;
+        return *this;
+    }
+
     namespace detail {
         char* vformat(format_buffer& buf, format_string format_str, format_args&& args);
 
