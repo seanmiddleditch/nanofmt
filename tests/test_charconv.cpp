@@ -62,6 +62,7 @@ TEST_CASE("nanofmt.to_chars.integers", "[nanofmt][to_chars][integers]") {
     }
 }
 
+#if NANOFMT_HAS_FLOAT
 TEST_CASE("nanofmt.to_chars.fixed", "[nanofmt][to_chars][float][fixed]") {
     using namespace NANOFMT_NS::test;
     using namespace NANOFMT_NS;
@@ -194,3 +195,4 @@ TEST_CASE("nanofmt.to_chars.general", "[nanofmt][to_chars][float][general]") {
         CHECK(to_string(-std::numeric_limits<float>::quiet_NaN(), float_format::general) == "-nan");
     }
 }
+#endif

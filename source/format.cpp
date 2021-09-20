@@ -22,7 +22,6 @@ namespace NANOFMT_NS {
             format_spec const& spec) noexcept;
         static constexpr int_format select_int_format(char type) noexcept;
         static constexpr char const* parse_int_spec(char const* in, char const* end, format_spec& spec) noexcept;
-        static constexpr char const* parse_float_spec(char const* in, char const* end, format_spec& spec) noexcept;
         static constexpr std::size_t strnlen(char const* string, std::size_t max_length) noexcept;
         static void format_char_impl(char value, format_output& out, format_spec const& spec) noexcept;
         template <typename IntT>
@@ -32,8 +31,12 @@ namespace NANOFMT_NS {
             std::size_t length,
             format_output& out,
             format_spec const& spec) noexcept;
+
+#if NANOFMT_HAS_FLOAT
+        static constexpr char const* parse_float_spec(char const* in, char const* end, format_spec& spec) noexcept;
         template <typename FloatT>
         static void format_float_impl(FloatT value, format_output& out, format_spec const& spec) noexcept;
+#endif
     } // namespace detail
 
     template <>
@@ -106,6 +109,7 @@ namespace NANOFMT_NS {
         return format_int_impl(value, out, spec);
     }
 
+#if NANOFMT_HAS_FLOAT
     template <>
     char const* detail::default_formatter<float>::parse(char const* in, char const* end) noexcept {
         return parse_float_spec(in, end, spec);
@@ -125,6 +129,7 @@ namespace NANOFMT_NS {
     void detail::default_formatter<double>::format(double value, format_output& out) noexcept {
         return format_float_impl(value, out, spec);
     }
+#endif
 
     template <>
     char const* detail::default_formatter<bool>::parse(char const* in, char const* end) noexcept {
@@ -223,8 +228,8 @@ namespace NANOFMT_NS {
             }
 
             // determine argument
-            int arg_index = 0;
-            if (arg_index = detail::parse_nonnegative(input, input_end); arg_index != -1) {
+            int arg_index = detail::parse_nonnegative(input, input_end);
+            if (arg_index != -1) {
                 arg_auto_index = false;
             }
             else if (arg_auto_index) {
@@ -294,10 +299,12 @@ namespace NANOFMT_NS {
                 return invoke(value.v_longlong);
             case types::t_ulonglong:
                 return invoke(value.v_ulonglong);
+#if NANOFMT_HAS_FLOAT
             case types::t_float:
                 return invoke(value.v_float);
             case types::t_double:
                 return invoke(value.v_double);
+#endif
             case types::t_bool:
                 return invoke(value.v_bool);
             case types::t_cstring:
@@ -395,7 +402,8 @@ namespace NANOFMT_NS {
 
         // -- parse width
         //
-        if (int const width = detail::parse_nonnegative(in, end); width >= 0) {
+        int const width = detail::parse_nonnegative(in, end);
+        if (width >= 0) {
             spec.width = width;
             if (in == end) {
                 return in;
@@ -494,10 +502,6 @@ namespace NANOFMT_NS {
         return parse_spec(in, end, spec, "bBcdoxX");
     }
 
-    constexpr char const* detail::parse_float_spec(char const* in, char const* end, format_spec& spec) noexcept {
-        return parse_spec(in, end, spec, "aAeEfFgG");
-    }
-
     constexpr std::size_t detail::strnlen(char const* string, std::size_t max_length) noexcept {
         for (std::size_t length = 0; length != max_length; ++length) {
             if (string[length] == '\0') {
@@ -563,6 +567,11 @@ namespace NANOFMT_NS {
         }
     }
 
+#if NANOFMT_HAS_FLOAT
+    constexpr char const* detail::parse_float_spec(char const* in, char const* end, format_spec& spec) noexcept {
+        return parse_spec(in, end, spec, "aAeEfFgG");
+    }
+
     template <typename FloatT>
     void detail::format_float_impl(FloatT value, format_output& out, format_spec const& spec) noexcept {
         if (!std::signbit(value)) {
@@ -601,4 +610,5 @@ namespace NANOFMT_NS {
                 break;
         }
     }
+#endif
 } // namespace NANOFMT_NS

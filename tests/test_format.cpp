@@ -100,6 +100,7 @@ TEST_CASE("nanofmt.format.integers", "[nanofmt][format][integers]") {
     }
 }
 
+#if NANOFMT_HAS_FLOAT
 TEST_CASE("nanofmt.format.floating", "[nanofmt][format][floating]") {
     using namespace NANOFMT_NS::test;
 
@@ -134,6 +135,7 @@ TEST_CASE("nanofmt.format.floating", "[nanofmt][format][floating]") {
         CHECK(sformat("{:G}", std::numeric_limits<float>::quiet_NaN()) == "NAN");
     }
 }
+#endif
 
 TEST_CASE("nanofmt.format.strings", "[nanofmt][format][strings]") {
     using namespace NANOFMT_NS::test;
@@ -145,14 +147,19 @@ TEST_CASE("nanofmt.format.strings", "[nanofmt][format][strings]") {
         CHECK(sformat("{}", s) == "array");
     }
 
-    SECTION("stdlib") {
+    SECTION("std::string") {
         CHECK(sformat("{}", std::string("test")) == "test");
-        CHECK(sformat("{}", std::string_view("test")) == "test");
-
-        CHECK(sformat("{}{}{}", std::string_view("ab"), std::string("cd"), "ef") == "abcdef");
 
         CHECK(sformat(std::string("a{}c"), "b") == "abc");
     }
+
+#if __cpp_lib_string_view
+    SECTION("std::string_view") {
+        CHECK(sformat("{}", std::string_view("test")) == "test");
+
+        CHECK(sformat("{}{}{}", std::string_view("ab"), std::string("cd"), "ef") == "abcdef");
+    }
+#endif
 
     SECTION("width and fill") {
         CHECK(sformat("{:<8}{:05}", "value", 42) == "value   00042");

@@ -23,7 +23,7 @@ target_include_directories(nanofmt
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
 )
-target_compile_features(nanofmt PUBLIC cxx_std_17)
+target_compile_features(nanofmt PUBLIC cxx_std_14)
 
 if (NANOFMT_NS)
     target_compile_definitions(nanofmt PUBLIC -DNANOFMT_NS=${NANOFMT_NS})

@@ -49,12 +49,14 @@ TEST_CASE("nanofmt.format_arg.integers", "[nanofmt][format_arg][integers]") {
     }
 }
 
+#if NANOFMT_HAS_FLOAT
 TEST_CASE("nanofmt.format_arg.floats", "[nanofmt][format_arg][floats]") {
     using namespace NANOFMT_NS;
 
     CHECK(to_arg(0.f).tag == format_arg::type::t_float);
     CHECK(to_arg(0.0).tag == format_arg::type::t_double);
 }
+#endif
 
 TEST_CASE("nanofmt.format_arg.pointers", "[nanofmt][format_arg][pointers][strings]") {
     using namespace NANOFMT_NS;
@@ -83,11 +85,11 @@ TEST_CASE("nanofmt.format_arg.pointers", "[nanofmt][format_arg][pointers][string
 TEST_CASE("nanofmt.format_arg.enums", "[nanofmt][format_arg][pointers][enums]") {
     using namespace NANOFMT_NS;
 
+    enum class enum_class { value };
+    enum class chonky_enum_class : long long { value };
     // clang-format off
     enum NANOFMT_GSL_SUPPRESS(enum.3) cenum { cenum_value };
     // clang-format on
-    enum class enum_class { value };
-    enum class chonky_enum_class : long long { value };
 
     CHECK(to_arg(cenum_value).tag == format_arg::type::t_int);
     CHECK(to_arg(enum_class::value).tag == format_arg::type::t_int);

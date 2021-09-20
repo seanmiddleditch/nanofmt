@@ -2,84 +2,94 @@
 
 // just in case another library links dragonbox, make ours "private" to
 // avoid version/ODR problems
-#define jkj nanofmt_jkj
 
-#include "nanofmt/charconv.h"
 #include "numeric_utils.h"
-#include "dragonbox/dragonbox.h"
+#include "nanofmt/charconv.h"
+#include "nanofmt/config.h"
 #include "nanofmt/format.h"
+
+#if NAONFMT_HAS_FLOAT
+#    define jkj nanofmt_jkj
+#    include "dragonbox/dragonbox.h"
+#endif
 
 #include <cmath>
 
-namespace NANOFMT_NS::detail {
-    template <typename IntegerT>
-    static char* to_chars_impl(char* dest, char const* end, IntegerT value, int_format fmt) noexcept;
-
-    template <typename CarrierT, typename FloatT>
-    static char* to_chars_impl(char* dest, char const* end, FloatT value, float_format fmt, int precision) noexcept;
-
-    template <typename UnsignedIntT>
-    static char* to_chars_impl_decimal(char* dest, char const* end, UnsignedIntT value) noexcept;
-
-    template <char A = 'a', typename UnsignedIntT>
-    static char* to_chars_impl_hex(char* dest, char const* end, UnsignedIntT value) noexcept;
-
-    template <typename UnsignedIntT>
-    static char* to_chars_impl_binary(char* dest, char const* end, UnsignedIntT value) noexcept;
-
-    template <typename UnsignedIntT>
-    static char* to_chars_n_round(char* dest, char const* end, UnsignedIntT value, std::size_t count) noexcept;
-
-    template <char E = 'e', bool TrailingZeroes = true, typename CarrierT>
-    char* to_chars_impl_scientific(
-        char* dest,
-        char const* end,
-        CarrierT significand,
-        int exponent,
-        int precision) noexcept;
-
-    template <bool TrailingZeroes = true, typename CarrierT>
-    static char* to_chars_impl_fixed(
-        char* dest,
-        char const* end,
-        CarrierT significand,
-        int exponent,
-        int precision) noexcept;
-
-    template <char E = 'e', typename CarrierT>
-    static char* to_chars_impl_general(
-        char* dest,
-        char const* end,
-        CarrierT significand,
-        int exponent,
-        int precision) noexcept;
-
-    static char* to_chars_impl_nonfinite(
-        char* dest,
-        char const* end,
-        bool negative,
-        bool infinite,
-        bool upper) noexcept;
-
-    // maximum significand for double is 17 decimal digits
-    static constexpr size_t significand_max_digits10 = 17;
-} // namespace NANOFMT_NS::detail
-
 namespace NANOFMT_NS {
+    namespace detail {
+        template <typename IntegerT>
+        static char* to_chars_impl(char* dest, char const* end, IntegerT value, int_format fmt) noexcept;
+
+        template <typename UnsignedIntT>
+        static char* to_chars_impl_decimal(char* dest, char const* end, UnsignedIntT value) noexcept;
+
+        template <char A = 'a', typename UnsignedIntT>
+        static char* to_chars_impl_hex(char* dest, char const* end, UnsignedIntT value) noexcept;
+
+        template <typename UnsignedIntT>
+        static char* to_chars_impl_binary(char* dest, char const* end, UnsignedIntT value) noexcept;
+
+#if NAONFMT_HAS_FLOAT
+        template <typename CarrierT, typename FloatT>
+        static char* to_chars_impl(char* dest, char const* end, FloatT value, float_format fmt, int precision) noexcept;
+
+        template <typename UnsignedIntT>
+        static char* to_chars_n_round(char* dest, char const* end, UnsignedIntT value, std::size_t count) noexcept;
+
+        template <typename CarrierT>
+        char* to_chars_impl_scientific(
+            char* dest,
+            char const* end,
+            CarrierT significand,
+            int exponent,
+            int precision,
+            char alpha_e = 'e',
+            bool trailing_zeroes = true) noexcept;
+
+        template <typename CarrierT>
+        static char* to_chars_impl_fixed(
+            char* dest,
+            char const* end,
+            CarrierT significand,
+            int exponent,
+            int precision,
+            bool trailing_zeroes = true) noexcept;
+
+        template <typename CarrierT>
+        static char* to_chars_impl_general(
+            char* dest,
+            char const* end,
+            CarrierT significand,
+            int exponent,
+            int precision,
+            char alpha_e = 'e') noexcept;
+
+        static char* to_chars_impl_nonfinite(
+            char* dest,
+            char const* end,
+            bool negative,
+            bool infinite,
+            bool upper) noexcept;
+
+        // maximum significand for double is 17 decimal digits
+        static constexpr size_t significand_max_digits10 = 17;
+#endif
+    } // namespace detail
+
     char* to_chars(char* dest, char const* end, signed char value, int_format fmt) noexcept {
-        return detail::to_chars_impl(dest, end, value, fmt);
+        return detail::to_chars_impl(dest, end, static_cast<signed int>(value), fmt);
     }
 
     char* to_chars(char* dest, char const* end, unsigned char value, int_format fmt) noexcept {
-        return detail::to_chars_impl(dest, end, value, fmt);
+        return detail::to_chars_impl(dest, end, static_cast<unsigned int>(value), fmt);
     }
 
     char* to_chars(char* dest, char const* end, signed short value, int_format fmt) noexcept {
-        return detail::to_chars_impl(dest, end, value, fmt);
+        return detail::to_chars_impl(dest, end, static_cast<signed int>(value), fmt);
     }
 
     char* to_chars(char* dest, char const* end, unsigned short value, int_format fmt) noexcept {
-        return detail::to_chars_impl(dest, end, value, fmt);
+        return detail::to_chars_impl(dest, end, static_cast<unsigned int>(value), fmt);
     }
 
     char* to_chars(char* dest, char const* end, signed int value, int_format fmt) noexcept {
@@ -91,11 +101,11 @@ namespace NANOFMT_NS {
     }
 
     char* to_chars(char* dest, char const* end, signed long value, int_format fmt) noexcept {
-        return detail::to_chars_impl(dest, end, value, fmt);
+        return detail::to_chars_impl(dest, end, static_cast<detail::long_compat_t<decltype(value)>>(value), fmt);
     }
 
     char* to_chars(char* dest, char const* end, unsigned long value, int_format fmt) noexcept {
-        return detail::to_chars_impl(dest, end, value, fmt);
+        return detail::to_chars_impl(dest, end, static_cast<detail::long_compat_t<decltype(value)>>(value), fmt);
     }
 
     char* to_chars(char* dest, char const* end, signed long long value, int_format fmt) noexcept {
@@ -106,6 +116,7 @@ namespace NANOFMT_NS {
         return detail::to_chars_impl(dest, end, value, fmt);
     }
 
+#if NANOFMT_HAS_FLOAT
     char* to_chars(char* dest, char const* end, float value, float_format fmt) noexcept {
         return detail::to_chars_impl<std::uint32_t>(dest, end, value, fmt, -1);
     }
@@ -121,6 +132,7 @@ namespace NANOFMT_NS {
     char* to_chars(char* dest, char const* end, double value, float_format fmt, int precision) noexcept {
         return detail::to_chars_impl<std::uint64_t>(dest, end, value, fmt, precision);
     }
+#endif
 
     template <typename IntegerT>
     char* detail::to_chars_impl(char* dest, char const* end, IntegerT value, int_format fmt) noexcept {
@@ -149,9 +161,10 @@ namespace NANOFMT_NS {
         }
     }
 
+#if NANOFMT_HAS_FLOAT
     template <typename CarrierT, typename FloatT>
     char* detail::to_chars_impl(char* dest, char const* end, FloatT value, float_format fmt, int precision) noexcept {
-        static_assert(sizeof(CarrierT) == sizeof(FloatT));
+        static_assert(sizeof(CarrierT) == sizeof(FloatT), "CarrierT is not appropriate for FloatT");
 
         if (!std::isfinite(value)) {
             switch (fmt) {
@@ -191,23 +204,24 @@ namespace NANOFMT_NS {
             case float_format::scientific:
                 return detail::to_chars_impl_scientific(dest, end, significand, exponent, precision);
             case float_format::scientific_upper:
-                return detail::to_chars_impl_scientific<'E'>(dest, end, significand, exponent, precision);
+                return detail::to_chars_impl_scientific(dest, end, significand, exponent, precision, 'E');
             case float_format::fixed:
                 return detail::to_chars_impl_fixed(dest, end, significand, exponent, precision);
             case float_format::general:
                 return detail::to_chars_impl_general(dest, end, significand, exponent, precision);
             case float_format::general_upper:
-                return detail::to_chars_impl_general<'E'>(dest, end, significand, exponent, precision);
+                return detail::to_chars_impl_general(dest, end, significand, exponent, precision, 'E');
             case float_format::hex: // FIXME: implement
             case float_format::hex_upper: // FIXME: implement
             default:
                 return dest;
         }
     }
+#endif
 
     template <typename UnsignedIntT>
     char* detail::to_chars_impl_decimal(char* dest, char const* end, UnsignedIntT value) noexcept {
-        static_assert(std::is_unsigned_v<UnsignedIntT>);
+        static_assert(std::is_unsigned_v<UnsignedIntT>, "Requires unsigned type");
 
         // pathological case of an empty buffer;
         // checking this here simplifies following code
@@ -241,7 +255,7 @@ namespace NANOFMT_NS {
 
     template <char A, typename UnsignedIntT>
     char* detail::to_chars_impl_hex(char* dest, char const* end, UnsignedIntT value) noexcept {
-        static_assert(std::is_unsigned_v<UnsignedIntT>);
+        static_assert(std::is_unsigned_v<UnsignedIntT>, "Requires unsigned type");
 
         // constants to process nibbles (half-bytes, or 4 bits)
         //
@@ -284,7 +298,7 @@ namespace NANOFMT_NS {
 
     template <typename UnsignedIntT>
     char* detail::to_chars_impl_binary(char* dest, char const* end, UnsignedIntT value) noexcept {
-        static_assert(std::is_unsigned_v<UnsignedIntT>);
+        static_assert(std::is_unsigned_v<UnsignedIntT>, "Requires unsigned type");
 
         // find the initial non-zero bit in the input
         //
@@ -302,9 +316,10 @@ namespace NANOFMT_NS {
         return dest;
     }
 
+#if NAONFMT_HAS_FLOAT
     template <typename UnsignedIntT>
     char* detail::to_chars_n_round(char* dest, char const* end, UnsignedIntT value, std::size_t count) noexcept {
-        static_assert(std::is_unsigned_v<UnsignedIntT>);
+        static_assert(std::is_unsigned_v<UnsignedIntT>, "Requires unsigned type");
 
         if (count == 0) {
             return dest;
@@ -363,14 +378,16 @@ namespace NANOFMT_NS {
         return copy_to_n(dest, end, tmp, count);
     }
 
-    template <char E, bool TrailingZeroes, typename CarrierT>
+    template <typename CarrierT>
     char* detail::to_chars_impl_scientific(
         char* dest,
         char const* end,
         CarrierT significand,
         int exponent,
-        int precision) noexcept {
-        static_assert(std::is_unsigned_v<CarrierT>);
+        int precision,
+        char alpha_e,
+        bool trailing_zeroes) noexcept {
+        static_assert(std::is_unsigned_v<CarrierT>, "Requires unsigned type");
 
         // generate significand digits, with truncation/rounding when appropriate
         //
@@ -409,14 +426,14 @@ namespace NANOFMT_NS {
             // always going to be the precision minus the number of fractional digits pulled
             // from the significand
             //
-            if constexpr (TrailingZeroes) {
+            if (trailing_zeroes) {
                 dest = fill_n(dest, end, '0', static_cast<size_t>(fract_digits) - fract_buffer_size);
             }
         }
 
         // write exponent, format [eE][+-][d]dd (zero-padded if exponent if less than two digits)
         //
-        dest = put(dest, end, E);
+        dest = put(dest, end, alpha_e);
         dest = put(dest, end, adjusted_exp < 0 ? '-' : '+');
         if (absolute_exp < 10) {
             dest = put(dest, end, '0');
@@ -424,14 +441,15 @@ namespace NANOFMT_NS {
         return to_chars(dest, end, absolute_exp);
     }
 
-    template <bool TrailingZeroes, typename CarrierT>
+    template <typename CarrierT>
     char* detail::to_chars_impl_fixed(
         char* dest,
         char const* end,
         CarrierT significand,
         int exponent,
-        int precision) noexcept {
-        static_assert(std::is_unsigned_v<CarrierT>);
+        int precision,
+        bool trailing_zeroes) noexcept {
+        static_assert(std::is_unsigned_v<CarrierT>, "Requires unsigned type");
 
         int const sig_digits = count_digits(significand);
 
@@ -445,7 +463,7 @@ namespace NANOFMT_NS {
         //
         if (precision >= 0 && -decimal_pos > precision) {
             // we will only display zeroes due to truncation
-            if constexpr (TrailingZeroes) {
+            if (trailing_zeroes) {
                 if (precision > 0) {
                     dest = copy_to_n(dest, end, "0.", 2);
                     return fill_n(dest, end, '0', precision);
@@ -490,14 +508,14 @@ namespace NANOFMT_NS {
 
         // write the fractional portion of the signifand and any appropriate trailing zeroes
         //
-        if (fract_digits > 0 || (precision > 0 && TrailingZeroes)) {
+        if (fract_digits > 0 || (precision > 0 && trailing_zeroes)) {
             int const fract_offset = max<int>(-decimal_pos, 0);
 
             dest = put(dest, end, '.');
             dest = fill_n(dest, end, '0', fract_offset);
             dest = copy_to_n(dest, end, digits + integer_digits, fract_digits);
 
-            if constexpr (TrailingZeroes) {
+            if (trailing_zeroes) {
                 int const fract_length_unused = fract_digits + fract_offset;
                 int const fract_tail_zeroes = max<int>(precision - fract_length_unused, 0);
                 dest = fill_n(dest, end, '0', fract_tail_zeroes);
@@ -507,13 +525,14 @@ namespace NANOFMT_NS {
         return dest;
     }
 
-    template <char E, typename CarrierT>
+    template <typename CarrierT>
     char* detail::to_chars_impl_general(
         char* dest,
         char const* end,
         CarrierT significand,
         int exponent,
-        int precision) noexcept {
+        int precision,
+        char alpha_e) noexcept {
         int const sig_digits = count_digits(significand);
 
         // C11 spec (see also https://en.cppreference.com/w/c/io/fprintf)
@@ -534,9 +553,22 @@ namespace NANOFMT_NS {
         int const X = exponent + sig_digits - 1;
 
         if (P > X && X >= -4) {
-            return to_chars_impl_fixed</*TrailingZeroes=*/false>(dest, end, significand, exponent, P - 1 - exponent);
+            return to_chars_impl_fixed(
+                dest,
+                end,
+                significand,
+                exponent,
+                P - 1 - exponent,
+                /*trailing_zeroes=*/false);
         }
-        return to_chars_impl_scientific<E, /*TrailingZeroes=*/false>(dest, end, significand, exponent, P - 1);
+        return to_chars_impl_scientific(
+            dest,
+            end,
+            significand,
+            exponent,
+            P - 1,
+            alpha_e,
+            /*trailing_zeroes=*/false);
     }
 
     char* detail::to_chars_impl_nonfinite(
@@ -553,4 +585,5 @@ namespace NANOFMT_NS {
         }
         return copy_to(dest, end, upper ? "NAN" : "nan");
     }
+#endif
 } // namespace NANOFMT_NS

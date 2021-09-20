@@ -4,6 +4,8 @@
 #    error "format.inl is a private header; inglure format.h instead"
 #endif
 
+#include "config.h"
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
 namespace NANOFMT_NS {
@@ -157,7 +159,8 @@ namespace NANOFMT_NS {
     template <typename ValueT>
     format_output detail::format_value(format_output out, ValueT const& value, format_string spec) {
         formatter<ValueT> fmt;
-        if (char const* const spec_end = fmt.parse(spec.begin, spec.end); spec_end != spec.end) {
+        char const* const spec_pos = fmt.parse(spec.begin, spec.end);
+        if (spec_pos != spec.end) {
             return out;
         }
         fmt.format(value, out);
@@ -196,8 +199,10 @@ namespace NANOFMT_NS {
             t_longlong,
             t_ulonglong,
             t_char,
+#    if NANOFMT_HAS_FLOAT
             t_float,
             t_double,
+#    endif
             t_bool,
             t_cstring,
             t_voidptr,
@@ -217,8 +222,10 @@ namespace NANOFMT_NS {
         constexpr format_arg(long long value) noexcept : v_longlong(value), tag(type::t_longlong) {}
         constexpr format_arg(unsigned long long value) noexcept : v_ulonglong(value), tag(type::t_ulonglong) {}
         constexpr format_arg(char value) noexcept : v_char(value), tag(type::t_char) {}
+#    if NANOFMT_HAS_FLOAT
         constexpr format_arg(float value) noexcept : v_float(value), tag(type::t_float) {}
         constexpr format_arg(double value) noexcept : v_double(value), tag(type::t_double) {}
+#    endif
         constexpr format_arg(bool value) noexcept : v_bool(value), tag(type::t_bool) {}
         constexpr format_arg(char const* value) noexcept : v_cstring(value), tag(type::t_cstring) {}
         constexpr format_arg(void const* value) noexcept : v_voidptr(value), tag(type::t_voidptr) {}
@@ -232,8 +239,10 @@ namespace NANOFMT_NS {
             long long v_longlong;
             unsigned long long v_ulonglong;
             char v_char;
+#    if NANOFMT_HAS_FLOAT
             float v_float;
             double v_double;
+#    endif
             bool v_bool;
             char const* v_cstring;
             void const* v_voidptr;
@@ -282,6 +291,7 @@ namespace NANOFMT_NS {
             using type = void const*;
         };
 
+#    if NANOFMT_IF_CONSTEXPR
         template <typename ValueT>
         constexpr format_arg make_format_arg(ValueT const& value) noexcept {
             using MappedT = typename detail::value_type_map<std::decay_t<ValueT>>::type;
@@ -309,6 +319,52 @@ namespace NANOFMT_NS {
                 return {};
             }
         }
+#    else
+        template <typename ValueT, bool IsBuiltIn, bool HasFormatter, bool IsEnum>
+        struct format_arg_maker;
+
+        template <typename ValueT, bool HasFormatter, bool IsEnum>
+        struct format_arg_maker<ValueT, true, HasFormatter, IsEnum> {
+            static constexpr format_arg make(ValueT const& value) noexcept {
+                using MappedT = typename detail::value_type_map<std::decay_t<ValueT>>::type;
+                return (MappedT)(value);
+            }
+        };
+
+        template <typename ValueT, bool IsEnum>
+        struct format_arg_maker<ValueT, false, true, IsEnum> {
+            static constexpr format_arg make(ValueT const& value) noexcept {
+                format_arg::custom custom;
+                custom.thunk = +[](void const* value, char const** in, char const* end, format_output& out) {
+                    formatter<ValueT> fmt;
+                    if (in != nullptr) {
+                        *in = fmt.parse(*in, end);
+                    }
+                    fmt.format(*static_cast<ValueT const*>(value), out);
+                };
+                // this is basically std::addressof, but we want to avoid pulling in <memory> as a dependency
+                custom.value =
+                    reinterpret_cast<ValueT*>(&const_cast<char&>(reinterpret_cast<const volatile char&>(value)));
+                return custom;
+            }
+        };
+
+        template <typename ValueT>
+        struct format_arg_maker<ValueT, false, false, true> {
+            static constexpr format_arg make(ValueT const& value) noexcept {
+                return static_cast<typename detail::value_type_map<std::underlying_type_t<ValueT>>::type>(value);
+            }
+        };
+
+        template <typename ValueT>
+        constexpr format_arg make_format_arg(ValueT const& value) noexcept {
+            using MappedT = typename detail::value_type_map<std::decay_t<ValueT>>::type;
+            constexpr bool IsBuiltIn = std::is_constructible_v<format_arg, MappedT>;
+            constexpr bool HasFormatter = detail::has_formatter<ValueT>::value;
+            constexpr bool IsEnum = std::is_enum_v<ValueT>;
+            return format_arg_maker<ValueT, IsBuiltIn, HasFormatter, IsEnum>::make(value);
+        }
+#    endif
     } // namespace detail
 
     template <size_t N>

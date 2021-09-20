@@ -6,9 +6,20 @@
 #include <cstring>
 #include <iostream>
 
-namespace NANOFMT_NS::test {
+namespace NANOFMT_NS {
+    namespace test {
+        template <size_t N>
+        struct string_result;
+
+        template <size_t N = 2048, typename FormatT, typename... ArgsT>
+        auto sformat(FormatT&& format_str, ArgsT&&... args);
+
+        template <size_t N = 2048, typename ValueT, typename... ArgsT>
+        auto to_string(ValueT const& value, ArgsT&&... args);
+    } // namespace test
+
     template <size_t N>
-    struct string_result {
+    struct test::string_result {
         char buffer[N] = {};
         size_t size = 0;
 
@@ -24,8 +35,8 @@ namespace NANOFMT_NS::test {
         }
     };
 
-    template <size_t N = 2048, typename FormatT, typename... ArgsT>
-    auto sformat(FormatT&& format_str, ArgsT&&... args) {
+    template <size_t N, typename FormatT, typename... ArgsT>
+    auto test::sformat(FormatT&& format_str, ArgsT&&... args) {
         string_result<N> result;
         char const* const end = NANOFMT_NS::format_to_n(
             result.buffer,
@@ -36,12 +47,12 @@ namespace NANOFMT_NS::test {
         return result;
     }
 
-    template <size_t N = 2048, typename ValueT, typename... ArgsT>
-    auto to_string(ValueT const& value, ArgsT&&... args) {
+    template <size_t N, typename ValueT, typename... ArgsT>
+    auto test::to_string(ValueT const& value, ArgsT&&... args) {
         string_result<N> result;
         char const* const end =
             NANOFMT_NS::to_chars(result.buffer, result.buffer + sizeof result.buffer, value, args...);
         result.size = end - result.buffer;
         return result;
     }
-} // namespace NANOFMT_NS::test
+} // namespace NANOFMT_NS
