@@ -1,7 +1,7 @@
 // Copyright (c) Sean Middleditch and contributors. See accompanying LICENSE.md for copyright details.
 
 #include "test_utils.h"
-#include "nanofmt/to_chars.h"
+#include "nanofmt/charconv.h"
 
 #include <catch2/catch_test_macros.hpp>
 #include <cstdint>
