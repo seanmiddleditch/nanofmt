@@ -35,9 +35,9 @@ The ``nanofmt::format_output&`` overloads of :cpp:func:`nanofmt::format_to`
 format a given format string and arguments into the target buffer. The result
 will **not** be NUL-terminated. The return value is the buffer object itself.
 
-.. cpp:function:: format_output& nanofmt::format_to(format_output& buffer, format_string format_str, Args const&... args)
+.. cpp:function:: format_output& nanofmt::format_to(format_output& out, format_string format_str, Args const&... args)
 
-.. cpp:function:: format_output& nanofmt::vformat_to(format_output& buffer, format_string format_str, format_args&& args)
+.. cpp:function:: format_output& nanofmt::vformat_to(format_output& out, format_string format_str, format_args&& args)
 
 Length-Delimited Formatting
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -70,9 +70,9 @@ specialized structure for nanofmt to work.
     Consumes characters from ``in`` up to, but not including, ``end``.
     Returns a pointer to one past the last character consumed.
 
-  .. cpp:function:: void format(T const& value, format_output& buffer) const
+  .. cpp:function:: void format(T const& value, format_output& out) const
 
-    Formats ``value`` to ``buffer``.
+    Formats ``value`` to ``out``.
 
 Format Length
 ^^^^^^^^^^^^^
@@ -168,7 +168,7 @@ format string.
 
 .. cpp:function:: char* nanofmt::format_value_to(char (&dest)[N], ValueT const& value, format_string spec = {})
 
-.. cpp:function:: char* nanofmt::format_value_to(format_output& buffer, ValueT const& value, format_string spec = {})
+.. cpp:function:: char* nanofmt::format_value_to(format_output& out, ValueT const& value, format_string spec = {})
 
 .. cpp:function:: char* nanofmt::format_value_to_n(char* dest, std::size_t, ValueT const& value, format_string spec = {})
 

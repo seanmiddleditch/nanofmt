@@ -32,8 +32,9 @@ namespace NANOFMT_NS {
     /// Use advance_to to update the pos pointer to ensure the advance field
     /// is updated appropriately.
     struct format_output {
-        constexpr format_output() noexcept = default;
-        constexpr format_output(char* const dest, std::size_t count) noexcept : pos(dest), end(dest + count) {}
+        char* pos = nullptr;
+        char const* end = nullptr;
+        std::size_t advance = 0;
 
         constexpr format_output& append(char const* const zstr) noexcept;
         constexpr format_output& append(char const* source, std::size_t length) noexcept;
@@ -42,10 +43,6 @@ namespace NANOFMT_NS {
         constexpr format_output& fill_n(char ch, std::size_t count) noexcept;
 
         constexpr format_output& advance_to(char* const p) noexcept;
-
-        char* pos = nullptr;
-        char const* end = nullptr;
-        std::size_t advance = 0;
     };
 
     /// Holds a list of N format_value objects.
@@ -61,7 +58,7 @@ namespace NANOFMT_NS {
     ///
     /// constexpr char const* parse(char const* in, char const* end) noexcept;
     ///
-    /// void format(T const& value, buffer& buffer);
+    /// void format(T const& value, format_output& out);
     template <typename T>
     struct formatter;
 
@@ -94,9 +91,9 @@ namespace NANOFMT_NS {
     constexpr format_string to_format_string(StringT const& value) noexcept;
 
     template <typename... Args>
-    format_output& format_to(format_output& buffer, format_string format_str, Args const&... args);
+    format_output& format_to(format_output& out, format_string format_str, Args const&... args);
 
-    inline format_output& vformat_to(format_output& buffer, format_string format_str, format_args&& args);
+    inline format_output& vformat_to(format_output& out, format_string format_str, format_args&& args);
 
     /// Formats a string and arguments into dest, writing no more than count
     /// bytes. The destination will **NOT** be NUL-terminated. Returns a
@@ -147,7 +144,7 @@ namespace NANOFMT_NS {
     };
 
     template <typename ValueT>
-    char* format_value_to(format_output& buffer, ValueT const& value, format_string spec = format_string{});
+    char* format_value_to(format_output& out, ValueT const& value, format_string spec = format_string{});
 
     /// Formats a value into dest, writing no more than N bytes. The output will
     /// be NUL-terminated. Returns a pointer to the last character written, which
@@ -194,7 +191,7 @@ namespace NANOFMT_NS {
         struct default_formatter {
             format_spec spec;
             char const* parse(char const* in, char const* end) noexcept;
-            void format(T value, format_output& buffer) noexcept;
+            void format(T value, format_output& out) noexcept;
         };
     } // namespace detail
 

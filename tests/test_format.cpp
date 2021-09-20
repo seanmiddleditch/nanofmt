@@ -15,13 +15,13 @@ class custom_type {};
 namespace NANOFMT_NS {
     template <>
     struct formatter<custom_enum> : formatter<char const*> {
-        void format(custom_enum value, format_output& buffer) {
+        void format(custom_enum value, format_output& out) {
             switch (value) {
                 case custom_enum::foo:
-                    formatter<char const*>::format("foo", buffer);
+                    formatter<char const*>::format("foo", out);
                     break;
                 case custom_enum::bar:
-                    formatter<char const*>::format("bar", buffer);
+                    formatter<char const*>::format("bar", out);
                     break;
             }
         }
@@ -29,8 +29,8 @@ namespace NANOFMT_NS {
 
     template <>
     struct formatter<custom_type> : formatter<char const*> {
-        void format(custom_type, format_output& buffer) {
-            formatter<char const*>::format("custom", buffer);
+        void format(custom_type, format_output& out) {
+            formatter<char const*>::format("custom", out);
         }
     };
 } // namespace NANOFMT_NS

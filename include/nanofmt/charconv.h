@@ -34,7 +34,7 @@ namespace NANOFMT_NS {
     // clang-format on
 
 #if defined(DOXYGEN_SHOULD_SKIP_THIS)
-    /// @brief Format an integer value to the target character buffer.
+    /// @brief Format an integer value to the target buffer.
     /// @param buffer target buffer to write characters to.
     /// @param end the end of the target buffer.
     /// @param value the value to format.
@@ -66,7 +66,7 @@ namespace NANOFMT_NS {
     char* to_chars(char* dest, char const* end, bool value, int_format) noexcept = delete;
 
 #if defined(DOXYGEN_SHOULD_SKIP_THIS)
-    /// @brief Format a single-precision floating point value to the target character buffer.
+    /// @brief Format a single-precision floating point value to the target buffer.
     /// @param buffer target buffer to write characters to.
     /// @param end the end of the target buffer.
     /// @param value the value to format.
@@ -75,7 +75,7 @@ namespace NANOFMT_NS {
     template <typename FloatT>
     char* to_chars(char* dest, char const* end, FloatT value, float_format fmt) noexcept;
 
-    /// @brief Format a single-precision floating point value to the target character buffer.
+    /// @brief Format a single-precision floating point value to the target buffer.
     /// @param buffer target buffer to write characters to.
     /// @param end the end of the target buffer.
     /// @param value the value to format.
