@@ -10,7 +10,9 @@
 enum class standard_enum { one, two };
 enum class custom_enum { foo, bar };
 
-class custom_type {};
+struct custom_type {
+    int value = 0;
+};
 
 namespace NANOFMT_NS {
     template <>
@@ -28,9 +30,13 @@ namespace NANOFMT_NS {
     };
 
     template <>
-    struct formatter<custom_type> : formatter<char const*> {
-        void format(custom_type, format_output& out) {
-            formatter<char const*>::format("custom", out);
+    struct formatter<custom_type> {
+        constexpr char const* parse(char const* in, char const*) noexcept {
+            return in;
+        }
+
+        void format(custom_type custom, format_output& out) {
+            out.format("custom{{{}}", custom.value);
         }
     };
 } // namespace NANOFMT_NS
@@ -198,12 +204,12 @@ TEST_CASE("nanofmt.format.enums", "[nanofmt][format][enums]") {
 TEST_CASE("nanofmt.format.custom", "[nanofmt][format][custom]") {
     using namespace NANOFMT_NS::test;
 
-    custom_type local;
+    custom_type local{7};
     custom_type& ref = local;
 
-    CHECK(sformat("{}", custom_type{}) == "custom");
-    CHECK(sformat("{}", local) == "custom");
-    CHECK(sformat("{}", ref) == "custom");
+    CHECK(sformat("{}", custom_type{1}) == "custom{1}");
+    CHECK(sformat("{}", local) == "custom{7}");
+    CHECK(sformat("{}", ref) == "custom{7}");
 }
 
 // SECTION("errors") {
