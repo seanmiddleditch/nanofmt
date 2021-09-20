@@ -15,13 +15,13 @@ class custom_type {};
 namespace NANOFMT_NS {
     template <>
     struct formatter<custom_enum> : formatter<char const*> {
-        void format(custom_enum value, format_buffer& buf) {
+        void format(custom_enum value, format_output& buffer) {
             switch (value) {
                 case custom_enum::foo:
-                    formatter<char const*>::format("foo", buf);
+                    formatter<char const*>::format("foo", buffer);
                     break;
                 case custom_enum::bar:
-                    formatter<char const*>::format("bar", buf);
+                    formatter<char const*>::format("bar", buffer);
                     break;
             }
         }
@@ -29,8 +29,8 @@ namespace NANOFMT_NS {
 
     template <>
     struct formatter<custom_type> : formatter<char const*> {
-        void format(custom_type, format_buffer& buf) {
-            formatter<char const*>::format("custom", buf);
+        void format(custom_type, format_output& buffer) {
+            formatter<char const*>::format("custom", buffer);
         }
     };
 } // namespace NANOFMT_NS
@@ -39,21 +39,21 @@ TEST_CASE("nanofmt.format.core", "[nanofmt][format]") {
     using namespace NANOFMT_NS;
 
     SECTION("format_to overflow") {
-        char buf[12];
-        std::memset(buf, 0xfe, sizeof buf);
+        char buffer[12];
+        std::memset(buffer, 0xfe, sizeof buffer);
 
-        char const* const end = format_to(buf, "Hello, {}! {:09d}", "World", 9001);
+        char const* const end = format_to(buffer, "Hello, {}! {:09d}", "World", 9001);
         REQUIRE(*end == '\0');
 
-        CHECK(std::strcmp(buf, "Hello, Worl") == 0);
+        CHECK(std::strcmp(buffer, "Hello, Worl") == 0);
     }
 
     SECTION("format_to_n overflow") {
-        char buf[12];
-        char* const end = format_to_n(buf, sizeof buf, "Hello, {}! {:09d}", "World", 9001);
+        char buffer[12];
+        char* const end = format_to_n(buffer, sizeof buffer, "Hello, {}! {:09d}", "World", 9001);
 
-        CHECK((end - buf) == 12);
-        CHECK(std::strncmp(buf, "Hello, World", sizeof buf) == 0);
+        CHECK((end - buffer) == 12);
+        CHECK(std::strncmp(buffer, "Hello, World", sizeof buffer) == 0);
     }
 }
 

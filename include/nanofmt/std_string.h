@@ -11,15 +11,15 @@
 namespace NANOFMT_NS {
     template <typename StringCharT, typename TraitsT, typename AllocatorT>
     struct formatter<std::basic_string<StringCharT, TraitsT, AllocatorT>> : formatter<format_string_view> {
-        constexpr void format(std::basic_string<StringCharT, TraitsT, AllocatorT> const& value, format_buffer& buf) {
-            formatter<format_string_view>::format({value.data(), value.size()}, buf);
+        constexpr void format(std::basic_string<StringCharT, TraitsT, AllocatorT> const& value, format_output& buffer) {
+            formatter<format_string_view>::format({value.data(), value.size()}, buffer);
         }
     };
 
     template <typename StringCharT, typename TraitsT>
     struct formatter<std::basic_string_view<StringCharT, TraitsT>> : formatter<format_string_view> {
-        constexpr void format(std::basic_string_view<StringCharT, TraitsT> const& value, format_buffer& buf) {
-            formatter<format_string_view>::format({value.data(), value.size()}, buf);
+        constexpr void format(std::basic_string_view<StringCharT, TraitsT> const& value, format_output& buffer) {
+            formatter<format_string_view>::format({value.data(), value.size()}, buffer);
         }
     };
 } // namespace NANOFMT_NS

@@ -31,13 +31,13 @@ The return value is a pointer to the terminating NUL character.
 Format to Buffer
 ^^^^^^^^^^^^^^^^
 
-The ``nanofmt::format_buffer&`` overloads of :cpp:func:`nanofmt::format_to`
+The ``nanofmt::format_output&`` overloads of :cpp:func:`nanofmt::format_to`
 format a given format string and arguments into the target buffer. The result
 will **not** be NUL-terminated. The return value is the buffer object itself.
 
-.. cpp:function:: format_buffer& nanofmt::format_to(format_buffer& buf, format_string format_str, Args const&... args)
+.. cpp:function:: format_output& nanofmt::format_to(format_output& buffer, format_string format_str, Args const&... args)
 
-.. cpp:function:: format_buffer& nanofmt::vformat_to(format_buffer& buf, format_string format_str, format_args&& args)
+.. cpp:function:: format_output& nanofmt::vformat_to(format_output& buffer, format_string format_str, format_args&& args)
 
 Length-Delimited Formatting
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -70,7 +70,7 @@ specialized structure for nanofmt to work.
     Consumes characters from ``in`` up to, but not including, ``end``.
     Returns a pointer to one past the last character consumed.
 
-  .. cpp:function:: void format(T const& value, format_buffer& buffer) const
+  .. cpp:function:: void format(T const& value, format_output& buffer) const
 
     Formats ``value`` to ``buffer``.
 
@@ -88,25 +88,25 @@ terminating NUL character.
 Buffers
 ^^^^^^^
 
-.. cpp:struct:: nanofmt::format_buffer
+.. cpp:struct:: nanofmt::format_output
 
-  .. cpp:function:: constexpr format_buffer& append(char const* const zstr) noexcept
+  .. cpp:function:: constexpr format_output& append(char const* const zstr) noexcept
 
     Appends the contents of ``zstr`` to the buffer.
 
-  .. cpp:function:: constexpr format_buffer& append(char const* source, std::size_t length) noexcept
+  .. cpp:function:: constexpr format_output& append(char const* source, std::size_t length) noexcept
 
     Appends ``length`` characters from ``source`` to the buffer.
 
-  .. cpp:function:: constexpr format_buffer& append(char ch) noexcept
+  .. cpp:function:: constexpr format_output& append(char ch) noexcept
 
     Appends the character ``ch`` to the buffer.
 
-  .. cpp:function:: constexpr format_buffer& fill_n(char ch, std::size_t count) noexcept
+  .. cpp:function:: constexpr format_output& fill_n(char ch, std::size_t count) noexcept
 
     Appends ``count`` copies of the character ``ch`` to the buffer.
 
-  .. cpp:function:: constexpr format_buffer& advance_to(char* const p) noexcept
+  .. cpp:function:: constexpr format_output& advance_to(char* const p) noexcept
 
     Updates the buffer position to ``p`` and adjusts the ``advance`` member appropriately.
 
@@ -168,7 +168,7 @@ format string.
 
 .. cpp:function:: char* nanofmt::format_value_to(char (&dest)[N], ValueT const& value, format_string spec = {})
 
-.. cpp:function:: char* nanofmt::format_value_to(format_buffer& buffer, ValueT const& value, format_string spec = {})
+.. cpp:function:: char* nanofmt::format_value_to(format_output& buffer, ValueT const& value, format_string spec = {})
 
 .. cpp:function:: char* nanofmt::format_value_to_n(char* dest, std::size_t, ValueT const& value, format_string spec = {})
 

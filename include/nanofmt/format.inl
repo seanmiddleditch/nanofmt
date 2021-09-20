@@ -41,7 +41,7 @@ namespace NANOFMT_NS {
         return copy_to_n(dest, end, pad_buffer, count);
     }
 
-    constexpr format_buffer& format_buffer::append(char const* const zstr) noexcept {
+    constexpr format_output& format_output::append(char const* const zstr) noexcept {
         char* const p = copy_to(pos, end, zstr);
         std::size_t const consumed = p - pos;
         advance += consumed;
@@ -50,32 +50,32 @@ namespace NANOFMT_NS {
         return *this;
     }
 
-    constexpr format_buffer& format_buffer::append(char const* source, std::size_t length) noexcept {
+    constexpr format_output& format_output::append(char const* source, std::size_t length) noexcept {
         advance += length;
         pos = copy_to_n(pos, end, source, length);
         return *this;
     }
 
-    constexpr format_buffer& format_buffer::append(char ch) noexcept {
+    constexpr format_output& format_output::append(char ch) noexcept {
         ++advance;
         pos = put(pos, end, ch);
         return *this;
     }
 
-    constexpr format_buffer& format_buffer::fill_n(char ch, std::size_t count) noexcept {
+    constexpr format_output& format_output::fill_n(char ch, std::size_t count) noexcept {
         advance += count;
         pos = NANOFMT_NS::fill_n(pos, end, ch, count);
         return *this;
     }
 
-    constexpr format_buffer& format_buffer::advance_to(char* const p) noexcept {
+    constexpr format_output& format_output::advance_to(char* const p) noexcept {
         advance += p - pos;
         pos = p;
         return *this;
     }
 
     namespace detail {
-        char* vformat(format_buffer& buf, format_string format_str, format_args&& args);
+        char* vformat(format_output& buffer, format_string format_str, format_args&& args);
 
         // avoid explicitly pulling in <utility>
         template <typename T>
@@ -105,78 +105,78 @@ namespace NANOFMT_NS {
         return {value.data(), value.size()};
     }
 
-    format_buffer& vformat_to(format_buffer& buf, format_string format_str, format_args&& args) {
-        detail::vformat(buf, format_str, static_cast<format_args&&>(args));
-        return buf;
+    format_output& vformat_to(format_output& buffer, format_string format_str, format_args&& args) {
+        detail::vformat(buffer, format_str, static_cast<format_args&&>(args));
+        return buffer;
     }
 
     [[nodiscard]] char* vformat_to_n(char* dest, std::size_t count, format_string format_str, format_args&& args) {
-        format_buffer buf(dest, count);
-        return detail::vformat(buf, format_str, static_cast<format_args&&>(args));
+        format_output buffer(dest, count);
+        return detail::vformat(buffer, format_str, static_cast<format_args&&>(args));
     }
 
     template <typename... Args>
     [[nodiscard]] char* format_to_n(char* dest, std::size_t count, format_string format_str, Args const&... args) {
-        format_buffer buf(dest, count);
-        return detail::vformat(buf, format_str, make_format_args(args...));
+        format_output buffer(dest, count);
+        return detail::vformat(buffer, format_str, make_format_args(args...));
     }
 
     template <typename... Args>
-    format_buffer& format_to(format_buffer& buf, format_string format_str, Args const&... args) {
-        detail::vformat(buf, format_str, make_format_args(args...));
-        return buf;
+    format_output& format_to(format_output& buffer, format_string format_str, Args const&... args) {
+        detail::vformat(buffer, format_str, make_format_args(args...));
+        return buffer;
     }
 
     template <std::size_t N, typename... Args>
     char* format_to(char (&dest)[N], format_string format_str, Args const&... args) {
-        format_buffer buf(dest, N - 1 /*NUL*/);
-        char* const end = detail::vformat(buf, format_str, make_format_args(args...));
+        format_output buffer(dest, N - 1 /*NUL*/);
+        char* const end = detail::vformat(buffer, format_str, make_format_args(args...));
         *end = '\0';
         return end;
     }
 
     template <typename... Args>
     [[nodiscard]] std::size_t format_length(format_string format_str, Args const&... args) {
-        format_buffer buf(nullptr, 0);
-        detail::vformat(buf, format_str, make_format_args(args...));
-        return buf.advance;
+        format_output buffer(nullptr, 0);
+        detail::vformat(buffer, format_str, make_format_args(args...));
+        return buffer.advance;
     }
 
     [[nodiscard]] std::size_t vformat_length(format_string format_str, format_args&& args) {
-        format_buffer buf(nullptr, 0);
-        detail::vformat(buf, format_str, static_cast<format_args&&>(args));
-        return buf.advance;
+        format_output buffer(nullptr, 0);
+        detail::vformat(buffer, format_str, static_cast<format_args&&>(args));
+        return buffer.advance;
     }
 
     template <typename ValueT>
-    char* format_value_to(format_buffer& buf, ValueT const& value, format_string spec) {
+    char* format_value_to(format_output& buffer, ValueT const& value, format_string spec) {
         formatter<ValueT> fmt;
         if (char const* const spec_end = fmt.parse(spec.begin, spec.end); spec_end != spec.end) {
-            return buf.pos;
+            return buffer.pos;
         }
-        fmt.format(value, buf);
-        return buf.pos;
+        fmt.format(value, buffer);
+        return buffer.pos;
     }
 
     template <typename ValueT>
     [[nodiscard]] char* format_value_to_n(char* dest, std::size_t count, ValueT const& value, format_string spec) {
-        format_buffer buf(dest, count);
-        return format_value_to(buf, value, spec);
+        format_output buffer(dest, count);
+        return format_value_to(buffer, value, spec);
     }
 
     template <typename ValueT, std::size_t N>
     char* format_value_to(char (&dest)[N], ValueT const& value, format_string spec) {
-        format_buffer buf(dest, N - 1 /*NUL*/);
-        char* const end = format_value_to(buf, value, spec);
+        format_output buffer(dest, N - 1 /*NUL*/);
+        char* const end = format_value_to(buffer, value, spec);
         *end = '\0';
         return end;
     }
 
     template <typename ValueT>
     [[nodiscard]] std::size_t format_value_length(ValueT const& value, format_string spec) {
-        format_buffer buf(nullptr, 0);
-        format_value_to(buf, value, spec);
-        return buf.advance;
+        format_output buffer(nullptr, 0);
+        format_value_to(buffer, value, spec);
+        return buffer.advance;
     }
 
     struct format_arg {
@@ -198,7 +198,7 @@ namespace NANOFMT_NS {
         };
 
         struct custom {
-            void (*thunk)(void const* value, char const** spec, char const* end, format_buffer& buf) = nullptr;
+            void (*thunk)(void const* value, char const** spec, char const* end, format_output& buffer) = nullptr;
             void const* value = nullptr;
         };
 
@@ -246,7 +246,7 @@ namespace NANOFMT_NS {
             T,
             std::void_t<
                 decltype(formatter<T>{}.parse("", "")),
-                decltype(formatter<T>{}.format(declval<T>(), format_buffer{}))>> {
+                decltype(formatter<T>{}.format(declval<T>(), format_output{}))>> {
             static constexpr bool value = true;
         };
 
@@ -283,12 +283,12 @@ namespace NANOFMT_NS {
             }
             else if constexpr (detail::has_formatter<ValueT>::value) {
                 format_arg::custom custom;
-                custom.thunk = +[](void const* value, char const** in, char const* end, format_buffer& buf) {
+                custom.thunk = +[](void const* value, char const** in, char const* end, format_output& buffer) {
                     formatter<ValueT> fmt;
                     if (in != nullptr) {
                         *in = fmt.parse(*in, end);
                     }
-                    fmt.format(*static_cast<ValueT const*>(value), buf);
+                    fmt.format(*static_cast<ValueT const*>(value), buffer);
                 };
                 // this is basically std::addressof, but we want to avoid pulling in <memory> as a dependency
                 custom.value =
@@ -315,7 +315,7 @@ namespace NANOFMT_NS {
         constexpr /*implicit*/ format_args(format_arg_store<N>&& values) noexcept : values(values.values)
                                                                                   , count(N) {}
 
-        void format(unsigned index, char const** in, char const* end, format_buffer& buf) const;
+        void format(unsigned index, char const** in, char const* end, format_output& buffer) const;
 
         format_arg const* values = nullptr;
         size_t count = 0;
