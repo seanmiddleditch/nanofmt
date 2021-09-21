@@ -324,9 +324,6 @@ namespace NANOFMT_NS {
 
         // -- parse fill -
         //
-        // fixme: fill should be any character except { and } but only when followed
-        //  by an alignment
-        //
         if (*in != '{' && *in != '}' && is_align(in + 1, end)) {
             spec.fill = *in;
             ++in;
@@ -420,10 +417,9 @@ namespace NANOFMT_NS {
             spec.precision = precision;
         }
 
-        // -- parse locale flag
+        // -- parse locale flag (ignored)
         //
         if (*in == 'L') {
-            spec.locale = true;
             ++in;
             if (in == end) {
                 return in;

@@ -118,6 +118,22 @@ namespace NANOFMT_NS {
         std::size_t length = 0;
     };
 
+    constexpr format_string::format_string(char const* string, std::size_t length) noexcept
+        : begin(string)
+        , end(string + length) {}
+
+    template <std::size_t N>
+    constexpr format_string::format_string(char const (&str)[N]) noexcept
+        : begin(str)
+        , end(begin + __builtin_strlen(begin)) {}
+
+    constexpr format_string::format_string(char const* const zstr) noexcept
+        : begin(zstr)
+        , end(begin + __builtin_strlen(begin)) {}
+
+    template <typename StringT>
+    constexpr format_string::format_string(StringT const& string) noexcept : format_string(to_format_string(string)) {}
+
     template <typename StringT>
     constexpr format_string to_format_string(StringT const& value) noexcept {
         return {value.data(), value.size()};

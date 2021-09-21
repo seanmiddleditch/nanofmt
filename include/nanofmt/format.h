@@ -10,6 +10,10 @@
 #include <type_traits>
 
 namespace NANOFMT_NS {
+    // ----------------------
+    //   Types
+    // ----------------------
+
     /// Type-erased wrapper for a formattable value.
     struct format_arg;
 
@@ -21,16 +25,10 @@ namespace NANOFMT_NS {
     /// Wrapper for format strings.
     struct format_string {
         constexpr format_string() noexcept = default;
-        constexpr format_string(char const* string, std::size_t length) noexcept
-            : begin(string)
-            , end(string + length) {}
+        constexpr format_string(char const* string, std::size_t length) noexcept;
         template <std::size_t N>
-        constexpr /*implicit*/ format_string(char const (&str)[N]) noexcept
-            : begin(str)
-            , end(begin + __builtin_strlen(begin)) {}
-        constexpr explicit format_string(char const* const zstr) noexcept
-            : begin(zstr)
-            , end(begin + __builtin_strlen(begin)) {}
+        constexpr /*implicit*/ format_string(char const (&str)[N]) noexcept;
+        constexpr explicit format_string(char const* const zstr) noexcept;
 
         template <typename StringT>
         constexpr explicit format_string(StringT const& string) noexcept;
@@ -89,6 +87,10 @@ namespace NANOFMT_NS {
     template <typename T>
     struct formatter;
 
+    // ----------------------
+    //   String Utilities
+    // ----------------------
+
     /// Copy the source string to the destination buffer, but not extending
     /// past the provided buffer end pointer. Returns the pointer past the
     /// last character written.
@@ -117,8 +119,9 @@ namespace NANOFMT_NS {
     template <typename StringT>
     constexpr format_string to_format_string(StringT const& value) noexcept;
 
-    template <typename StringT>
-    constexpr format_string::format_string(StringT const& string) noexcept : format_string(to_format_string(string)) {}
+    // ----------------------
+    //   Format API
+    // ----------------------
 
     /// Formats a string and arguments into dest, writing no more than count
     /// bytes. The destination will **NOT** be NUL-terminated. Returns a
@@ -148,6 +151,10 @@ namespace NANOFMT_NS {
 
     [[nodiscard]] inline std::size_t vformat_length(format_string format_str, format_args&& args);
 
+    // ----------------------
+    //   Format Value API
+    // ----------------------
+
     /// Formats a value into dest, writing no more than N bytes. The output will
     /// be NUL-terminated. Returns a pointer to the last character written, which
     /// will be the NUL byte itself.
@@ -169,10 +176,18 @@ namespace NANOFMT_NS {
     template <typename ValueT>
     [[nodiscard]] std::size_t format_value_length(ValueT const& value, format_string spec = format_string{});
 
+    // ----------------------
+    //   Format Args
+    // ----------------------
+
     /// Constructs a format_args from a list of values.
     ///
     template <typename... Args>
     [[nodiscard]] constexpr auto make_format_args(Args const&... args) noexcept;
+
+    // ----------------------
+    //   Default Formatters
+    // ----------------------
 
     namespace detail {
         struct format_spec {
@@ -184,7 +199,6 @@ namespace NANOFMT_NS {
             char type = '\0';
             bool zero_pad = false;
             bool alt_form = false;
-            bool locale = false;
         };
 
         struct char_buffer;
