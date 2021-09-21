@@ -23,19 +23,7 @@ namespace NANOFMT_NS {
     struct format_args;
 
     /// Wrapper for format strings.
-    struct format_string {
-        constexpr format_string() noexcept = default;
-        constexpr format_string(char const* string, std::size_t length) noexcept;
-        template <std::size_t N>
-        constexpr /*implicit*/ format_string(char const (&str)[N]) noexcept;
-        constexpr explicit format_string(char const* const zstr) noexcept;
-
-        template <typename StringT>
-        constexpr explicit format_string(StringT const& string) noexcept;
-
-        char const* begin = nullptr;
-        char const* end = nullptr;
-    };
+    struct format_string;
 
     /// Small wrapper to assist in formatting types like std::string_view.
     struct format_string_view;
@@ -47,28 +35,7 @@ namespace NANOFMT_NS {
     ///
     /// Use advance_to to update the pos pointer to ensure the advance field
     /// is updated appropriately.
-    struct format_output {
-        char* pos = nullptr;
-        char const* end = nullptr;
-        std::size_t advance = 0;
-
-        constexpr format_output& append(char const* zstr) noexcept;
-        constexpr format_output& append(char const* source, std::size_t length) noexcept;
-
-        constexpr format_output& put(char ch) noexcept;
-
-        constexpr format_output& fill_n(char ch, std::size_t count) noexcept;
-
-        template <typename... Args>
-        format_output& format(format_string fmt, Args const&... args);
-
-        inline format_output& vformat(format_string fmt, format_args&& args);
-
-        template <typename ValueT>
-        format_output& format_value(ValueT const& value, format_string spec = {});
-
-        constexpr format_output& advance_to(char* p) noexcept;
-    };
+    struct format_output;
 
     /// Holds a list of N format_value objects.
     ///
@@ -159,22 +126,18 @@ namespace NANOFMT_NS {
     /// be NUL-terminated. Returns a pointer to the last character written, which
     /// will be the NUL byte itself.
     template <typename ValueT, std::size_t N>
-    char* format_value_to(char (&dest)[N], ValueT const& value, format_string spec = format_string{});
+    char* format_value_to(char (&dest)[N], ValueT const& value, format_string spec);
 
     /// Formats a value into dest, writing no more than count bytes. The
     /// destination will **NOT** be NUL-terminated. Returns a pointer to
     /// the last character written.
     template <typename ValueT>
-    [[nodiscard]] char* format_value_to_n(
-        char* dest,
-        std::size_t count,
-        ValueT const& value,
-        format_string spec = format_string{});
+    [[nodiscard]] char* format_value_to_n(char* dest, std::size_t count, ValueT const& value, format_string spec);
 
     /// Calculates the length of the buffer required to hold the formatted value,
     /// excluded the trailing NUL byte.
     template <typename ValueT>
-    [[nodiscard]] std::size_t format_value_length(ValueT const& value, format_string spec = format_string{});
+    [[nodiscard]] std::size_t format_value_length(ValueT const& value, format_string spec);
 
     // ----------------------
     //   Format Args
