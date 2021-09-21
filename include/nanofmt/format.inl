@@ -80,8 +80,8 @@ namespace NANOFMT_NS {
         return *this;
     }
 
-    constexpr format_output& format_output::append(char ch) noexcept {
-        pos = put(pos, end, ch);
+    constexpr format_output& format_output::put(char ch) noexcept {
+        pos = NANOFMT_NS::put(pos, end, ch);
         ++advance;
         return *this;
     }

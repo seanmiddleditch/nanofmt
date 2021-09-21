@@ -469,7 +469,7 @@ namespace NANOFMT_NS {
         }
 
         if (sign_char != '\0') {
-            out.append(sign_char);
+            out.put(sign_char);
         }
         out.fill_n('0', zero_padding);
         out.append(digits, count);
@@ -511,7 +511,7 @@ namespace NANOFMT_NS {
         switch (spec.type) {
             case '\0':
             case 'c':
-                out.append(value);
+                out.put(value);
                 break;
             default:
                 return format_int_impl(static_cast<int>(value), out, spec);
@@ -567,10 +567,10 @@ namespace NANOFMT_NS {
     void detail::format_float_impl(FloatT value, format_output& out, format_spec const& spec) noexcept {
         if (!std::signbit(value)) {
             if (spec.sign == '+') {
-                out.append('+');
+                out.put('+');
             }
             else if (spec.sign == ' ') {
-                out.append(' ');
+                out.put(' ');
             }
         }
 

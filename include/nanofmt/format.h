@@ -56,7 +56,8 @@ namespace NANOFMT_NS {
 
         constexpr format_output& append(char const* zstr) noexcept;
         constexpr format_output& append(char const* source, std::size_t length) noexcept;
-        constexpr format_output& append(char ch) noexcept;
+
+        constexpr format_output& put(char ch) noexcept;
 
         constexpr format_output& fill_n(char ch, std::size_t count) noexcept;
 
