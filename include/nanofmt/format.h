@@ -33,7 +33,7 @@ namespace NANOFMT_NS {
             , end(begin + __builtin_strlen(begin)) {}
 
         template <typename StringT>
-        constexpr format_string(StringT const& string) noexcept;
+        constexpr explicit format_string(StringT const& string) noexcept;
 
         char const* begin = nullptr;
         char const* end = nullptr;
