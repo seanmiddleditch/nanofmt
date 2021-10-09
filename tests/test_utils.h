@@ -24,14 +24,11 @@ namespace NANOFMT_NS::test {
         }
     };
 
-    template <size_t N = 2048, typename FormatT, typename... ArgsT>
-    auto sformat(FormatT&& format_str, ArgsT&&... args) {
+    template <size_t N = 2048, typename... ArgsT>
+    auto sformat(format_string fmt, ArgsT&&... args) {
         string_result<N> result;
-        char const* const end = NANOFMT_NS::format_to_n(
-            result.buffer,
-            sizeof result.buffer,
-            std::forward<FormatT>(format_str),
-            std::forward<ArgsT>(args)...);
+        char const* const end =
+            NANOFMT_NS::format_to_n(result.buffer, sizeof result.buffer, fmt, std::forward<ArgsT>(args)...);
         result.size = end - result.buffer;
         return result;
     }

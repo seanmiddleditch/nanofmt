@@ -31,6 +31,43 @@ namespace NANOFMT_NS {
         };
     } // namespace detail
 
+    struct format_string {
+        constexpr format_string() noexcept = default;
+        constexpr format_string(char const* string, std::size_t length) noexcept;
+        template <std::size_t N>
+        constexpr /*implicit*/ format_string(char const (&str)[N]) noexcept;
+        constexpr explicit format_string(char const* const zstr) noexcept;
+
+        template <typename StringT>
+        constexpr explicit format_string(StringT const& string) noexcept;
+
+        char const* begin = nullptr;
+        char const* end = nullptr;
+    };
+
+    struct format_output {
+        char* pos = nullptr;
+        char const* end = nullptr;
+        std::size_t advance = 0;
+
+        constexpr format_output& append(char const* zstr) noexcept;
+        constexpr format_output& append(char const* source, std::size_t length) noexcept;
+
+        constexpr format_output& put(char ch) noexcept;
+
+        constexpr format_output& fill_n(char ch, std::size_t count) noexcept;
+
+        template <typename... Args>
+        format_output& format(format_string fmt, Args const&... args);
+
+        inline format_output& vformat(format_string fmt, format_args&& args);
+
+        template <typename ValueT>
+        format_output& format_value(ValueT const& value, format_string spec);
+
+        constexpr format_output& advance_to(char* p) noexcept;
+    };
+
     constexpr char* copy_to(char* dest, char const* end, char const* source) noexcept {
         char const* ptr = source;
         while (*ptr != 0 && dest != end)
@@ -80,8 +117,8 @@ namespace NANOFMT_NS {
         return *this;
     }
 
-    constexpr format_output& format_output::append(char ch) noexcept {
-        pos = put(pos, end, ch);
+    constexpr format_output& format_output::put(char ch) noexcept {
+        pos = NANOFMT_NS::put(pos, end, ch);
         ++advance;
         return *this;
     }
@@ -117,6 +154,22 @@ namespace NANOFMT_NS {
         char const* string = nullptr;
         std::size_t length = 0;
     };
+
+    constexpr format_string::format_string(char const* string, std::size_t length) noexcept
+        : begin(string)
+        , end(string + length) {}
+
+    template <std::size_t N>
+    constexpr format_string::format_string(char const (&str)[N]) noexcept
+        : begin(str)
+        , end(begin + __builtin_strlen(begin)) {}
+
+    constexpr format_string::format_string(char const* const zstr) noexcept
+        : begin(zstr)
+        , end(begin + __builtin_strlen(begin)) {}
+
+    template <typename StringT>
+    constexpr format_string::format_string(StringT const& string) noexcept : format_string(to_format_string(string)) {}
 
     template <typename StringT>
     constexpr format_string to_format_string(StringT const& value) noexcept {

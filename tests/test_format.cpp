@@ -151,7 +151,7 @@ TEST_CASE("nanofmt.format.strings", "[nanofmt][format][strings]") {
 
         CHECK(sformat("{}{}{}", std::string_view("ab"), std::string("cd"), "ef") == "abcdef");
 
-        CHECK(sformat(std::string("a{}c"), "b") == "abc");
+        CHECK(sformat(nanofmt::format_string(std::string("a{}c")), "b") == "abc");
     }
 
     SECTION("width and fill") {

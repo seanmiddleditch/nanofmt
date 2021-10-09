@@ -324,9 +324,6 @@ namespace NANOFMT_NS {
 
         // -- parse fill -
         //
-        // fixme: fill should be any character except { and } but only when followed
-        //  by an alignment
-        //
         if (*in != '{' && *in != '}' && is_align(in + 1, end)) {
             spec.fill = *in;
             ++in;
@@ -420,10 +417,9 @@ namespace NANOFMT_NS {
             spec.precision = precision;
         }
 
-        // -- parse locale flag
+        // -- parse locale flag (ignored)
         //
         if (*in == 'L') {
-            spec.locale = true;
             ++in;
             if (in == end) {
                 return in;
@@ -469,7 +465,7 @@ namespace NANOFMT_NS {
         }
 
         if (sign_char != '\0') {
-            out.append(sign_char);
+            out.put(sign_char);
         }
         out.fill_n('0', zero_padding);
         out.append(digits, count);
@@ -511,7 +507,7 @@ namespace NANOFMT_NS {
         switch (spec.type) {
             case '\0':
             case 'c':
-                out.append(value);
+                out.put(value);
                 break;
             default:
                 return format_int_impl(static_cast<int>(value), out, spec);
@@ -567,10 +563,10 @@ namespace NANOFMT_NS {
     void detail::format_float_impl(FloatT value, format_output& out, format_spec const& spec) noexcept {
         if (!std::signbit(value)) {
             if (spec.sign == '+') {
-                out.append('+');
+                out.put('+');
             }
             else if (spec.sign == ' ') {
-                out.append(' ');
+                out.put(' ');
             }
         }
 

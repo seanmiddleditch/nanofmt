@@ -106,7 +106,7 @@ will **not** be NUL-terminated. The return value is the buffer object itself.
 
     Appends ``length`` characters from ``source`` to the buffer.
 
-  .. cpp:function:: constexpr format_output& append(char ch) noexcept
+  .. cpp:function:: constexpr format_output& put(char ch) noexcept
 
     Appends the character ``ch`` to the buffer.
 
