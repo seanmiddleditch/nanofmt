@@ -8,7 +8,7 @@
 namespace {
     template <typename T>
     constexpr auto to_arg(T const& value) noexcept {
-        return NANOFMT_NS::make_format_args(value).values[0];
+        return ::NANOFMT_NS::make_format_args(value).values[0];
     }
 } // namespace
 
