@@ -215,8 +215,8 @@ TEST_CASE("nanofmt.format.custom", "[nanofmt][format][custom]") {
 // SECTION("errors") {
 //    char buffer[256];
 
-//    CHECK(sformat_to(buffer, "{} {:4d} {:3.5f}", "abc", 9, 12.57) == NANOFMT_NS::format_result::success);
-//    CHECK(sformat_to(buffer, "{} {:4d", "abc", 9) == NANOFMT_NS::format_result::malformed_input);
-//    CHECK(sformat_to(buffer, "{0} {1}", "abc", 9) == NANOFMT_NS::format_result::success);
-//    CHECK(sformat_to(buffer, "{0} {1} {5}", "abc", 9, 12.57) == NANOFMT_NS::format_result::out_of_range);
+//    CHECK(sformat_to(buffer, "{} {:4d} {:3.5f}", "abc", 9, 12.57) == ::NANOFMT_NS::format_result::success);
+//    CHECK(sformat_to(buffer, "{} {:4d", "abc", 9) == ::NANOFMT_NS::format_result::malformed_input);
+//    CHECK(sformat_to(buffer, "{0} {1}", "abc", 9) == ::NANOFMT_NS::format_result::success);
+//    CHECK(sformat_to(buffer, "{0} {1} {5}", "abc", 9, 12.57) == ::NANOFMT_NS::format_result::out_of_range);
 //}

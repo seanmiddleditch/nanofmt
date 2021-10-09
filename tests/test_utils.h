@@ -28,7 +28,7 @@ namespace NANOFMT_NS::test {
     auto sformat(format_string fmt, ArgsT&&... args) {
         string_result<N> result;
         char const* const end =
-            NANOFMT_NS::format_to_n(result.buffer, sizeof result.buffer, fmt, std::forward<ArgsT>(args)...);
+            ::NANOFMT_NS::format_to_n(result.buffer, sizeof result.buffer, fmt, std::forward<ArgsT>(args)...);
         result.size = end - result.buffer;
         return result;
     }
@@ -37,7 +37,7 @@ namespace NANOFMT_NS::test {
     auto to_string(ValueT const& value, ArgsT&&... args) {
         string_result<N> result;
         char const* const end =
-            NANOFMT_NS::to_chars(result.buffer, result.buffer + sizeof result.buffer, value, args...);
+            ::NANOFMT_NS::to_chars(result.buffer, result.buffer + sizeof result.buffer, value, args...);
         result.size = end - result.buffer;
         return result;
     }
