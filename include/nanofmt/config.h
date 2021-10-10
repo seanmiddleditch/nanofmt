@@ -1,5 +1,7 @@
 // Copyright (c) Sean Middleditch and contributors. See accompanying LICENSE.md for copyright details.
 
+#ifndef NANOFMT_CONFIG_H_
+#define NANOFMT_CONFIG_H_ 1
 #pragma once
 
 #if !defined(NANOFMT_NS)
@@ -21,4 +23,6 @@
 #endif
 #if !defined(NANOFMT_GSL_SUPPRESS)
 #    define NANOFMT_GSL_SUPPRESS(rule)
+#endif
+
 #endif

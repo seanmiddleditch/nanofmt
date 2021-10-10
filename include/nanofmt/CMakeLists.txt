@@ -3,5 +3,6 @@ target_sources(nanofmt PRIVATE
     "config.h"
     "format.h"
     "format.inl"
+    "forward.h"
     "std_string.h"
 )
