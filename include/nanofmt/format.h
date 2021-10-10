@@ -119,27 +119,6 @@ namespace NANOFMT_NS {
     [[nodiscard]] inline std::size_t vformat_length(format_string format_str, format_args args);
 
     // ----------------------
-    //   Format Value API
-    // ----------------------
-
-    /// Formats a value into dest, writing no more than N bytes. The output will
-    /// be NUL-terminated. Returns a pointer to the last character written, which
-    /// will be the NUL byte itself.
-    template <typename ValueT, std::size_t N>
-    char* format_value_to(char (&dest)[N], ValueT const& value, format_string spec);
-
-    /// Formats a value into dest, writing no more than count bytes. The
-    /// destination will **NOT** be NUL-terminated. Returns a pointer to
-    /// the last character written.
-    template <typename ValueT>
-    [[nodiscard]] char* format_value_to_n(char* dest, std::size_t count, ValueT const& value, format_string spec);
-
-    /// Calculates the length of the buffer required to hold the formatted value,
-    /// excluded the trailing NUL byte.
-    template <typename ValueT>
-    [[nodiscard]] std::size_t format_value_length(ValueT const& value, format_string spec);
-
-    // ----------------------
     //   Format Args
     // ----------------------
 

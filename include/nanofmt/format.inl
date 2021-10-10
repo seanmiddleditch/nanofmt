@@ -10,9 +10,6 @@ namespace NANOFMT_NS {
     namespace detail {
         format_output vformat(format_output out, format_string format_str, format_args args);
 
-        template <typename ValueT>
-        format_output format_value(format_output out, ValueT const& value, format_string spec);
-
         // avoid explicitly pulling in <utility>
         template <typename T>
         const T& declval() noexcept;
@@ -142,9 +139,6 @@ namespace NANOFMT_NS {
 
         inline format_output& vformat(format_string fmt, format_args args);
 
-        template <typename ValueT>
-        format_output& format_value(ValueT const& value, format_string spec);
-
         constexpr format_output& advance_to(char* p) noexcept;
     };
 
@@ -218,11 +212,6 @@ namespace NANOFMT_NS {
         return *this = detail::vformat(*this, fmt, static_cast<format_args&&>(args));
     }
 
-    template <typename ValueT>
-    format_output& format_output::format_value(ValueT const& value, format_string spec) {
-        return *this = detail::format_value(*this, value, spec);
-    }
-
     constexpr format_output& format_output::advance_to(char* const p) noexcept {
         size_t const diff = p - pos;
         pos = p;
@@ -289,38 +278,6 @@ namespace NANOFMT_NS {
 
     [[nodiscard]] std::size_t vformat_length(format_string format_str, format_args args) {
         return detail::vformat(format_output{}, format_str, static_cast<format_args&&>(args)).advance;
-    }
-
-    template <typename ValueT>
-    format_output detail::format_value(format_output out, ValueT const& value, format_string spec) {
-        formatter<ValueT> fmt;
-        if (char const* const spec_end = fmt.parse(spec.begin, spec.end); spec_end != spec.end) {
-            return out;
-        }
-        fmt.format(value, out);
-        return out;
-    }
-
-    template <typename ValueT>
-    char* format_value_to(format_output& out, ValueT const& value, format_string spec) {
-        return detail::format_value(out, value, spec).pos;
-    }
-
-    template <typename ValueT>
-    [[nodiscard]] char* format_value_to_n(char* dest, std::size_t count, ValueT const& value, format_string spec) {
-        return detail::format_value(format_output{dest, dest + count}, value, spec).pos;
-    }
-
-    template <typename ValueT, std::size_t N>
-    char* format_value_to(char (&dest)[N], ValueT const& value, format_string spec) {
-        char* const pos = detail::format_value(format_output{dest, dest + (N - 1 /*NUL*/)}, value, spec).pos;
-        *pos = '\0';
-        return pos;
-    }
-
-    template <typename ValueT>
-    [[nodiscard]] std::size_t format_value_length(ValueT const& value, format_string spec) {
-        return detail::format_value(format_output{}, value, spec).advance;
     }
 
     namespace detail {
