@@ -20,6 +20,10 @@ namespace NANOFMT_NS {
         template <typename T>
         struct value_type_map;
 
+        template <typename T>
+        using enable_if_format_string =
+            std::enable_if_t<std::is_same_v<::NANOFMT_NS::format_string, decltype(to_format_string(declval<T>()))>>;
+
         struct char_buffer {
             char const* chars = nullptr;
             std::size_t max_length = 0;
@@ -113,8 +117,8 @@ namespace NANOFMT_NS {
         constexpr /*implicit*/ format_string(char const (&str)[N]) noexcept;
         constexpr explicit format_string(char const* const zstr) noexcept;
 
-        template <typename StringT>
-        constexpr explicit format_string(StringT const& string) noexcept;
+        template <typename StringT, typename = detail::enable_if_format_string<StringT>>
+        constexpr /*implicit*/ format_string(StringT const& string) noexcept;
 
         char const* begin = nullptr;
         char const* end = nullptr;
@@ -243,7 +247,7 @@ namespace NANOFMT_NS {
         : begin(zstr)
         , end(begin + __builtin_strlen(begin)) {}
 
-    template <typename StringT>
+    template <typename StringT, typename>
     constexpr format_string::format_string(StringT const& string) noexcept : format_string(to_format_string(string)) {}
 
     template <typename StringT>
