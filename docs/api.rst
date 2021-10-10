@@ -94,10 +94,6 @@ will **not** be NUL-terminated. The return value is the buffer object itself.
 
     Formats the given format string and argument into the buffer.
     
-  .. cpp:function:: format_output& nanofmt::format_value(ValueT const& value, format_string spec = {})
-
-    Formats the given value into the buffer.
-
   .. cpp:function:: constexpr format_output& append(char const* const zstr) noexcept
 
     Appends the contents of ``zstr`` to the buffer.
@@ -167,18 +163,6 @@ General string utiltities that are useful in implementing formatting.
   Copies ``count`` copies of the charcter ``ch`` to the destination buffer,
   but not extending past the provided buffer end pointer. Returns the
   pointer past the last character written. 
-
-Values
-^^^^^^
-
-Individual values can be formatted with nanofmt without requiring a full
-format string.
-
-.. cpp:function:: char* nanofmt::format_value_to(char (&dest)[N], ValueT const& value, format_string spec = {})
-
-.. cpp:function:: char* nanofmt::format_value_to_n(char* dest, std::size_t, ValueT const& value, format_string spec = {})
-
-.. cpp:function:: char* nanofmt::format_value_size(ValueT const& value, format_string spec = {})
 
 Format Strings
 ^^^^^^^^^^^^^^
