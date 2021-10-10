@@ -26,7 +26,7 @@ The return value is a pointer to the terminating NUL character.
 
 .. cpp:function:: char* nanofmt::format_to(char (&dest)[N], format_string format_str, Args const&... args)
 
-.. cpp:function:: char* nanofmt::vformat_to(char (&dest)[N], format_string format_str, format_args&& args)
+.. cpp:function:: char* nanofmt::vformat_to(char (&dest)[N], format_string format_str, format_args args)
 
 Length-Delimited Formatting
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -72,7 +72,7 @@ terminating NUL character.
 
 .. cpp:function:: size_t nanofmt::format_length(format_string format_str, Args const&... args)
 
-.. cpp:function:: size_t nanofmt::vformat_length(format_string format_str, format_args&& args)
+.. cpp:function:: size_t nanofmt::vformat_length(format_string format_str, format_args args)
 
 Output Buffers
 ^^^^^^^^^^^^^^
@@ -90,7 +90,7 @@ will **not** be NUL-terminated. The return value is the buffer object itself.
 
     Formats the given format string and argument into the buffer.
 
-  .. cpp:function:: format_output& vformat(format_string fmt, format_args&& args)
+  .. cpp:function:: format_output& vformat(format_string fmt, format_args args)
 
     Formats the given format string and argument into the buffer.
     
