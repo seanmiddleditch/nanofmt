@@ -14,6 +14,8 @@ struct custom_type {
     int value = 0;
 };
 
+struct unknown {};
+
 namespace NANOFMT_NS {
     template <>
     struct formatter<custom_enum> : formatter<char const*> {
@@ -222,16 +224,18 @@ TEST_CASE("nanofmt.format.custom", "[nanofmt][format][custom]") {
     custom_type local{7};
     custom_type& ref = local;
 
+    custom_type const clocal{7};
+    custom_type const& cref = clocal;
+
     CHECK(sformat("{}", custom_type{1}) == "custom{1}");
     CHECK(sformat("{}", local) == "custom{7}");
     CHECK(sformat("{}", ref) == "custom{7}");
+    CHECK(sformat("{}", clocal) == "custom{7}");
+    CHECK(sformat("{}", cref) == "custom{7}");
 }
 
-// SECTION("errors") {
-//    char buffer[256];
-
-//    CHECK(sformat_to(buffer, "{} {:4d} {:3.5f}", "abc", 9, 12.57) == ::NANOFMT_NS::format_result::success);
-//    CHECK(sformat_to(buffer, "{} {:4d", "abc", 9) == ::NANOFMT_NS::format_result::malformed_input);
-//    CHECK(sformat_to(buffer, "{0} {1}", "abc", 9) == ::NANOFMT_NS::format_result::success);
-//    CHECK(sformat_to(buffer, "{0} {1} {5}", "abc", 9, 12.57) == ::NANOFMT_NS::format_result::out_of_range);
+// TEST_CASE("nanofmt.format.compile_error", "[nanofmt][format][error]") {
+//    using namespace NANOFMT_NS::test;
+//
+//    CHECK(sformat("{}", unknown{}) == "");
 //}
