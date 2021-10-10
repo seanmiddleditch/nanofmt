@@ -33,6 +33,7 @@ add_subdirectory(source)
 add_subdirectory(include/nanofmt)
 
 if (NANOFMT_TESTS)
+    enable_testing()
     add_subdirectory(tests)
 endif()
 
