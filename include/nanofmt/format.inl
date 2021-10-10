@@ -279,6 +279,13 @@ namespace NANOFMT_NS {
         return pos;
     }
 
+    template <std::size_t N>
+    char* vformat_to(char (&dest)[N], format_string format_str, format_args args) {
+        char* const pos = detail::vformat(format_output{dest, dest + (N - 1 /*NUL*/)}, format_str, args).pos;
+        *pos = '\0';
+        return pos;
+    }
+
     template <std::size_t N, typename... Args>
     [[nodiscard]] char* format_append_to_n(
         char* dest,
