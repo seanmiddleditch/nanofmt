@@ -337,11 +337,7 @@ namespace NANOFMT_NS {
             static constexpr bool value = false;
         };
         template <typename T>
-        struct has_formatter<
-            T,
-            std::void_t<
-                decltype(formatter<T>{}.parse("", "")),
-                decltype(formatter<T>{}.format(declval<T>(), format_output{}))>> {
+        struct has_formatter<T, std::enable_if_t<std::is_default_constructible_v<::NANOFMT_NS::formatter<T>>>> {
             static constexpr bool value = true;
         };
 
