@@ -292,6 +292,7 @@ namespace NANOFMT_NS {
         std::size_t count,
         format_string format_str,
         Args const&... args) {
+        std::size_t const start = ::NANOFMT_NS::strnlen(dest, N);
         return detail::vformat(
                    format_output{dest + start, dest + count},
                    format_str,
