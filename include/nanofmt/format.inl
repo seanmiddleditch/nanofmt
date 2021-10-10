@@ -334,6 +334,9 @@ namespace NANOFMT_NS {
         using has_formatter = std::is_default_constructible<::NANOFMT_NS::formatter<T>>;
 
         template <typename T>
+        constexpr bool always_false_v = false;
+
+        template <typename T>
         struct value_type_map {
             using type = T;
         };
@@ -382,7 +385,7 @@ namespace NANOFMT_NS {
                 return static_cast<typename detail::value_type_map<std::underlying_type_t<ValueT>>::type>(value);
             }
             else {
-                return {};
+                static_assert(always_false_v<ValueT>, "Type has no nanofmt::formatter<> specialization");
             }
         }
     } // namespace detail
