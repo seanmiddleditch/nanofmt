@@ -32,6 +32,63 @@ namespace NANOFMT_NS {
 
     } // namespace detail
 
+    struct format_arg {
+        enum class type {
+            t_mono,
+            t_int,
+            t_uint,
+            t_long,
+            t_ulong,
+            t_longlong,
+            t_ulonglong,
+            t_char,
+            t_float,
+            t_double,
+            t_bool,
+            t_cstring,
+            t_voidptr,
+            t_custom
+        };
+
+        struct custom {
+            void (*thunk)(void const* value, char const** spec, char const* end, format_output& out) = nullptr;
+            void const* value = nullptr;
+        };
+
+        constexpr format_arg() noexcept : v_int(0) {}
+        constexpr format_arg(int value) noexcept : v_int(value), tag(type::t_int) {}
+        constexpr format_arg(unsigned value) noexcept : v_unsigned(value), tag(type::t_uint) {}
+        constexpr format_arg(long value) noexcept : v_long(value), tag(type::t_long) {}
+        constexpr format_arg(unsigned long value) noexcept : v_ulong(value), tag(type::t_ulong) {}
+        constexpr format_arg(long long value) noexcept : v_longlong(value), tag(type::t_longlong) {}
+        constexpr format_arg(unsigned long long value) noexcept : v_ulonglong(value), tag(type::t_ulonglong) {}
+        constexpr format_arg(char value) noexcept : v_char(value), tag(type::t_char) {}
+        constexpr format_arg(float value) noexcept : v_float(value), tag(type::t_float) {}
+        constexpr format_arg(double value) noexcept : v_double(value), tag(type::t_double) {}
+        constexpr format_arg(bool value) noexcept : v_bool(value), tag(type::t_bool) {}
+        constexpr format_arg(char const* value) noexcept : v_cstring(value), tag(type::t_cstring) {}
+        constexpr format_arg(void const* value) noexcept : v_voidptr(value), tag(type::t_voidptr) {}
+        constexpr format_arg(custom value) noexcept : v_custom(value), tag(type::t_custom) {}
+
+        union {
+            int v_int;
+            unsigned v_unsigned;
+            long v_long;
+            unsigned long v_ulong;
+            long long v_longlong;
+            unsigned long long v_ulonglong;
+            char v_char;
+            float v_float;
+            double v_double;
+            bool v_bool;
+            char const* v_cstring;
+            void const* v_voidptr;
+            custom v_custom;
+        };
+
+        type tag = type::t_mono;
+    };
+
     template <size_t N>
     struct format_arg_store {
         static constexpr size_t size = N;
@@ -265,63 +322,6 @@ namespace NANOFMT_NS {
     [[nodiscard]] std::size_t format_value_length(ValueT const& value, format_string spec) {
         return detail::format_value(format_output{}, value, spec).advance;
     }
-
-    struct format_arg {
-        enum class type {
-            t_mono,
-            t_int,
-            t_uint,
-            t_long,
-            t_ulong,
-            t_longlong,
-            t_ulonglong,
-            t_char,
-            t_float,
-            t_double,
-            t_bool,
-            t_cstring,
-            t_voidptr,
-            t_custom
-        };
-
-        struct custom {
-            void (*thunk)(void const* value, char const** spec, char const* end, format_output& out) = nullptr;
-            void const* value = nullptr;
-        };
-
-        constexpr format_arg() noexcept : v_int(0) {}
-        constexpr format_arg(int value) noexcept : v_int(value), tag(type::t_int) {}
-        constexpr format_arg(unsigned value) noexcept : v_unsigned(value), tag(type::t_uint) {}
-        constexpr format_arg(long value) noexcept : v_long(value), tag(type::t_long) {}
-        constexpr format_arg(unsigned long value) noexcept : v_ulong(value), tag(type::t_ulong) {}
-        constexpr format_arg(long long value) noexcept : v_longlong(value), tag(type::t_longlong) {}
-        constexpr format_arg(unsigned long long value) noexcept : v_ulonglong(value), tag(type::t_ulonglong) {}
-        constexpr format_arg(char value) noexcept : v_char(value), tag(type::t_char) {}
-        constexpr format_arg(float value) noexcept : v_float(value), tag(type::t_float) {}
-        constexpr format_arg(double value) noexcept : v_double(value), tag(type::t_double) {}
-        constexpr format_arg(bool value) noexcept : v_bool(value), tag(type::t_bool) {}
-        constexpr format_arg(char const* value) noexcept : v_cstring(value), tag(type::t_cstring) {}
-        constexpr format_arg(void const* value) noexcept : v_voidptr(value), tag(type::t_voidptr) {}
-        constexpr format_arg(custom value) noexcept : v_custom(value), tag(type::t_custom) {}
-
-        union {
-            int v_int;
-            unsigned v_unsigned;
-            long v_long;
-            unsigned long v_ulong;
-            long long v_longlong;
-            unsigned long long v_ulonglong;
-            char v_char;
-            float v_float;
-            double v_double;
-            bool v_bool;
-            char const* v_cstring;
-            void const* v_voidptr;
-            custom v_custom;
-        };
-
-        type tag = type::t_mono;
-    };
 
     namespace detail {
         template <typename T, typename>
