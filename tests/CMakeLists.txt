@@ -12,5 +12,4 @@ target_link_libraries(nanofmt_test PRIVATE
     Catch2::Catch2WithMain
 )
 
-include(Catch)
-catch_discover_tests(nanofmt_test)
+add_test(NAME nanofmt_test COMMAND nanofmt_test)
