@@ -54,6 +54,10 @@ namespace NANOFMT_NS {
     template <typename T>
     struct formatter;
 
+    /// Overload to support converting user-defined string types to format_string.
+    template <typename StringT>
+    constexpr format_string to_format_string(StringT const& value) noexcept;
+
     // ----------------------
     //   String Utilities
     // ----------------------
@@ -82,9 +86,9 @@ namespace NANOFMT_NS {
     /// pointer past the last character written.
     [[nodiscard]] constexpr char* fill_n(char* dest, char const* end, char ch, std::size_t count) noexcept;
 
-    /// Overload to support converting user-defined string types to format_string.
-    template <typename StringT>
-    constexpr format_string to_format_string(StringT const& value) noexcept;
+    /// Finds the first NUL character in the target buffer. Returns the length
+    /// of the buffer if no NUL is found.
+    [[nodiscard]] constexpr std::size_t strnlen(char const* buffer, std::size_t count) noexcept;
 
     // ----------------------
     //   Format API
@@ -117,6 +121,18 @@ namespace NANOFMT_NS {
     [[nodiscard]] std::size_t format_length(format_string format_str, Args const&... args);
 
     [[nodiscard]] inline std::size_t vformat_length(format_string format_str, format_args args);
+
+    template <std::size_t N, typename... Args>
+    [[nodiscard]] char* format_append_to(char* dest, std::size_t count, format_string format_str, Args const&... args);
+
+    template <std::size_t N, typename... Args>
+    [[nodiscard]] char* vformat_append_to(char* dest, std::size_t count, format_string format_str, format_args args);
+
+    template <std::size_t N, typename... Args>
+    char* format_append_to(char (&dest)[N], format_string format_str, Args const&... args);
+
+    template <std::size_t N, typename... Args>
+    char* vformat_append_to(char (&dest)[N], format_string format_str, format_args args);
 
     // ----------------------
     //   Format Args

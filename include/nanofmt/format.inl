@@ -176,6 +176,14 @@ namespace NANOFMT_NS {
         return copy_to_n(dest, end, pad_buffer, count);
     }
 
+    constexpr std::size_t strnlen(char const* buffer, std::size_t count) noexcept {
+        char const* const end = buffer + count;
+        for (char const* pos = buffer; pos != end; ++pos)
+            if (*pos == '\0')
+                return pos - buffer;
+        return count;
+    }
+
     constexpr format_output& format_output::append(char const* const zstr) noexcept {
         char* const p = copy_to(pos, end, zstr);
         std::size_t const consumed = p - pos;
@@ -267,6 +275,33 @@ namespace NANOFMT_NS {
                               format_str,
                               ::NANOFMT_NS::make_format_args(args...))
                               .pos;
+        *pos = '\0';
+        return pos;
+    }
+
+    template <std::size_t N, typename... Args>
+    [[nodiscard]] char* format_append_to(char* dest, std::size_t count, format_string format_str, Args const&... args) {
+        return vformat_append_to(dest, count, format_str, ::NANOFMT_NS::make_format_args(args...));
+    }
+
+    template <std::size_t N, typename... Args>
+    [[nodiscard]] char* vformat_append_to(char* dest, std::size_t count, format_string format_str, format_args args) {}
+
+    template <std::size_t N, typename... Args>
+    char* format_append_to(char (&dest)[N], format_string format_str, Args const&... args) {
+        return vformat_append_to(dest, format_str, ::NANOFMT_NS::make_format_args(args...));
+    }
+
+    template <std::size_t N, typename... Args>
+    char* vformat_append_to(char (&dest)[N], format_string format_str, format_args args) {
+        std::size_t const start = ::NANOFMT_NS::strnlen(dest, N);
+        std::size_t const available = N - start;
+        if (available == 0) {
+            return dest + N;
+        }
+        char* const pos =
+            detail::vformat(format_output{dest + start, dest + start + (available - 1 /*NUL*/)}, format_str, args)
+                .pos;
         *pos = '\0';
         return pos;
     }
