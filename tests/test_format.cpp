@@ -63,6 +63,18 @@ TEST_CASE("nanofmt.format.core", "[nanofmt][format]") {
     }
 }
 
+TEST_CASE("nanofmt.format.append", "[nanofmt][format][append]") {
+    using namespace NANOFMT_NS;
+
+    char buffer[12] = {};
+    format_to(buffer, "Hello");
+    format_append_to(buffer, "{} ", ',');
+    char* const end = format_append_to(buffer, "World! {:09d}", 9001);
+
+    CHECK((end - buffer) == 11);
+    CHECK(std::strcmp(buffer, "Hello, Worl") == 0);
+}
+
 TEST_CASE("nanofmt.format.integers", "[nanofmt][format][integers]") {
     using namespace NANOFMT_NS::test;
 

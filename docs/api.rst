@@ -24,9 +24,17 @@ The :cpp:func:`nanofmt::format_to` functions format a given format string
 and arguments into the target buffer. The result will be NUL-terminated.
 The return value is a pointer to the terminating NUL character.
 
+The :cpp:func:`nanofmt::format_append_to` functions format a given format
+string and arguments onto the end of target buffer. The result will be NUL-
+terminated. The return value is a pointer to the terminating NUL character.
+
 .. cpp:function:: char* nanofmt::format_to(char (&dest)[N], format_string format_str, Args const&... args)
 
 .. cpp:function:: char* nanofmt::vformat_to(char (&dest)[N], format_string format_str, format_args args)
+
+.. cpp:function:: char* nanofmt::format_append_to(char (&dest)[N], format_string format_str, Args const&... args)
+
+.. cpp:function:: char* nanofmt::vformat_append_to(char (&dest)[N], format_string format_str, format_args args)
 
 Length-Delimited Formatting
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -36,9 +44,18 @@ and arguments into the target buffer, up to the given number of characters.
 The result will **NOT** be NUL-terminated. The return value is a pointer to
 one past the last character written.
 
+The :cpp:func:`nanofmt::format_append_to_n` functions format a given format
+string and arguments onto the end of the target buffer, up to the given
+number of characters. The result will **NOT** be NUL-terminated. The return
+value is a pointer to one past the last character written.
+
 .. cpp:function:: char* nanofmt::format_to_n(char* dest, std::size_t count, format_string format_str, Args const&... args)
 
 .. cpp:function:: char* nanofmt::vformat_to_n(char* dest, std::size_t count, format_string format_str, format_args&&)
+
+.. cpp:function:: char* nanofmt::format_append_to_n(char* dest, std::size_t count, format_string format_str, Args const&... args)
+
+.. cpp:function:: char* nanofmt::vformat_append_to_n(char* dest, std::size_t count, format_string format_str, format_args&&)
 
 Custom Formatters
 ^^^^^^^^^^^^^^^^^
@@ -156,13 +173,17 @@ General string utiltities that are useful in implementing formatting.
 
   Copies the provided character ``ch`` to the destination buffer, but not
   extending past the provided buffer end pointer. Returns the pointer past
-  the last character written. 
+  the last character written.
 
 .. cpp:function:: char* fill_n(char* dest, char const* end, char ch, std::size_t count) noexcept
 
   Copies ``count`` copies of the charcter ``ch`` to the destination buffer,
   but not extending past the provided buffer end pointer. Returns the
   pointer past the last character written. 
+
+.. cpp:function:: std::size_t strnlen(char const* buffer, std::size_t count) noexcept
+
+  Returns the length of the string in buffer, to a maximum of count.
 
 Format Strings
 ^^^^^^^^^^^^^^
