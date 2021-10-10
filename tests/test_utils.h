@@ -1,5 +1,7 @@
 // Copyright (c) Sean Middleditch and contributors. See accompanying LICENSE.md for copyright details.
 
+#pragma once
+
 #include "nanofmt/charconv.h"
 #include "nanofmt/format.h"
 

@@ -14,6 +14,10 @@ Formatting
 
 The format API is available in the header ``nanofmt/format.h``.
 
+The header ``nanofmt/forward.h`` offers forward declarations of
+nanofmt types, including the ``formatter<T>`` template that users
+must specialize to support custom types.
+
 Extensions for C++ standard library string types are in the header
 ``nanofmt/std_string.h``.
 
@@ -79,6 +83,26 @@ specialized structure for nanofmt to work.
   .. cpp:function:: void format(T const& value, format_output& out) const
 
     Formats ``value`` to ``out``.
+
+A header implementing a custom formatter may choose to only depend on
+``nanofmt/foward.h`` header. This header does not offer any of the
+implementations, nor does it provide declarations of the formatting
+functions. A formatter may work around this by specifying the
+``format_output&`` parameter of ``format`` as a template, as in:
+
+.. code-block:: c++
+
+  #include <nanofmt/forward.h>
+
+  namespace nanofmt {
+    template<>
+    struct formatter<my_type> {
+      constexpr char const* parse(char const* in, char const*) noexcept;
+
+      template <typename OutputT>
+      void format(my_type const& value, OutputT& output);
+    }
+  }
 
 Format Length
 ^^^^^^^^^^^^^

@@ -6,7 +6,7 @@ target_sources(nanofmt_test PRIVATE
     "test_format.cpp"
     "test_format_args.cpp"
     "test_utils.h"
-)
+ "fwd_only_type.h")
 target_link_libraries(nanofmt_test PRIVATE
     nanofmt
     Catch2::Catch2WithMain

@@ -1,5 +1,6 @@
 // Copyright (c) Sean Middleditch and contributors. See accompanying LICENSE.md for copyright details.
 
+#include "fwd_only_type.h"
 #include "test_utils.h"
 #include "nanofmt/format.h"
 #include "nanofmt/std_string.h"
@@ -232,6 +233,8 @@ TEST_CASE("nanofmt.format.custom", "[nanofmt][format][custom]") {
     CHECK(sformat("{}", ref) == "custom{7}");
     CHECK(sformat("{}", clocal) == "custom{7}");
     CHECK(sformat("{}", cref) == "custom{7}");
+
+    CHECK(sformat("{}", fwd_only_type{}) == "fwd_only_type");
 }
 
 // TEST_CASE("nanofmt.format.compile_error", "[nanofmt][format][error]") {
