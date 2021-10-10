@@ -169,6 +169,11 @@ namespace NANOFMT_NS {
         };
     } // namespace detail
 
+    template <typename T>
+    struct formatter {
+        formatter() = delete; // formatters must be default-constructible
+    };
+
     template <>
     struct formatter<char> : detail::default_formatter<char> {};
     template <>
