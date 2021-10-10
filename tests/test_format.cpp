@@ -41,6 +41,9 @@ namespace NANOFMT_NS {
     };
 } // namespace NANOFMT_NS
 
+static_assert(NANOFMT_NS::detail::has_formatter<custom_type>::value, "has_formatter failed");
+static_assert(NANOFMT_NS::detail::has_formatter<std::string>::value, "has_formatter failed");
+
 TEST_CASE("nanofmt.format.core", "[nanofmt][format]") {
     using namespace NANOFMT_NS;
 

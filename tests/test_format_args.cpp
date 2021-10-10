@@ -80,14 +80,16 @@ TEST_CASE("nanofmt.format_arg.pointers", "[nanofmt][format_arg][pointers][string
     }
 }
 
-TEST_CASE("nanofmt.format_arg.enums", "[nanofmt][format_arg][pointers][enums]") {
-    using namespace NANOFMT_NS;
-
+namespace {
     // clang-format off
     enum NANOFMT_GSL_SUPPRESS(enum.3) cenum { cenum_value };
     // clang-format on
     enum class enum_class { value };
     enum class chonky_enum_class : long long { value };
+} // namespace
+
+TEST_CASE("nanofmt.format_arg.enums", "[nanofmt][format_arg][pointers][enums]") {
+    using namespace NANOFMT_NS;
 
     CHECK(to_arg(cenum_value).tag == format_arg::type::t_int);
     CHECK(to_arg(enum_class::value).tag == format_arg::type::t_int);

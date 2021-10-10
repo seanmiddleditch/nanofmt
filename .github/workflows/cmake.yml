@@ -42,7 +42,7 @@ jobs:
 
     - name: Test
       working-directory: ${{ github.workspace }}/build
-      run: ctest -C ${{ matrix.config }}
+      run: ctest --no-tests=error -C ${{ matrix.config }}
 
     - name: Install
       working-directory: ${{ github.workspace }}/build

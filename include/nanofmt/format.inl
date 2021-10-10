@@ -17,8 +17,6 @@ namespace NANOFMT_NS {
         template <typename ValueT>
         constexpr format_arg make_format_arg(ValueT const& value) noexcept;
 
-        template <typename T, typename = void>
-        struct has_formatter;
         template <typename T>
         struct value_type_map;
 
@@ -332,18 +330,8 @@ namespace NANOFMT_NS {
     }
 
     namespace detail {
-        template <typename T, typename>
-        struct has_formatter {
-            static constexpr bool value = false;
-        };
         template <typename T>
-        struct has_formatter<
-            T,
-            std::void_t<
-                decltype(formatter<T>{}.parse("", "")),
-                decltype(formatter<T>{}.format(declval<T>(), format_output{}))>> {
-            static constexpr bool value = true;
-        };
+        using has_formatter = std::is_default_constructible<::NANOFMT_NS::formatter<T>>;
 
         template <typename T>
         struct value_type_map {
