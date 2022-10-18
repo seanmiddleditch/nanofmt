@@ -209,10 +209,12 @@ namespace NANOFMT_NS {
     template <>
     struct formatter<unsigned long long> : detail::default_formatter<unsigned long long> {};
 
+#if NANOFMT_FLOAT
     template <>
     struct formatter<float> : detail::default_formatter<float> {};
     template <>
     struct formatter<double> : detail::default_formatter<double> {};
+#endif
 
     template <>
     struct formatter<decltype(nullptr)> : detail::default_formatter<void const*> {};

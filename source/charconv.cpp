@@ -50,12 +50,14 @@ namespace NANOFMT_NS::detail {
         int exponent,
         int precision) noexcept;
 
+#if NANOFMT_FLOAT
     static char* to_chars_impl_nonfinite(
         char* dest,
         char const* end,
         bool negative,
         bool infinite,
         bool upper) noexcept;
+#endif
 
     // maximum significand for double is 17 decimal digits
     static constexpr size_t significand_max_digits10 = 17;
@@ -102,6 +104,7 @@ namespace NANOFMT_NS {
         return detail::to_chars_impl(dest, end, value, fmt);
     }
 
+#if NANOFMT_FLOAT
     char* to_chars(char* dest, char const* end, float value, float_format fmt) noexcept {
         return detail::to_chars_impl<std::uint32_t>(dest, end, value, fmt, -1);
     }
@@ -117,6 +120,7 @@ namespace NANOFMT_NS {
     char* to_chars(char* dest, char const* end, double value, float_format fmt, int precision) noexcept {
         return detail::to_chars_impl<std::uint64_t>(dest, end, value, fmt, precision);
     }
+#endif
 
     template <typename IntegerT>
     char* detail::to_chars_impl(char* dest, char const* end, IntegerT value, int_format fmt) noexcept {
@@ -535,6 +539,7 @@ namespace NANOFMT_NS {
         return to_chars_impl_scientific<E, /*TrailingZeroes=*/false>(dest, end, significand, exponent, P - 1);
     }
 
+#if NANOFMT_FLOAT
     char* detail::to_chars_impl_nonfinite(
         char* dest,
         char const* end,
@@ -549,4 +554,5 @@ namespace NANOFMT_NS {
         }
         return copy_to(dest, end, upper ? "NAN" : "nan");
     }
+#endif
 } // namespace NANOFMT_NS

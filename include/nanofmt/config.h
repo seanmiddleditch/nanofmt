@@ -4,6 +4,10 @@
 #define NANOFMT_CONFIG_H_ 1
 #pragma once
 
+#if !defined(NANOFMT_FLOAT)
+#    define NANOFMT_FLOAT 1
+#endif
+
 #if !defined(NANOFMT_NS)
 #    define NANOFMT_NS nanofmt
 #endif
