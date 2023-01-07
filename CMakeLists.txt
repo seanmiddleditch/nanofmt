@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.16)
 project(nanofmt VERSION 0.1 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.25)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
