@@ -13,6 +13,7 @@ jobs:
     name: Tidy
 
     env:
+      CXX: clang++
       BUILD_TYPE: RELEASE
       CLANG_TIDY: clang-tidy-11
 
@@ -23,8 +24,6 @@ jobs:
       run: sudo apt-get install -y ${{ env.CLANG_TIDY }}
 
     - name: Configure
-      env:
-        CXX: ${{ matrix.compiler }}
       run: cmake -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=${{ matrix.config }} -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=ON
 
     - name: Tidy
