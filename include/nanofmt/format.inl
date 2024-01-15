@@ -313,7 +313,7 @@ namespace NANOFMT_NS {
     template <std::size_t N>
     char* vformat_to(char (&dest)[N], format_string format_str, format_args args) {
         const detail::vformat_result result =
-            detail::vformat(format_context{dest, dest + (N - 1 /*NUL*/)}, format_str, args).out();
+            detail::vformat(dest, dest + (N - 1 /*NUL*/), format_str, args);
         *result.pos = '\0';
         return result.pos;
     }

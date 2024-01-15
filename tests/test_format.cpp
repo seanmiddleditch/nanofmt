@@ -84,6 +84,17 @@ TEST_CASE("nanofmt.format.append") {
     CHECK(std::strcmp(buffer, "Hello, Worl") == 0);
 }
 
+TEST_CASE("nanofmt.vformat.append") {
+    using namespace NANOFMT_NS;
+
+    char buffer[12] = {};
+    vformat_to(buffer, "{} + {}", make_format_args(1, 2));
+    char const* const end = vformat_append_to(buffer, " = {}", make_format_args(3));
+
+    CHECK((end - buffer) == 9);
+    CHECK(std::strcmp(buffer, "1 + 2 = 3") == 0);
+}
+
 TEST_CASE("nanofmt.format.integers") {
     using namespace NANOFMT_NS::test;
 
