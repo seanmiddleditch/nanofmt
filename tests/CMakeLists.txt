@@ -1,4 +1,4 @@
-include(fetch_catch2)
+include(fetch_doctest)
 
 add_executable(nanofmt_test)
 target_sources(nanofmt_test PRIVATE
@@ -10,7 +10,7 @@ target_sources(nanofmt_test PRIVATE
 )
 target_link_libraries(nanofmt_test PRIVATE
     nanofmt
-    Catch2::Catch2WithMain
+    doctest::doctest_with_main
 )
 
 add_test(NAME nanofmt_test COMMAND nanofmt_test)
