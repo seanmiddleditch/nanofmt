@@ -1,6 +1,7 @@
 // Copyright (c) Sean Middleditch and contributors. See accompanying LICENSE.md for copyright details.
 
 #include "parse_utils.h"
+
 #include "nanofmt/charconv.h"
 #include "nanofmt/format.h"
 
@@ -195,9 +196,11 @@ namespace NANOFMT_NS {
         format_string_impl(value.string, value.length, out, spec);
     }
 
-    format_output detail::vformat(format_output out, format_string format_str, format_args args) {
+    detail::vformat_result detail::vformat(char* dest, char const* end, format_string format_str, format_args args) {
         int arg_next_index = 0;
         bool arg_auto_index = true;
+
+        format_output out{dest, end};
 
         char const* input = format_str.begin;
         char const* input_begin = input;
@@ -216,7 +219,7 @@ namespace NANOFMT_NS {
 
             // if we hit the end of the input, we have an incomplete format, and nothing else we can do
             if (input == input_end) {
-                return out;
+                return {out.pos, out.advance};
             }
 
             // if we just have another { then take it as a literal character by starting our next begin here,
@@ -236,7 +239,7 @@ namespace NANOFMT_NS {
             }
             else {
                 // we received a non-explicit index after an explicit index
-                return out;
+                return {out.pos, out.advance};
             }
 
             // extract formatter specification/arguments
@@ -261,7 +264,8 @@ namespace NANOFMT_NS {
         }
 
         // write out tail end of format string
-        return out.append(input_begin, input - input_begin);
+        out.append(input_begin, input - input_begin);
+        return {out.pos, out.advance};
     }
 
     void format_args::format(unsigned index, char const** in, char const* end, format_output& out) const {
