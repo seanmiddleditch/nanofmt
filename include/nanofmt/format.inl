@@ -1,7 +1,7 @@
 // Copyright (c) Sean Middleditch and contributors. See accompanying LICENSE.md for copyright details.
 
 #ifndef NANOFMT_FORMAT_H_
-#    error "format.inl is a private header; inglure format.h instead"
+#    error "format.inl is a private header; include format.h instead"
 #endif
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
