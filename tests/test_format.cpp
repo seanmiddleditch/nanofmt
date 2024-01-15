@@ -37,8 +37,8 @@ namespace NANOFMT_NS {
 
     template <>
     struct formatter<custom_type> {
-        constexpr char const* parse(char const* in, char const*) noexcept {
-            return in;
+        constexpr char const* parse(format_parse_context& ctx) noexcept {
+            return ctx.begin();
         }
 
         void format(custom_type custom, format_context& ctx) {

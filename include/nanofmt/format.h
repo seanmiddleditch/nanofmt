@@ -28,6 +28,9 @@ namespace NANOFMT_NS {
     /// Small wrapper to assist in formatting types like std::string_view.
     struct format_string_view;
 
+    /// Contextual information used when parsing format specifiers.
+    struct format_parse_context;
+
     /// Wrapper around a destination sequence of characters.
     ///
     /// Counts the number of characters that are written to the buffer,
@@ -164,7 +167,7 @@ namespace NANOFMT_NS {
         template <typename T>
         struct default_formatter {
             format_spec spec;
-            char const* parse(char const* in, char const* end) noexcept;
+            char const* parse(format_parse_context& ctx) noexcept;
             void format(T value, format_context& ctx) noexcept;
         };
     } // namespace detail

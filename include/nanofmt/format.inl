@@ -136,6 +136,22 @@ namespace NANOFMT_NS {
         char const* end = nullptr;
     };
 
+    struct format_parse_context {
+        const char* pos = nullptr;
+        const char* sentinel = nullptr;
+
+        constexpr const char* begin() const noexcept {
+            return pos;
+        }
+        constexpr const char* end() const noexcept {
+            return sentinel;
+        }
+
+        constexpr void advance_to(const char* to) noexcept {
+            pos = to;
+        }
+    };
+
     struct format_context {
         char* pos = nullptr;
         char const* end = nullptr;
@@ -390,7 +406,8 @@ namespace NANOFMT_NS {
                 custom.thunk = +[](void const* value, char const** in, char const* end, format_context& ctx) {
                     formatter<ValueT> fmt;
                     if (in != nullptr) {
-                        *in = fmt.parse(*in, end);
+                        format_parse_context pctx{*in, end};
+                        *in = fmt.parse(pctx);
                     }
                     fmt.format(*static_cast<ValueT const*>(value), ctx);
                 };

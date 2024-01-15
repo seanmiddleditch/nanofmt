@@ -13,13 +13,14 @@ struct fwd_only_type {};
 namespace NANOFMT_NS {
     template <>
     struct formatter<fwd_only_type> {
-        constexpr char const* parse(char const* in, char const*) noexcept {
-            return in;
+        template <typename ContextT = format_parse_context>
+        constexpr char const* parse(ContextT& ctx) noexcept {
+            return ctx.begin();
         }
 
-        template <typename OutputT>
-        void format(fwd_only_type, OutputT& output) {
-            output.append("fwd_only_type");
+        template <typename ContextT = format_context>
+        void format(fwd_only_type, ContextT& ctx) {
+            ctx.append("fwd_only_type");
         }
     };
 } // namespace NANOFMT_NS

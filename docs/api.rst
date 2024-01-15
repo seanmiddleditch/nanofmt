@@ -75,14 +75,27 @@ specialized structure for nanofmt to work.
   Custom formatter. May include any member variables necesasry to convey
   format information from ``parse`` to ``format``.
 
-  .. cpp:function:: char const* parse(char const* in, char const* end)
+  .. cpp:function:: char const* parse(format_parse_context& ctx)
 
-    Consumes characters from ``in`` up to, but not including, ``end``.
+    Consumes characters from ``ctx`` up to, but not including, ``ctx.end()``.
     Returns a pointer to one past the last character consumed.
 
   .. cpp:function:: void format(T const& value, format_context& ctx) const
 
     Formats ``value`` to ``ctx.out()``.
+
+The parse function takes a type :cpp:struct:`nanofmt::format_parse_context`
+that contains information about the current argument and specification string.
+
+.. cpp:struct:: nanofmt::format_parse_context
+
+  Parse context for custom formatters.
+
+  .. cpp:function:: char const* begin() const noexcept
+
+  .. cpp:function:: char const* end() const noexcept
+
+  .. cpp:function:: void advance_to(const char* to) noexcept
 
 A header implementing a custom formatter may choose to only depend on
 ``nanofmt/foward.h`` header. This header does not offer any of the
@@ -97,10 +110,11 @@ functions. A formatter may work around this by specifying the
   namespace nanofmt {
     template<>
     struct formatter<my_type> {
-      constexpr char const* parse(char const* in, char const*) noexcept;
+      template <typename ContextT>
+      constexpr char const* parse(ContextT& ctx) noexcept;
 
-      template <typename OutputT>
-      void format(my_type const& value, OutputT& output);
+      template <typename ContextT>
+      void format(my_type const& value, ContextT& ctx);
     }
   }
 

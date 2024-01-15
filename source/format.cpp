@@ -11,8 +11,7 @@
 namespace NANOFMT_NS {
     namespace detail {
         static constexpr char const* parse_spec(
-            char const* in,
-            char const* end,
+            format_parse_context& ctx,
             format_spec& spec,
             char const* allowed_types) noexcept;
         static void format_int_chars(
@@ -22,9 +21,9 @@ namespace NANOFMT_NS {
             bool negative,
             format_spec const& spec) noexcept;
         static constexpr int_format select_int_format(char type) noexcept;
-        static constexpr char const* parse_int_spec(char const* in, char const* end, format_spec& spec) noexcept;
+        static constexpr char const* parse_int_spec(format_parse_context& ctx, format_spec& spec) noexcept;
 #if NANOFMT_FLOAT
-        static constexpr char const* parse_float_spec(char const* in, char const* end, format_spec& spec) noexcept;
+        static constexpr char const* parse_float_spec(format_parse_context& ctx, format_spec& spec) noexcept;
 #endif
         static constexpr std::size_t strnlen(char const* string, std::size_t max_length) noexcept;
         static void format_char_impl(char value, format_context& ctx, format_spec const& spec) noexcept;
@@ -40,8 +39,8 @@ namespace NANOFMT_NS {
     } // namespace detail
 
     template <>
-    char const* detail::default_formatter<char>::parse(char const* in, char const* end) noexcept {
-        return parse_int_spec(in, end, spec);
+    char const* detail::default_formatter<char>::parse(format_parse_context& ctx) noexcept {
+        return parse_int_spec(ctx, spec);
     }
 
     template <>
@@ -50,8 +49,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    char const* detail::default_formatter<signed int>::parse(char const* in, char const* end) noexcept {
-        return parse_int_spec(in, end, spec);
+    char const* detail::default_formatter<signed int>::parse(format_parse_context& ctx) noexcept {
+        return parse_int_spec(ctx, spec);
     }
 
     template <>
@@ -60,8 +59,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    char const* detail::default_formatter<unsigned int>::parse(char const* in, char const* end) noexcept {
-        return parse_int_spec(in, end, spec);
+    char const* detail::default_formatter<unsigned int>::parse(format_parse_context& ctx) noexcept {
+        return parse_int_spec(ctx, spec);
     }
 
     template <>
@@ -70,8 +69,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    char const* detail::default_formatter<signed long>::parse(char const* in, char const* end) noexcept {
-        return parse_int_spec(in, end, spec);
+    char const* detail::default_formatter<signed long>::parse(format_parse_context& ctx) noexcept {
+        return parse_int_spec(ctx, spec);
     }
 
     template <>
@@ -80,8 +79,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    char const* detail::default_formatter<unsigned long>::parse(char const* in, char const* end) noexcept {
-        return parse_int_spec(in, end, spec);
+    char const* detail::default_formatter<unsigned long>::parse(format_parse_context& ctx) noexcept {
+        return parse_int_spec(ctx, spec);
     }
 
     template <>
@@ -90,8 +89,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    char const* detail::default_formatter<signed long long>::parse(char const* in, char const* end) noexcept {
-        return parse_int_spec(in, end, spec);
+    char const* detail::default_formatter<signed long long>::parse(format_parse_context& ctx) noexcept {
+        return parse_int_spec(ctx, spec);
     }
 
     template <>
@@ -100,8 +99,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    char const* detail::default_formatter<unsigned long long>::parse(char const* in, char const* end) noexcept {
-        return parse_int_spec(in, end, spec);
+    char const* detail::default_formatter<unsigned long long>::parse(format_parse_context& ctx) noexcept {
+        return parse_int_spec(ctx, spec);
     }
 
     template <>
@@ -111,8 +110,8 @@ namespace NANOFMT_NS {
 
 #if NANOFMT_FLOAT
     template <>
-    char const* detail::default_formatter<float>::parse(char const* in, char const* end) noexcept {
-        return parse_float_spec(in, end, spec);
+    char const* detail::default_formatter<float>::parse(format_parse_context& ctx) noexcept {
+        return parse_float_spec(ctx, spec);
     }
 
     template <>
@@ -121,8 +120,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    char const* detail::default_formatter<double>::parse(char const* in, char const* end) noexcept {
-        return parse_float_spec(in, end, spec);
+    char const* detail::default_formatter<double>::parse(format_parse_context& ctx) noexcept {
+        return parse_float_spec(ctx, spec);
     }
 
     template <>
@@ -132,8 +131,8 @@ namespace NANOFMT_NS {
 #endif
 
     template <>
-    char const* detail::default_formatter<bool>::parse(char const* in, char const* end) noexcept {
-        return parse_spec(in, end, spec, "sbBcdoxX");
+    char const* detail::default_formatter<bool>::parse(format_parse_context& ctx) noexcept {
+        return parse_spec(ctx, spec, "sbBcdoxX");
     }
 
     template <>
@@ -150,8 +149,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    char const* detail::default_formatter<void const*>::parse(char const* in, char const* end) noexcept {
-        return parse_spec(in, end, spec, "p");
+    char const* detail::default_formatter<void const*>::parse(format_parse_context& ctx) noexcept {
+        return parse_spec(ctx, spec, "p");
     }
 
     template <>
@@ -165,8 +164,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    char const* detail::default_formatter<char const*>::parse(char const* in, char const* end) noexcept {
-        return parse_spec(in, end, spec, "s");
+    char const* detail::default_formatter<char const*>::parse(format_parse_context& ctx) noexcept {
+        return parse_spec(ctx, spec, "s");
     }
 
     template <>
@@ -177,8 +176,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    char const* detail::default_formatter<detail::char_buffer>::parse(char const* in, char const* end) noexcept {
-        return parse_spec(in, end, spec, "s");
+    char const* detail::default_formatter<detail::char_buffer>::parse(format_parse_context& ctx) noexcept {
+        return parse_spec(ctx, spec, "s");
     }
 
     template <>
@@ -187,8 +186,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    char const* detail::default_formatter<format_string_view>::parse(char const* in, char const* end) noexcept {
-        return parse_spec(in, end, spec, "s");
+    char const* detail::default_formatter<format_string_view>::parse(format_parse_context& ctx) noexcept {
+        return parse_spec(ctx, spec, "s");
     }
 
     template <>
@@ -280,7 +279,8 @@ namespace NANOFMT_NS {
         auto invoke = [in, end, &ctx](auto value) {
             formatter<decltype(value)> fmt;
             if (in != nullptr) {
-                *in = fmt.parse(*in, end);
+                format_parse_context pctx{*in, end};
+                *in = fmt.parse(pctx);
             }
             fmt.format(value, ctx);
         };
@@ -322,10 +322,12 @@ namespace NANOFMT_NS {
     }
 
     static constexpr char const* detail::parse_spec(
-        char const* in,
-        char const* end,
+        format_parse_context& ctx,
         format_spec& spec,
         char const* allowed_types) noexcept {
+        const char* in = ctx.begin();
+        const char* const end = ctx.end();
+
         if (in == end) {
             return in;
         }
@@ -497,14 +499,14 @@ namespace NANOFMT_NS {
         }
     }
 
-    constexpr char const* detail::parse_int_spec(char const* in, char const* end, format_spec& spec) noexcept {
+    constexpr char const* detail::parse_int_spec(format_parse_context& ctx, format_spec& spec) noexcept {
         spec.align = +1; /* right-align by default */
-        return parse_spec(in, end, spec, "bBcdoxX");
+        return parse_spec(ctx, spec, "bBcdoxX");
     }
 
 #if NANOFMT_FLOAT
-    constexpr char const* detail::parse_float_spec(char const* in, char const* end, format_spec& spec) noexcept {
-        return parse_spec(in, end, spec, "aAeEfFgG");
+    constexpr char const* detail::parse_float_spec(format_parse_context& ctx, format_spec& spec) noexcept {
+        return parse_spec(ctx, spec, "aAeEfFgG");
     }
 #endif
 
