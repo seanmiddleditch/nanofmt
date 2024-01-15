@@ -2,7 +2,9 @@
 
 #include "nanofmt/charconv.h"
 #include "numeric_utils.h"
-#include "nanofmt/dragonbox.h"
+#if NANOFMT_FLOAT
+#    include "nanofmt/dragonbox.h"
+#endif
 #include "nanofmt/format.h"
 
 #include <cmath>
