@@ -12,30 +12,36 @@ jobs:
     strategy:
       matrix:
         runs-on: ['ubuntu-latest']
-        compiler: ['g++', 'clang++']
+        cxx: ['g++', 'clang++']
         config: ['DEBUG', 'RELEASE']
         cxxflags: ['-Wall -Werror -pedantic']
+        cmake-defines: ['']
         include:
+        - runs-on: 'ubuntu-latest'
+          cxx: 'g++'
+          config: 'DEBUG'
+          cxxflags: '-Wall -Werror -pedantic'
+          cmake-defines: '-DNANOFMT_FLOAT=OFF'
         - runs-on: 'windows-latest'
-          compiler: cl.exe
+          cxx: cl.exe
           config: 'DEBUG'
           cxxflags: /W4 /WX
         - runs-on: 'windows-latest'
-          compiler: cl.exe
+          cxx: cl.exe
           config: 'RELEASE'
           cxxflags: /W4 /WX
 
     runs-on: ${{ matrix.runs-on }}
-    name: Build (${{ matrix.compiler }}, ${{ matrix.config }})
+    name: Build (${{ matrix.cxx }}, ${{ matrix.config }})
 
     steps:
     - uses: actions/checkout@v2
 
     - name: Configure
       env:
-        CXX: ${{ matrix.compiler }}
+        CXX: ${{ matrix.cxx }}
         CXXFLAGS: ${{ matrix.cxxflags }}
-      run: cmake -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=${{ matrix.config }}
+      run: cmake -B ${{ github.workspace }}/build ${{ matrix.cmake-defines }} -DCMAKE_BUILD_TYPE=${{ matrix.config }}
 
     - name: Build
       run: cmake --build ${{ github.workspace }}/build --config ${{ matrix.config }}
