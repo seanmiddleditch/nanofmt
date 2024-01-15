@@ -1,9 +1,10 @@
 // Copyright (c) Sean Middleditch and contributors. See accompanying LICENSE.md for copyright details.
 
 #include "test_utils.h"
+
 #include "nanofmt/format.h"
 
-#include <catch2/catch_test_macros.hpp>
+#include <doctest/doctest.h>
 
 namespace {
     template <typename T>
@@ -12,22 +13,22 @@ namespace {
     }
 } // namespace
 
-TEST_CASE("nanofmt.format_arg.misc", "[nanofmt][format_arg]") {
+TEST_CASE("nanofmt.format_arg.misc") {
     using namespace NANOFMT_NS;
 
     CHECK(to_arg(true).tag == format_arg::type::t_bool);
     CHECK(to_arg('c').tag == format_arg::type::t_char);
 }
 
-TEST_CASE("nanofmt.format_arg.integers", "[nanofmt][format_arg][integers]") {
+TEST_CASE("nanofmt.format_arg.integers") {
     using namespace NANOFMT_NS;
 
-    SECTION("misc") {
+    SUBCASE("misc") {
         CHECK(to_arg(true).tag == format_arg::type::t_bool);
         CHECK(to_arg('c').tag == format_arg::type::t_char);
     }
 
-    SECTION("signed") {
+    SUBCASE("signed") {
         using signed_char = signed char;
 
         CHECK(to_arg(signed_char{}).tag == format_arg::type::t_int);
@@ -37,7 +38,7 @@ TEST_CASE("nanofmt.format_arg.integers", "[nanofmt][format_arg][integers]") {
         CHECK(to_arg(0ll).tag == format_arg::type::t_longlong);
     }
 
-    SECTION("unsigned") {
+    SUBCASE("unsigned") {
         using unsigned_char = unsigned char;
         using unsigned_short = unsigned short;
 
@@ -49,17 +50,17 @@ TEST_CASE("nanofmt.format_arg.integers", "[nanofmt][format_arg][integers]") {
     }
 }
 
-TEST_CASE("nanofmt.format_arg.floats", "[nanofmt][format_arg][floats]") {
+TEST_CASE("nanofmt.format_arg.floats") {
     using namespace NANOFMT_NS;
 
     CHECK(to_arg(0.f).tag == format_arg::type::t_float);
     CHECK(to_arg(0.0).tag == format_arg::type::t_double);
 }
 
-TEST_CASE("nanofmt.format_arg.pointers", "[nanofmt][format_arg][pointers][strings]") {
+TEST_CASE("nanofmt.format_arg.pointers") {
     using namespace NANOFMT_NS;
 
-    SECTION("pointers") {
+    SUBCASE("pointers") {
         void const* cptr = nullptr;
         void* ptr = nullptr;
 
@@ -68,7 +69,7 @@ TEST_CASE("nanofmt.format_arg.pointers", "[nanofmt][format_arg][pointers][string
         CHECK(to_arg(nullptr).tag == format_arg::type::t_voidptr);
     }
 
-    SECTION("C strings") {
+    SUBCASE("C strings") {
         char chars[16] = {};
         char const* cstr = nullptr;
         char* str = nullptr;
@@ -88,7 +89,7 @@ namespace {
     enum class chonky_enum_class : long long { value };
 } // namespace
 
-TEST_CASE("nanofmt.format_arg.enums", "[nanofmt][format_arg][pointers][enums]") {
+TEST_CASE("nanofmt.format_arg.enums") {
     using namespace NANOFMT_NS;
 
     CHECK(to_arg(cenum_value).tag == format_arg::type::t_int);
@@ -119,14 +120,14 @@ namespace NANOFMT_NS {
     struct formatter<custom::class_type> : custom_formatter_base {};
 } // namespace NANOFMT_NS
 
-TEST_CASE("nanofmt.format_arg.custom", "[nanofmt][format_arg][pointers][custom]") {
+TEST_CASE("nanofmt.format_arg.custom") {
     using namespace NANOFMT_NS;
 
-    SECTION("enums") {
+    SUBCASE("enums") {
         CHECK(to_arg(custom::enum_class::value).tag == format_arg::type::t_custom);
     }
 
-    SECTION("objects") {
+    SUBCASE("objects") {
         custom::struct_type st;
         const custom::struct_type cst;
         custom::class_type ct;
