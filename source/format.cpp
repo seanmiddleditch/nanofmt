@@ -22,7 +22,9 @@ namespace NANOFMT_NS {
             format_spec const& spec) noexcept;
         static constexpr int_format select_int_format(char type) noexcept;
         static constexpr char const* parse_int_spec(char const* in, char const* end, format_spec& spec) noexcept;
+#if NANOFMT_FLOAT
         static constexpr char const* parse_float_spec(char const* in, char const* end, format_spec& spec) noexcept;
+#endif
         static constexpr std::size_t strnlen(char const* string, std::size_t max_length) noexcept;
         static void format_char_impl(char value, format_output& out, format_spec const& spec) noexcept;
         template <typename IntT>
@@ -106,6 +108,7 @@ namespace NANOFMT_NS {
         return format_int_impl(value, out, spec);
     }
 
+#if NANOFMT_FLOAT
     template <>
     char const* detail::default_formatter<float>::parse(char const* in, char const* end) noexcept {
         return parse_float_spec(in, end, spec);
@@ -125,6 +128,7 @@ namespace NANOFMT_NS {
     void detail::default_formatter<double>::format(double value, format_output& out) noexcept {
         return format_float_impl(value, out, spec);
     }
+#endif
 
     template <>
     char const* detail::default_formatter<bool>::parse(char const* in, char const* end) noexcept {
@@ -294,10 +298,12 @@ namespace NANOFMT_NS {
                 return invoke(value.v_longlong);
             case types::t_ulonglong:
                 return invoke(value.v_ulonglong);
+#if NANOFMT_FLOAT
             case types::t_float:
                 return invoke(value.v_float);
             case types::t_double:
                 return invoke(value.v_double);
+#endif
             case types::t_bool:
                 return invoke(value.v_bool);
             case types::t_cstring:
@@ -306,6 +312,8 @@ namespace NANOFMT_NS {
                 return invoke(value.v_voidptr);
             case types::t_custom:
                 return value.v_custom.thunk(value.v_custom.value, in, end, out);
+            default:
+                break;
         }
     }
 
@@ -490,9 +498,11 @@ namespace NANOFMT_NS {
         return parse_spec(in, end, spec, "bBcdoxX");
     }
 
+#if NANOFMT_FLOAT
     constexpr char const* detail::parse_float_spec(char const* in, char const* end, format_spec& spec) noexcept {
         return parse_spec(in, end, spec, "aAeEfFgG");
     }
+#endif
 
     constexpr std::size_t detail::strnlen(char const* string, std::size_t max_length) noexcept {
         for (std::size_t length = 0; length != max_length; ++length) {

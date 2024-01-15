@@ -13,6 +13,7 @@ set(NANOFMT_NS "" CACHE STRING "Namespace for nanofmt API and implementation")
 option(NANOFMT_TESTS "Build nanofmt tests" ${NANOFMT_IS_TOPLEVEL})
 option(NANOFMT_DOCS "Build sphinx and doxygen documentation" OFF)
 option(NANOFMT_INSTALL "Add install targets for nanofmt" ON)
+option(NANOFMT_FLOAT "Enable support for float and double" ON)
 
 add_library(nanofmt STATIC)
 add_library(nanofmt::nanofmt ALIAS nanofmt)
@@ -24,6 +25,10 @@ target_include_directories(nanofmt
         $<INSTALL_INTERFACE:include>
 )
 target_compile_features(nanofmt PUBLIC cxx_std_17)
+
+if (NANOFMT_FLOAT)
+    target_compile_definitions(nanofmt PUBLIC -DNANOFMT_FLOAT=1)
+endif()
 
 if (NANOFMT_NS)
     target_compile_definitions(nanofmt PUBLIC -DNANOFMT_NS=${NANOFMT_NS})

@@ -67,6 +67,10 @@ to appeal more to "C with Classes" programmers; this is not a judgement of
 modern C++, just an acquiescence to the prevalent tastes and opinions in
 the industries targetted by nanofmt (primarily the AAA game industry).
 
+Support for floating-point types can optionally be disabled via the
+`NANOFMT_FLOAT` CMake option. Pass `-DNANOFMT_FLOAT=OFF` on the CMake
+command line to disable.
+
 When to Use nanofmt
 -------------------
 
