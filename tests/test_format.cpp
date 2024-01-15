@@ -237,6 +237,16 @@ TEST_CASE("nanofmt.format.custom", "[nanofmt][format][custom]") {
     CHECK(sformat("{}", fwd_only_type{}) == "fwd_only_type");
 }
 
+TEST_CASE("nanofmt.format.length", "[nanofmt][format][length]") {
+    using namespace NANOFMT_NS;
+
+    CHECK(format_length("{}") == 0);
+    CHECK(format_length("{}", 777) == 3);
+
+    // https://github.com/seanmiddleditch/nanofmt/issues/49
+    CHECK(format_length("{0} = 0x{0:X} = 0b{0:b}", 28) == 19);
+}
+
 // TEST_CASE("nanofmt.format.compile_error", "[nanofmt][format][error]") {
 //    using namespace NANOFMT_NS::test;
 //
