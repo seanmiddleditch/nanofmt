@@ -195,6 +195,7 @@ namespace NANOFMT_NS {
         format_string_impl(value.string, value.length, ctx, spec);
     }
 
+    // NOLINTNEXTLINE(readability-non-const-parameter) -- false positive
     detail::vformat_result detail::vformat(char* dest, char const* end, format_string format_str, format_args args) {
         int arg_next_index = 0;
         bool arg_auto_index = true;
