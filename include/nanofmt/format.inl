@@ -318,24 +318,24 @@ namespace NANOFMT_NS {
         return result.pos;
     }
 
-    template <std::size_t N, typename... Args>
+    template <typename... Args>
     [[nodiscard]] char* format_append_to_n(
         char* dest,
         std::size_t count,
         format_string format_str,
         Args const&... args) {
-        std::size_t const start = ::NANOFMT_NS::strnlen(dest, N);
+        std::size_t const start = ::NANOFMT_NS::strnlen(dest, count);
         return detail::vformat(
-                   format_context{dest + start, dest + count},
+                   dest + start, dest + count,
                    format_str,
                    ::NANOFMT_NS::make_format_args(args...))
-            .out();
+            .pos;
     }
 
-    template <std::size_t N, typename... Args>
+    template <typename... Args>
     [[nodiscard]] char* vformat_append_to_n(char* dest, std::size_t count, format_string format_str, format_args args) {
-        std::size_t const start = ::NANOFMT_NS::strnlen(dest, N);
-        return detail::vformat(format_context{dest + start, dest + count}, format_str, args).out();
+        std::size_t const start = ::NANOFMT_NS::strnlen(dest, count);
+        return detail::vformat(dest + start, dest + count, format_str, args).pos;
     }
 
     template <std::size_t N, typename... Args>

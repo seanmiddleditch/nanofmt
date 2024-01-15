@@ -50,33 +50,33 @@ namespace NANOFMT_NS {
 static_assert(NANOFMT_NS::detail::has_formatter<custom_type>::value, "has_formatter failed");
 static_assert(NANOFMT_NS::detail::has_formatter<std::string>::value, "has_formatter failed");
 
-TEST_CASE("nanofmt.format.core") {
+TEST_CASE("nanofmt.format.format_to.overflow") {
     using namespace NANOFMT_NS;
 
-    SUBCASE("format_to overflow") {
-        char buffer[12];
-        std::memset(buffer, 0xfe, sizeof buffer);
+    char buffer[12];
+    std::memset(buffer, 0xfe, sizeof buffer);
 
-        char const* const end = format_to(buffer, "Hello, {}! {:09d}", "World", 9001);
-        REQUIRE(*end == '\0');
+    char const* const end = format_to(buffer, "Hello, {}! {:09d}", "World", 9001);
+    REQUIRE(*end == '\0');
 
-        CHECK(std::strcmp(buffer, "Hello, Worl") == 0);
-    }
-
-    SUBCASE("format_to_n overflow") {
-        char buffer[12];
-        char* const end = format_to_n(buffer, sizeof buffer, "Hello, {}! {:09d}", "World", 9001);
-
-        CHECK((end - buffer) == 12);
-        CHECK(std::strncmp(buffer, "Hello, World", sizeof buffer) == 0);
-    }
+    CHECK(std::strcmp(buffer, "Hello, Worl") == 0);
 }
 
-TEST_CASE("nanofmt.format.append") {
+TEST_CASE("nanofmt.format.format_to_n.overflow") {
+    using namespace NANOFMT_NS;
+
+    char buffer[12];
+    char* const end = format_to_n(buffer, sizeof buffer, "Hello, {}! {:09d}", "World", 9001);
+
+    CHECK((end - buffer) == 12);
+    CHECK(std::strncmp(buffer, "Hello, World", sizeof buffer) == 0);
+}
+
+TEST_CASE("nanofmt.format.format_append_to") {
     using namespace NANOFMT_NS;
 
     char buffer[12] = {};
-    format_to(buffer, "Hello");
+    format_append_to(buffer, "Hello");
     format_append_to(buffer, "{} ", ',');
     char* const end = format_append_to(buffer, "World! {:09d}", 9001);
 
@@ -84,15 +84,49 @@ TEST_CASE("nanofmt.format.append") {
     CHECK(std::strcmp(buffer, "Hello, Worl") == 0);
 }
 
-TEST_CASE("nanofmt.vformat.append") {
+TEST_CASE("nanofmt.format.vformat_append_to") {
     using namespace NANOFMT_NS;
 
     char buffer[12] = {};
-    vformat_to(buffer, "{} + {}", make_format_args(1, 2));
+    vformat_append_to(buffer, "{} + {}", make_format_args(1, 2));
     char const* const end = vformat_append_to(buffer, " = {}", make_format_args(3));
 
     CHECK((end - buffer) == 9);
     CHECK(std::strcmp(buffer, "1 + 2 = 3") == 0);
+}
+
+TEST_CASE("nanofmt.format.format_append_to_n") {
+    using namespace NANOFMT_NS;
+
+    char buffer[8] = {};
+    (void)format_append_to_n(buffer, sizeof(buffer), "Hello");
+    (void)format_append_to_n(buffer, sizeof(buffer), "{} ", ',');
+    char* const end = format_append_to_n(buffer, sizeof(buffer), "World! {:09d}", 9001);
+
+    CHECK((end - buffer) == sizeof(buffer));
+    CHECK(std::strncmp(buffer, "Hello, W", end - buffer) == 0);
+}
+
+TEST_CASE("nanofmt.format.vformat_append_to") {
+    using namespace NANOFMT_NS;
+
+    char buffer[12] = {};
+    vformat_append_to(buffer, "{} + {}", make_format_args(1, 2));
+    char const* const end = vformat_append_to(buffer, " = {}", make_format_args(3));
+
+    CHECK((end - buffer) == 9);
+    CHECK(std::strcmp(buffer, "1 + 2 = 3") == 0);
+}
+
+TEST_CASE("nanofmt.format.vformat_append_to_n") {
+    using namespace NANOFMT_NS;
+
+    char buffer[16] = {};
+    (void)vformat_append_to_n(buffer, sizeof(buffer), "Hello{} ", make_format_args(','));
+    char* const end = vformat_append_to_n(buffer, sizeof(buffer), "{}! {}", make_format_args("World", 9001));
+
+    CHECK((end - buffer) == sizeof(buffer));
+    CHECK(std::strncmp(buffer, "Hello, World! 900", end - buffer) == 0);
 }
 
 TEST_CASE("nanofmt.format.integers") {
