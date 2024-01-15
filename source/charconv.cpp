@@ -1,12 +1,8 @@
 // Copyright (c) Sean Middleditch and contributors. See accompanying LICENSE.md for copyright details.
 
-// just in case another library links dragonbox, make ours "private" to
-// avoid version/ODR problems
-#define jkj nanofmt_jkj
-
 #include "nanofmt/charconv.h"
 #include "numeric_utils.h"
-#include "dragonbox/dragonbox.h"
+#include "nanofmt/dragonbox.h"
 #include "nanofmt/format.h"
 
 #include <cmath>
@@ -172,12 +168,12 @@ namespace NANOFMT_NS {
         int exponent = 0;
 
         if (value != 0) {
-            auto const db_result = jkj::dragonbox::to_decimal(
+            auto const db_result = nanofmt::dragonbox::to_decimal(
                 value,
-                jkj::dragonbox::policy::sign::ignore,
-                jkj::dragonbox::policy::cache::compact,
-                jkj::dragonbox::policy::trailing_zero::remove,
-                jkj::dragonbox::policy::binary_to_decimal_rounding::to_even);
+                nanofmt::dragonbox::policy::sign::ignore,
+                nanofmt::dragonbox::policy::cache::compact,
+                nanofmt::dragonbox::policy::trailing_zero::remove,
+                nanofmt::dragonbox::policy::binary_to_decimal_rounding::to_even);
             significand = db_result.significand;
             exponent = db_result.exponent;
         }

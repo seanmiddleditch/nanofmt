@@ -1,5 +1,3 @@
-include(fetch_dragonbox)
-
 target_sources(nanofmt PRIVATE
     "charconv.cpp"
     "format.cpp"

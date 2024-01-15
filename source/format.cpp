@@ -521,7 +521,9 @@ namespace NANOFMT_NS {
         }
 
         // binary encoding is the widest; FIXME: this is icky
-        char chars[sizeof(value) * 8];
+        char chars[sizeof(value) * 8] = {
+            0,
+        };
 
         size_t const available = out.end - out.pos;
         size_t const length =
