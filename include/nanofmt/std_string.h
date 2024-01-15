@@ -1,5 +1,7 @@
 // Copyright (c) Sean Middleditch and contributors. See accompanying LICENSE.md for copyright details.
 
+#ifndef NANOFMT_STD_STRING_H_
+#define NANOFMT_STD_STRING_H_ 1
 #pragma once
 
 #include "config.h"
@@ -23,3 +25,5 @@ namespace NANOFMT_NS {
         }
     };
 } // namespace NANOFMT_NS
+
+#endif
