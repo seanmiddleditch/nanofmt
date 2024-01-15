@@ -8,6 +8,7 @@
 
 #include <doctest/doctest.h>
 
+#include <cstdint>
 #include <limits>
 
 enum class standard_enum { one, two };
