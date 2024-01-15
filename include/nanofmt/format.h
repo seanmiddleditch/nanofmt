@@ -106,7 +106,7 @@ namespace NANOFMT_NS {
     /// Formats a string and arguments into dest, writing no more than count
     /// bytes. The destination will **NOT** be NUL-terminated. Returns a
     /// pointer to the last character written.
-    inline char* vformat_to_n(char* dest, std::size_t count, format_string format_str, format_args args);
+    [[nodiscard]] inline char* vformat_to_n(char* dest, std::size_t count, format_string format_str, format_args args);
 
     template <std::size_t N, typename... Args>
     char* format_to(char (&dest)[N], format_string format_str, Args const&... args);
