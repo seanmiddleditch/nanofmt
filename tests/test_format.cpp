@@ -23,13 +23,13 @@ struct unknown {};
 namespace NANOFMT_NS {
     template <>
     struct formatter<custom_enum> : formatter<char const*> {
-        void format(custom_enum value, format_output& out) {
+        void format(custom_enum value, format_context& ctx) {
             switch (value) {
                 case custom_enum::foo:
-                    formatter<char const*>::format("foo", out);
+                    formatter<char const*>::format("foo", ctx);
                     break;
                 case custom_enum::bar:
-                    formatter<char const*>::format("bar", out);
+                    formatter<char const*>::format("bar", ctx);
                     break;
             }
         }
@@ -41,8 +41,8 @@ namespace NANOFMT_NS {
             return in;
         }
 
-        void format(custom_type custom, format_output& out) {
-            out.format("custom{{{}}", custom.value);
+        void format(custom_type custom, format_context& ctx) {
+            ctx.format("custom{{{}}", custom.value);
         }
     };
 } // namespace NANOFMT_NS

@@ -35,7 +35,7 @@ namespace NANOFMT_NS {
     ///
     /// Use advance_to to update the pos pointer to ensure the advance field
     /// is updated appropriately.
-    struct format_output;
+    struct format_context;
 
     /// Holds a list of N format_value objects.
     ///
@@ -50,7 +50,7 @@ namespace NANOFMT_NS {
     ///
     /// constexpr char const* parse(char const* in, char const* end) noexcept;
     ///
-    /// void format(T const& value, format_output& out);
+    /// void format(T const& value, format_context& ctx);
     template <typename T>
     struct formatter;
 
@@ -165,7 +165,7 @@ namespace NANOFMT_NS {
         struct default_formatter {
             format_spec spec;
             char const* parse(char const* in, char const* end) noexcept;
-            void format(T value, format_output& out) noexcept;
+            void format(T value, format_context& ctx) noexcept;
         };
     } // namespace detail
 

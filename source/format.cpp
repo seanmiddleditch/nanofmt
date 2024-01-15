@@ -16,7 +16,7 @@ namespace NANOFMT_NS {
             format_spec& spec,
             char const* allowed_types) noexcept;
         static void format_int_chars(
-            format_output& out,
+            format_context& ctx,
             char const* digits,
             size_t count,
             bool negative,
@@ -27,16 +27,16 @@ namespace NANOFMT_NS {
         static constexpr char const* parse_float_spec(char const* in, char const* end, format_spec& spec) noexcept;
 #endif
         static constexpr std::size_t strnlen(char const* string, std::size_t max_length) noexcept;
-        static void format_char_impl(char value, format_output& out, format_spec const& spec) noexcept;
+        static void format_char_impl(char value, format_context& ctx, format_spec const& spec) noexcept;
         template <typename IntT>
-        static void format_int_impl(IntT value, format_output& out, format_spec const& spec) noexcept;
+        static void format_int_impl(IntT value, format_context& ctx, format_spec const& spec) noexcept;
         static void format_string_impl(
             char const* value,
             std::size_t length,
-            format_output& out,
+            format_context& ctx,
             format_spec const& spec) noexcept;
         template <typename FloatT>
-        static void format_float_impl(FloatT value, format_output& out, format_spec const& spec) noexcept;
+        static void format_float_impl(FloatT value, format_context& ctx, format_spec const& spec) noexcept;
     } // namespace detail
 
     template <>
@@ -45,8 +45,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<char>::format(char value, format_output& out) noexcept {
-        format_char_impl(value, out, spec);
+    void detail::default_formatter<char>::format(char value, format_context& ctx) noexcept {
+        format_char_impl(value, ctx, spec);
     }
 
     template <>
@@ -55,8 +55,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<signed int>::format(signed int value, format_output& out) noexcept {
-        return format_int_impl(value, out, spec);
+    void detail::default_formatter<signed int>::format(signed int value, format_context& ctx) noexcept {
+        return format_int_impl(value, ctx, spec);
     }
 
     template <>
@@ -65,8 +65,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<unsigned int>::format(unsigned int value, format_output& out) noexcept {
-        return format_int_impl(value, out, spec);
+    void detail::default_formatter<unsigned int>::format(unsigned int value, format_context& ctx) noexcept {
+        return format_int_impl(value, ctx, spec);
     }
 
     template <>
@@ -75,8 +75,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<signed long>::format(signed long value, format_output& out) noexcept {
-        return format_int_impl(value, out, spec);
+    void detail::default_formatter<signed long>::format(signed long value, format_context& ctx) noexcept {
+        return format_int_impl(value, ctx, spec);
     }
 
     template <>
@@ -85,8 +85,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<unsigned long>::format(unsigned long value, format_output& out) noexcept {
-        return format_int_impl(value, out, spec);
+    void detail::default_formatter<unsigned long>::format(unsigned long value, format_context& ctx) noexcept {
+        return format_int_impl(value, ctx, spec);
     }
 
     template <>
@@ -95,8 +95,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<signed long long>::format(signed long long value, format_output& out) noexcept {
-        return format_int_impl(value, out, spec);
+    void detail::default_formatter<signed long long>::format(signed long long value, format_context& ctx) noexcept {
+        return format_int_impl(value, ctx, spec);
     }
 
     template <>
@@ -105,8 +105,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<unsigned long long>::format(unsigned long long value, format_output& out) noexcept {
-        return format_int_impl(value, out, spec);
+    void detail::default_formatter<unsigned long long>::format(unsigned long long value, format_context& ctx) noexcept {
+        return format_int_impl(value, ctx, spec);
     }
 
 #if NANOFMT_FLOAT
@@ -116,8 +116,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<float>::format(float value, format_output& out) noexcept {
-        return format_float_impl(value, out, spec);
+    void detail::default_formatter<float>::format(float value, format_context& ctx) noexcept {
+        return format_float_impl(value, ctx, spec);
     }
 
     template <>
@@ -126,8 +126,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<double>::format(double value, format_output& out) noexcept {
-        return format_float_impl(value, out, spec);
+    void detail::default_formatter<double>::format(double value, format_context& ctx) noexcept {
+        return format_float_impl(value, ctx, spec);
     }
 #endif
 
@@ -137,14 +137,14 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<bool>::format(bool value, format_output& out) noexcept {
+    void detail::default_formatter<bool>::format(bool value, format_context& ctx) noexcept {
         switch (spec.type) {
             case '\0':
             case 's':
-                out.append(value ? "true" : "false");
+                ctx.append(value ? "true" : "false");
                 break;
             default:
-                format_int_impl(static_cast<unsigned char>(value), out, spec);
+                format_int_impl(static_cast<unsigned char>(value), ctx, spec);
                 return;
         }
     }
@@ -155,13 +155,13 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<void const*>::format(void const* value, format_output& out) noexcept {
+    void detail::default_formatter<void const*>::format(void const* value, format_context& ctx) noexcept {
         // hex encoding is 2 chars per octet
         char chars[sizeof(value) * 2];
         char const* const end =
             to_chars(chars, chars + sizeof chars, reinterpret_cast<std::uintptr_t>(value), int_format::hex);
-        out.append("0x");
-        out.append(chars, end - chars);
+        ctx.append("0x");
+        ctx.append(chars, end - chars);
     }
 
     template <>
@@ -170,9 +170,9 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<char const*>::format(char const* value, format_output& out) noexcept {
+    void detail::default_formatter<char const*>::format(char const* value, format_context& ctx) noexcept {
         if (value != nullptr) {
-            format_string_impl(value, __builtin_strlen(value), out, spec);
+            format_string_impl(value, __builtin_strlen(value), ctx, spec);
         }
     }
 
@@ -182,8 +182,8 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<detail::char_buffer>::format(char_buffer value, format_output& out) noexcept {
-        format_string_impl(value.chars, strnlen(value.chars, value.max_length), out, spec);
+    void detail::default_formatter<detail::char_buffer>::format(char_buffer value, format_context& ctx) noexcept {
+        format_string_impl(value.chars, strnlen(value.chars, value.max_length), ctx, spec);
     }
 
     template <>
@@ -192,15 +192,15 @@ namespace NANOFMT_NS {
     }
 
     template <>
-    void detail::default_formatter<format_string_view>::format(format_string_view value, format_output& out) noexcept {
-        format_string_impl(value.string, value.length, out, spec);
+    void detail::default_formatter<format_string_view>::format(format_string_view value, format_context& ctx) noexcept {
+        format_string_impl(value.string, value.length, ctx, spec);
     }
 
     detail::vformat_result detail::vformat(char* dest, char const* end, format_string format_str, format_args args) {
         int arg_next_index = 0;
         bool arg_auto_index = true;
 
-        format_output out{dest, end};
+        format_context out{dest, end};
 
         char const* input = format_str.begin;
         char const* input_begin = input;
@@ -268,7 +268,7 @@ namespace NANOFMT_NS {
         return {out.pos, out.advance};
     }
 
-    void format_args::format(unsigned index, char const** in, char const* end, format_output& out) const {
+    void format_args::format(unsigned index, char const** in, char const* end, format_context& ctx) const {
         using types = format_arg::type;
 
         if (index >= count) {
@@ -277,12 +277,12 @@ namespace NANOFMT_NS {
 
         format_arg const& value = values[index];
 
-        auto invoke = [in, end, &out](auto value) {
+        auto invoke = [in, end, &ctx](auto value) {
             formatter<decltype(value)> fmt;
             if (in != nullptr) {
                 *in = fmt.parse(*in, end);
             }
-            fmt.format(value, out);
+            fmt.format(value, ctx);
         };
 
         switch (value.tag) {
@@ -315,7 +315,7 @@ namespace NANOFMT_NS {
             case types::t_voidptr:
                 return invoke(value.v_voidptr);
             case types::t_custom:
-                return value.v_custom.thunk(value.v_custom.value, in, end, out);
+                return value.v_custom.thunk(value.v_custom.value, in, end, ctx);
             default:
                 break;
         }
@@ -453,7 +453,7 @@ namespace NANOFMT_NS {
     }
 
     void detail::format_int_chars(
-        format_output& out,
+        format_context& ctx,
         char const* digits,
         size_t count,
         bool negative,
@@ -473,14 +473,14 @@ namespace NANOFMT_NS {
         size_t const total_length = (sign_char != '\0') + count + zero_padding;
 
         if (spec.width > 0 && spec.align > 0 && static_cast<std::size_t>(spec.width) > total_length) {
-            out.fill_n(spec.fill, static_cast<std::size_t>(spec.width) - total_length);
+            ctx.fill_n(spec.fill, static_cast<std::size_t>(spec.width) - total_length);
         }
 
         if (sign_char != '\0') {
-            out.put(sign_char);
+            ctx.put(sign_char);
         }
-        out.fill_n('0', zero_padding);
-        out.append(digits, count);
+        ctx.fill_n('0', zero_padding);
+        ctx.append(digits, count);
     }
 
     constexpr int_format detail::select_int_format(char type) noexcept {
@@ -517,21 +517,21 @@ namespace NANOFMT_NS {
         return max_length;
     }
 
-    void detail::format_char_impl(char value, format_output& out, format_spec const& spec) noexcept {
+    void detail::format_char_impl(char value, format_context& ctx, format_spec const& spec) noexcept {
         switch (spec.type) {
             case '\0':
             case 'c':
-                out.put(value);
+                ctx.put(value);
                 break;
             default:
-                return format_int_impl(static_cast<int>(value), out, spec);
+                return format_int_impl(static_cast<int>(value), ctx, spec);
         }
     }
 
     template <typename IntT>
-    void detail::format_int_impl(IntT value, format_output& out, format_spec const& spec) noexcept {
+    void detail::format_int_impl(IntT value, format_context& ctx, format_spec const& spec) noexcept {
         if (spec.type == 'c') {
-            return format_char_impl(static_cast<char>(value), out, spec);
+            return format_char_impl(static_cast<char>(value), ctx, spec);
         }
 
         // binary encoding is the widest; FIXME: this is icky
@@ -544,45 +544,45 @@ namespace NANOFMT_NS {
             : sizeof(chars);
 
         const char* const end = to_chars(chars, chars + length, value, select_int_format(spec.type));
-        format_int_chars(out, chars, end - chars, value < 0, spec);
+        format_int_chars(ctx, chars, end - chars, value < 0, spec);
     }
 
     void detail::format_string_impl(
         char const* value,
         std::size_t length,
-        format_output& out,
+        format_context& ctx,
         format_spec const& spec) noexcept {
         if (spec.width < 0 || length >= static_cast<size_t>(spec.width)) {
-            out.append(value, length);
+            ctx.append(value, length);
             return;
         }
 
         auto const padding = static_cast<size_t>(spec.width) - length;
         if (spec.align < 0) {
-            out.append(value, length);
-            out.fill_n(' ', padding);
+            ctx.append(value, length);
+            ctx.fill_n(' ', padding);
         }
         else if (spec.align > 0) {
-            out.fill_n(' ', padding);
-            out.append(value, length);
+            ctx.fill_n(' ', padding);
+            ctx.append(value, length);
         }
         else {
             auto const front_padding = padding / 2;
             auto const back_padding = padding - front_padding;
-            out.fill_n(' ', front_padding);
-            out.append(value, length);
-            out.fill_n(' ', back_padding);
+            ctx.fill_n(' ', front_padding);
+            ctx.append(value, length);
+            ctx.fill_n(' ', back_padding);
         }
     }
 
     template <typename FloatT>
-    void detail::format_float_impl(FloatT value, format_output& out, format_spec const& spec) noexcept {
+    void detail::format_float_impl(FloatT value, format_context& ctx, format_spec const& spec) noexcept {
         if (!std::signbit(value)) {
             if (spec.sign == '+') {
-                out.put('+');
+                ctx.put('+');
             }
             else if (spec.sign == ' ') {
-                out.put(' ');
+                ctx.put(' ');
             }
         }
 
@@ -590,26 +590,26 @@ namespace NANOFMT_NS {
             default:
             case 'g':
             case 'G':
-                out.advance_to(to_chars(
-                    out.out(),
-                    out.end,
+                ctx.advance_to(to_chars(
+                    ctx.out(),
+                    ctx.end,
                     value,
                     spec.type == 'G' ? float_format::general_upper : float_format::general,
                     spec.precision));
                 break;
             case 'e':
             case 'E':
-                out.advance_to(to_chars(
-                    out.out(),
-                    out.end,
+                ctx.advance_to(to_chars(
+                    ctx.out(),
+                    ctx.end,
                     value,
                     spec.type == 'E' ? float_format::scientific_upper : float_format::scientific,
                     spec.precision < 0 ? 6 : spec.precision));
                 break;
             case 'f':
             case 'F':
-                out.advance_to(
-                    to_chars(out.out(), out.end, value, float_format::fixed, spec.precision < 0 ? 6 : spec.precision));
+                ctx.advance_to(
+                    to_chars(ctx.out(), ctx.end, value, float_format::fixed, spec.precision < 0 ? 6 : spec.precision));
                 break;
         }
     }

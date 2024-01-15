@@ -80,15 +80,15 @@ specialized structure for nanofmt to work.
     Consumes characters from ``in`` up to, but not including, ``end``.
     Returns a pointer to one past the last character consumed.
 
-  .. cpp:function:: void format(T const& value, format_output& out) const
+  .. cpp:function:: void format(T const& value, format_context& ctx) const
 
-    Formats ``value`` to ``out``.
+    Formats ``value`` to ``ctx.out()``.
 
 A header implementing a custom formatter may choose to only depend on
 ``nanofmt/foward.h`` header. This header does not offer any of the
 implementations, nor does it provide declarations of the formatting
 functions. A formatter may work around this by specifying the
-``format_output&`` parameter of ``format`` as a template, as in:
+``format_context&`` parameter of ``format`` as a template, as in:
 
 .. code-block:: c++
 
@@ -118,36 +118,36 @@ terminating NUL character.
 Output Buffers
 ^^^^^^^^^^^^^^
 
-.. cpp:struct:: nanofmt::format_output
+.. cpp:struct:: nanofmt::format_context
 
 Format to Buffer
 ^^^^^^^^^^^^^^^^
 
-The ``nanofmt::format_output&`` overloads of :cpp:func:`nanofmt::format_to`
+The ``nanofmt::format_context&`` overloads of :cpp:func:`nanofmt::format_to`
 format a given format string and arguments into the target buffer. The result
 will **not** be NUL-terminated. The return value is the buffer object itself.
 
-  .. cpp:function:: format_output& format(format_string fmt, Args const&... args)
+  .. cpp:function:: format_context& format(format_string fmt, Args const&... args)
 
     Formats the given format string and argument into the buffer.
 
-  .. cpp:function:: format_output& vformat(format_string fmt, format_args args)
+  .. cpp:function:: format_context& vformat(format_string fmt, format_args args)
 
     Formats the given format string and argument into the buffer.
     
-  .. cpp:function:: constexpr format_output& append(char const* const zstr) noexcept
+  .. cpp:function:: constexpr format_context& append(char const* const zstr) noexcept
 
     Appends the contents of ``zstr`` to the buffer.
 
-  .. cpp:function:: constexpr format_output& append(char const* source, std::size_t length) noexcept
+  .. cpp:function:: constexpr format_context& append(char const* source, std::size_t length) noexcept
 
     Appends ``length`` characters from ``source`` to the buffer.
 
-  .. cpp:function:: constexpr format_output& put(char ch) noexcept
+  .. cpp:function:: constexpr format_context& put(char ch) noexcept
 
     Appends the character ``ch`` to the buffer.
 
-  .. cpp:function:: constexpr format_output& fill_n(char ch, std::size_t count) noexcept
+  .. cpp:function:: constexpr format_context& fill_n(char ch, std::size_t count) noexcept
 
     Appends ``count`` copies of the character ``ch`` to the buffer.
 
@@ -155,7 +155,7 @@ will **not** be NUL-terminated. The return value is the buffer object itself.
 
     Returns the current output location within the destination buffer.
 
-  .. cpp:function:: constexpr format_output& advance_to(char* const p) noexcept
+  .. cpp:function:: constexpr format_context& advance_to(char* const p) noexcept
 
     Updates the buffer position to ``p`` and adjusts the ``advance`` member appropriately.
 
