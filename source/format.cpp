@@ -587,7 +587,7 @@ namespace NANOFMT_NS {
             case 'g':
             case 'G':
                 out.advance_to(to_chars(
-                    out.pos,
+                    out.out(),
                     out.end,
                     value,
                     spec.type == 'G' ? float_format::general_upper : float_format::general,
@@ -596,7 +596,7 @@ namespace NANOFMT_NS {
             case 'e':
             case 'E':
                 out.advance_to(to_chars(
-                    out.pos,
+                    out.out(),
                     out.end,
                     value,
                     spec.type == 'E' ? float_format::scientific_upper : float_format::scientific,
@@ -605,7 +605,7 @@ namespace NANOFMT_NS {
             case 'f':
             case 'F':
                 out.advance_to(
-                    to_chars(out.pos, out.end, value, float_format::fixed, spec.precision < 0 ? 6 : spec.precision));
+                    to_chars(out.out(), out.end, value, float_format::fixed, spec.precision < 0 ? 6 : spec.precision));
                 break;
         }
     }

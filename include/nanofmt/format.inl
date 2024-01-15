@@ -142,6 +142,8 @@ namespace NANOFMT_NS {
         inline format_output& vformat(format_string fmt, format_args args);
 
         constexpr format_output& advance_to(char* p) noexcept;
+
+        constexpr char* out() const noexcept { return pos; }
     };
 
     constexpr char* copy_to(char* dest, char const* end, char const* source) noexcept {
@@ -256,13 +258,13 @@ namespace NANOFMT_NS {
     }
 
     [[nodiscard]] char* vformat_to_n(char* dest, std::size_t count, format_string format_str, format_args args) {
-        return detail::vformat(format_output{dest, dest + count}, format_str, static_cast<format_args&&>(args)).pos;
+        return detail::vformat(format_output{dest, dest + count}, format_str, static_cast<format_args&&>(args)).out();
     }
 
     template <typename... Args>
     [[nodiscard]] char* format_to_n(char* dest, std::size_t count, format_string format_str, Args const&... args) {
         return detail::vformat(format_output{dest, dest + count}, format_str, ::NANOFMT_NS::make_format_args(args...))
-            .pos;
+            .out();
     }
 
     template <typename... Args>
@@ -276,14 +278,14 @@ namespace NANOFMT_NS {
                               format_output{dest, dest + (N - 1 /*NUL*/)},
                               format_str,
                               ::NANOFMT_NS::make_format_args(args...))
-                              .pos;
+                              .out();
         *pos = '\0';
         return pos;
     }
 
     template <std::size_t N>
     char* vformat_to(char (&dest)[N], format_string format_str, format_args args) {
-        char* const pos = detail::vformat(format_output{dest, dest + (N - 1 /*NUL*/)}, format_str, args).pos;
+        char* const pos = detail::vformat(format_output{dest, dest + (N - 1 /*NUL*/)}, format_str, args).out();
         *pos = '\0';
         return pos;
     }
@@ -299,13 +301,13 @@ namespace NANOFMT_NS {
                    format_output{dest + start, dest + count},
                    format_str,
                    ::NANOFMT_NS::make_format_args(args...))
-            .pos;
+            .out();
     }
 
     template <std::size_t N, typename... Args>
     [[nodiscard]] char* vformat_append_to_n(char* dest, std::size_t count, format_string format_str, format_args args) {
         std::size_t const start = ::NANOFMT_NS::strnlen(dest, N);
-        return detail::vformat(format_output{dest + start, dest + count}, format_str, args).pos;
+        return detail::vformat(format_output{dest + start, dest + count}, format_str, args).out();
     }
 
     template <std::size_t N, typename... Args>
@@ -319,7 +321,7 @@ namespace NANOFMT_NS {
         if (start == N) {
             return dest + N;
         }
-        char* const pos = detail::vformat(format_output{dest + start, dest + (N - 1 /*NUL*/)}, format_str, args).pos;
+        char* const pos = detail::vformat(format_output{dest + start, dest + (N - 1 /*NUL*/)}, format_str, args).out();
         *pos = '\0';
         return pos;
     }

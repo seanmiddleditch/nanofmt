@@ -151,6 +151,10 @@ will **not** be NUL-terminated. The return value is the buffer object itself.
 
     Appends ``count`` copies of the character ``ch`` to the buffer.
 
+  .. cpp:function:: constexpr char* out() const noexcept
+
+    Returns the current output location within the destination buffer.
+
   .. cpp:function:: constexpr format_output& advance_to(char* const p) noexcept
 
     Updates the buffer position to ``p`` and adjusts the ``advance`` member appropriately.
