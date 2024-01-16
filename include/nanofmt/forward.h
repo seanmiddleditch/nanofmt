@@ -11,7 +11,8 @@ namespace NANOFMT_NS {
     struct format_args;
     struct format_string;
     struct format_string_view;
-    struct format_output;
+    struct format_parse_context;
+    struct format_context;
     template <typename T>
     struct formatter;
 } // namespace NANOFMT_NS

@@ -1,5 +1,7 @@
 // Copyright (c) Sean Middleditch and contributors. See accompanying LICENSE.md for copyright details.
 
+#ifndef NANOFMT_CHARCONV_H_
+#define NANOFMT_CHARCONV_H_ 1
 #pragma once
 
 #include "config.h"
@@ -102,3 +104,5 @@ namespace NANOFMT_NS {
     char* to_chars(char* dest, char const* end, long double value, float_format fmt) noexcept = delete;
     char* to_chars(char* dest, char const* end, long double value, float_format fmt, int precision) noexcept = delete;
 } // namespace NANOFMT_NS
+
+#endif

@@ -28,6 +28,9 @@ namespace NANOFMT_NS {
     /// Small wrapper to assist in formatting types like std::string_view.
     struct format_string_view;
 
+    /// Contextual information used when parsing format specifiers.
+    struct format_parse_context;
+
     /// Wrapper around a destination sequence of characters.
     ///
     /// Counts the number of characters that are written to the buffer,
@@ -35,7 +38,7 @@ namespace NANOFMT_NS {
     ///
     /// Use advance_to to update the pos pointer to ensure the advance field
     /// is updated appropriately.
-    struct format_output;
+    struct format_context;
 
     /// Holds a list of N format_value objects.
     ///
@@ -50,7 +53,7 @@ namespace NANOFMT_NS {
     ///
     /// constexpr char const* parse(char const* in, char const* end) noexcept;
     ///
-    /// void format(T const& value, format_output& out);
+    /// void format(T const& value, format_context& ctx);
     template <typename T>
     struct formatter;
 
@@ -103,7 +106,7 @@ namespace NANOFMT_NS {
     /// Formats a string and arguments into dest, writing no more than count
     /// bytes. The destination will **NOT** be NUL-terminated. Returns a
     /// pointer to the last character written.
-    inline char* vformat_to_n(char* dest, std::size_t count, format_string format_str, format_args args);
+    [[nodiscard]] inline char* vformat_to_n(char* dest, std::size_t count, format_string format_str, format_args args);
 
     template <std::size_t N, typename... Args>
     char* format_to(char (&dest)[N], format_string format_str, Args const&... args);
@@ -164,8 +167,8 @@ namespace NANOFMT_NS {
         template <typename T>
         struct default_formatter {
             format_spec spec;
-            char const* parse(char const* in, char const* end) noexcept;
-            void format(T value, format_output& out) noexcept;
+            char const* parse(format_parse_context& ctx) noexcept;
+            void format(T value, format_context& ctx) noexcept;
         };
     } // namespace detail
 
